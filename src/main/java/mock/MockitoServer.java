@@ -39,7 +39,6 @@ public class MockitoServer implements Server {
 		);
 		when(mocked.exec(matches("PASS (.+?)"))).thenReturn("+OK Logged In.\r\n");
 		when(mocked.exec("STAT")).thenReturn("+OK 2 240\r\n");
-		when(mocked.exec("STAT")).thenReturn("+r\n");
 		when(mocked.exec("UIDL")).thenReturn("+OK\r\n1 UID1-" + (int) (Math.random()*1000) + "\r\n2 UID2-" + (int) (Math.random()*1000) + "\r\n.\r\n");
 		when(mocked.exec("LIST")).thenReturn("+OK 2 messages (240 octets)\r\n1 120\r\n2 120\r\n.\r\n");
 		when(mocked.exec(matches("DELE (\\d)+"))).thenAnswer(
