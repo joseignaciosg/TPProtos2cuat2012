@@ -1,4 +1,7 @@
-package server;
+package server.start;
+
+import server.GenericServer;
+import server.ProxySocketServer;
 
 public class ProxyServer {
 
