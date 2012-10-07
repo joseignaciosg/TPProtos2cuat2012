@@ -21,7 +21,7 @@ public abstract class AbstractSockectServer implements Runnable {
 			do {
 				final BufferedReader inFromClient = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 				String clientSentence = inFromClient.readLine();
-				System.out.println(getClass() + "Command: " + clientSentence);
+				System.out.println(getClass().getSimpleName() + " -- Command: " + clientSentence);
 				endOfTransmission = exec(clientSentence);
 			} while (!endOfTransmission);
 			socket.close();

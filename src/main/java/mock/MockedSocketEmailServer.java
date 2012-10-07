@@ -10,19 +10,19 @@ public class MockedSocketEmailServer extends AbstractSockectServer {
 	
 	private Server server;
 	
-	private DataOutputStream outToClient;
-	
 	public MockedSocketEmailServer() {
 		server = new MockitoServer();
 	}
-	
+		
 	@Override
 	protected void initialize() throws Exception {
-		outToClient = new DataOutputStream(socket.getOutputStream());
+		DataOutputStream outToClient = new DataOutputStream(socket.getOutputStream());
+		outToClient.writeBytes(server.exec(null));
 	}
 	
 	@Override
 	protected boolean exec(String command) throws Exception {
+		DataOutputStream outToClient = new DataOutputStream(socket.getOutputStream());
 		String ans = server.exec(command);
 		if (ans == null) {
 			outToClient.writeBytes("I can break the rules too, good bye!\n");
