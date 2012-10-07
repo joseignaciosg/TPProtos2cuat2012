@@ -3,99 +3,44 @@ import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
-public class ProxySocketServer implements Runnable {
+import server.AbstractSockectServer;
 
-	private Socket muaSocket;
+public class ProxySocketServer extends AbstractSockectServer {
 
-	public ProxySocketServer(final Socket muaSocket) {
-		this.muaSocket = muaSocket;
+	private Socket originServerSocket;
+	private BufferedReader inFromOriginServer;
+	private DataOutputStream outToMUA;
+	private DataOutputStream outToOriginServer;
+
+	@Override
+	protected void initialize() throws Exception {
+		String originServerSentence;
+		//originServerSocket = new Socket("localhost", 8082);
+		originServerSocket = new Socket("mail.josegalindo.com.ar", 110);
+		inFromOriginServer = new BufferedReader(new InputStreamReader(originServerSocket.getInputStream()));
+		outToOriginServer = new DataOutputStream(originServerSocket.getOutputStream());
+		originServerSentence = inFromOriginServer.readLine();
+		System.out.println("PROXY: Received from Origin Server: " + originServerSentence);
+		outToMUA = new DataOutputStream(socket.getOutputStream());
+		outToMUA.writeBytes(originServerSentence + "\r\n");
 	}
 
 	@Override
-	public void run() {
-		try {
-			String muaSentence;
-			String originServerSentence;
-			DataOutputStream outToOriginServer;
-			BufferedReader inFromMUA;
-			BufferedReader inFromOriginServer;
-			DataOutputStream outToMUA;
-			Socket proxyToOriginServerSocket;
-
-			// Abro socket hacia el origin server en el puerto 110 (ej. pop3.alu.itba.edu.ar)
-			proxyToOriginServerSocket = new Socket("localhost", 8082);
-
-			inFromOriginServer = new BufferedReader(new InputStreamReader(
-					proxyToOriginServerSocket.getInputStream()));
-
-			// Respuesta del origin server
-			originServerSentence = inFromOriginServer.readLine();
-			System.out.println("PROXY: Received from Origin Server: "
-					+ originServerSentence);
-
-			// Le forwardeo los datos que me envió el origin server al MUA
-			outToMUA = new DataOutputStream(muaSocket.getOutputStream());
-			outToMUA.writeBytes(originServerSentence + "\r\n");
-			
-			inFromMUA = new BufferedReader(new InputStreamReader(
-					muaSocket.getInputStream()));
-
-			// Leo datos del MUA
-			muaSentence = inFromMUA.readLine();
-			System.out.println("PROXY: Received MUA Sentence: " + muaSentence);
-
-			// Forwardeo datos del MUA hacia Origin Server
-
-			outToOriginServer = new DataOutputStream(
-					proxyToOriginServerSocket.getOutputStream());
-
-			// Le envio al origin server lo que me paso el MUA
-			outToOriginServer.writeBytes(muaSentence + "\r\n");
-
-			// clientSocket.close();
+	protected boolean exec(String command) throws Exception {
+		String serverResponse;
+		outToOriginServer.writeBytes(command + "\r\n");
+		if (command.equals("CAPA") || command.equals("LIST") || command.equals("UIDL") || command.contains("RETR")) {
 			do {
-				
-				if(muaSentence.equals("CAPA") || muaSentence.equals("LIST") || muaSentence.equals("UIDL")
-				  || muaSentence.contains("RETR")){
-					originServerSentence = inFromOriginServer.readLine();
-					while(!originServerSentence.equals(".")){
-						// Le forwardeo los datos que me envió el origin server al MUA
-						System.out.println("PROXY: Forwarding to MUA: " + originServerSentence);
-						outToMUA.writeBytes(originServerSentence + "\r\n");
-						
-						// Respuesta del origin server
-						originServerSentence = inFromOriginServer.readLine();
-						System.out.println("PROXY: Received from Origin Server: " + originServerSentence);
-						
-					}
-					
-					// Le forwardeo los datos que me envió el origin server al MUA
-					outToMUA.writeBytes(".\r\n");
-
-				}else{				
-					// Respuesta del origin server
-					originServerSentence = inFromOriginServer.readLine();
-					System.out.println("PROXY: Received from Origin Server: "
-							+ originServerSentence);
-	
-					// Le forwardeo los datos que me envió el origin server al MUA
-					outToMUA.writeBytes(originServerSentence + "\r\n");
-				}
-				
-				// Leo datos del MUA
-				muaSentence = inFromMUA.readLine();
-				System.out.println("PROXY: Received MUA Sentence: "
-						+ muaSentence);
-
-				// Le envio al origin server lo que me paso el MUA
-				outToOriginServer.writeBytes(muaSentence + "\r\n");
-
-			} while (!muaSentence.toUpperCase().equals("END"));
-			System.out.println("Cerrando conexión...");
-			this.muaSocket.close();
-		} catch (final Exception e) {
+				serverResponse = inFromOriginServer.readLine();
+				outToMUA.writeBytes(serverResponse + "\r\n");
+				System.out.println("PROXY: Received from Origin Server: " + serverResponse);
+			} while (!serverResponse.equals("."));
+		} else {
+			serverResponse = inFromOriginServer.readLine();
+			outToMUA.writeBytes(serverResponse + "\r\n");
+			System.out.println("PROXY: Received from Origin Server: " + serverResponse);
 		}
-
+		return false;
 	}
 
 }

@@ -1,5 +1,7 @@
 package mock;
 
+import java.io.DataOutputStream;
+
 import server.AbstractSockectServer;
 import server.Server;
 
@@ -7,31 +9,27 @@ import server.Server;
 public class MockedSocketEmailServer extends AbstractSockectServer {
 	
 	private Server server;
-	private boolean forceExit;
+	
+	private DataOutputStream outToClient;
 	
 	public MockedSocketEmailServer() {
-		forceExit = false;
 		server = new MockitoServer();
 	}
 	
 	@Override
-	protected String getWelcomeMessage() {
-		return server.exec(null);
+	protected void initialize() throws Exception {
+		outToClient = new DataOutputStream(socket.getOutputStream());
 	}
 	
 	@Override
-	protected String exec(String command) {
+	protected boolean exec(String command) throws Exception {
 		String ans = server.exec(command);
-		if (ans != null) {
-			return ans;
+		if (ans == null) {
+			outToClient.writeBytes("I can break the rules too, good bye!\n");
+			return true;
 		}
-		forceExit = true;
-		return "I can break the rules too, good bye!\n";
-	}
-
-	@Override
-	protected boolean isEnd(String command) {
-		return forceExit || command.toLowerCase().equals("quit");
+		outToClient.writeBytes(ans);
+		return "QUIT".equals(ans.toUpperCase());
 	}
 
 

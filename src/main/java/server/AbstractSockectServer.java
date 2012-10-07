@@ -2,7 +2,6 @@ package server;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
@@ -16,22 +15,22 @@ public abstract class AbstractSockectServer implements Runnable {
 	
 	@Override
 	public void run() {
-		String clientSentence;
+		boolean endOfTransmission;
 		try {
-			prtWelcomeMessage();
+			initialize();
 			do {
 				final BufferedReader inFromClient = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-				final DataOutputStream outToClient = new DataOutputStream(socket.getOutputStream());
-				clientSentence = inFromClient.readLine();
-				outToClient.writeBytes(exec(clientSentence));
-			} while (!isEnd(clientSentence));
+				String clientSentence = inFromClient.readLine();
+				System.out.println(getClass() + "Command: " + clientSentence);
+				endOfTransmission = exec(clientSentence);
+			} while (!endOfTransmission);
 			socket.close();
 		} catch (final Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	private void prtWelcomeMessage() throws IOException {
+	protected void initialize() throws Exception {
 		String welcome = getWelcomeMessage();
 		if (welcome != null) {
 			final DataOutputStream outToClient = new DataOutputStream(socket.getOutputStream());
@@ -43,7 +42,6 @@ public abstract class AbstractSockectServer implements Runnable {
 		return null;
 	}
 
-	protected abstract String exec(String command);
+	protected abstract boolean exec(String command) throws Exception;
 	
-	protected abstract boolean isEnd(String command);
 }

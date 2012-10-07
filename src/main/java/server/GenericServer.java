@@ -9,7 +9,7 @@ public class GenericServer {
 	
 	public void run(int port, Class<? extends AbstractSockectServer> serverClass) {
 		try {
-			System.out.println("TCP Server initialized...");
+			System.out.println("TCP Server initialized for attending class " + serverClass);
 			ServerSocket welcomeSocket = new ServerSocket(port);
 			while (!Thread.interrupted()) {
 				final Socket connectionSocket = welcomeSocket.accept();
