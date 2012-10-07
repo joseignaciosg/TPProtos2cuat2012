@@ -35,6 +35,7 @@ public class MockitoServer implements Server {
 				}
 			}
 		);
+		when(mocked.exec(matches("PASS (.+?)"))).thenReturn("+OK Logged In.\r\n");
 		when(mocked.exec("STAT")).thenReturn("+OK 2 240\r\n");
 		when(mocked.exec("UIDL")).thenReturn("+OK\r\n");
 		when(mocked.exec("LIST")).thenReturn("+OK 2 messages (240 octets)\r\n1 120\r\n2 120\r\n.\r\n");
