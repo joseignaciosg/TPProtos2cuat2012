@@ -23,7 +23,7 @@ public class ProxySocketServer implements Runnable {
 			Socket proxyToOriginServerSocket;
 
 			// Abro socket hacia el origin server en el puerto 110 (ej. pop3.alu.itba.edu.ar)
-			proxyToOriginServerSocket = new Socket("mail.josegalindo.com.ar", 110);
+			proxyToOriginServerSocket = new Socket("localhost", 8082);
 
 			inFromOriginServer = new BufferedReader(new InputStreamReader(
 					proxyToOriginServerSocket.getInputStream()));
