@@ -1,0 +1,1291 @@
+
+
+
+
+
+
+Network Working Group                                           J. Myers
+Request for Comments: 1939                               Carnegie Mellon
+STD: 53                                                          M. Rose
+Obsoletes: 1725                             Dover Beach Consulting, Inc.
+Category: Standards Track                                       May 1996
+
+
+                    Post Office Protocol - Versión 3
+
+Estado del memorándum
+
+   Este memorándum especifica un protocolo estándar para la comunidad de
+   Internet, y solicita discusión y sugerencias para su mejora. Por
+   favor, consulte la edición actual del memorándum "Internet Official
+   Protocol Standards" (Estándares de Internet para Protocolos
+   Oficiales) (STD 1), para el estado de estandarización y la situación
+   de este protocolo. La distribución de este memorándum es ilimitada.
+
+Tabla de contenidos
+
+   1. Introducción ................................................    2
+   2. Un pequeño comentario .......................................    2
+   3. Modo de operación básico ....................................    3
+   4. La fase de AUTORIZACIÓN .....................................    4
+     la orden QUIT ...............................................    5
+   5. La fase de transacción TRANSACCION ..........................    5
+     la orden STAT ...............................................    6
+     la orden LIST ...............................................    6
+     la orden RETR ...............................................    8
+     la orden DELE ...............................................    8
+     la orden NOOP ...............................................    9
+     la orden RSET ...............................................    9
+   6. La fase de ACTUALIZACIÓN ....................................   10
+     la orden QUIT ...............................................   10
+   7. Órdenes opcionales POP3 .....................................   11
+     la orden TOP ................................................   11
+     la orden UIDL ...............................................   12
+     la orden USER ...............................................   13
+     la orden PASS ...............................................   14
+     la orden APOP ...............................................   15
+   8. Consideraciones operativas y de escalabilidad................   16
+   9. Resumen de órdenes POP3 .....................................   18
+   10. Sesión de ejemplo POP3 .....................................   19
+   11. Formato del mensaje ........................................   19
+   12. Referencias ................................................   20
+   13. Consideraciones sobre seguridad ............................   20
+   14. Agradecimiento .............................................   20
+   15. Direcciones de los autores .................................   21
+
+
+
+Myers & Rose                 Standards Track                    [Pág. 1]
+
+RFC 1939                          POP3                          May 1996
+
+
+   Anexo A. Diferencias con el RFC 1725 ........................   22
+   Anexo B. Índice de órdenes .................................   23
+
+1. Introducción
+
+   Con frecuencia, en algunos nodos pequeños de Internet no resulta práctico
+   mantener un sistema de transporte de mensajes (MTS, message transport
+   system). Por ejemplo, una estación de trabajo puede no tener suficientes
+   recursos (ciclos, espacio en el disco) para permitir un servidor SMTP
+   [RFC821], y mantener de forma residente y en continua ejecución el sistema
+   de transporte de correo asociado. De forma similar puede resultar costoso
+   (o imposible) mantener un equipo personal interconectado a una red de
+   tipo IP durante periodos largos de tiempo (el nodo carece del recurso
+   conocido como "conectividad").
+
+   Sin embargo, a veces resulta muy útil poder gestionar correo en esos
+   nodos más pequeños, y a menudo tienen soporte para un agente de usuario
+   (user agent UA) para ayudar en las tareas de gestión del correo. Para
+   solucionar este problema, un nodo que pueda gestionar un MTS ofrece un
+   servicio de buzón a esos nodos menos dotados. El
+   Post Office Protocol (N. del T. Protocolo de Oficina de Correos) - Versión
+   3 (POP3) se utiliza para permitir a una estación de trabajo transferir
+   el correo que guarda el servidor.
+
+   La orientación del protocolo POP3 no es proporcionar amplias operaciones
+   de de correo en el servidor; normalmente el correo se transfiere y
+   después se borra. En el [RFC1730] se comenta IMAP4, un protocolo más
+   avanzado (y complejo).
+
+   En el resto de este memorándum, el termino "equipo cliente" se refiere
+   a un equipo que utilice el servicio POP3, mientras el término "equipo
+   servidor" se refiere al equipo que ofrece el servicio POP3.
+
+2. Un pequeño comentario
+
+   Este memorándum no especifica la forma en la que un equipo cliente
+   introduce el correo en el sistema de transporte, sin embargo, aquí se
+   muestra un método consistente con la filosofía de este memorándum:
+
+      Cuando el agente de usuario en un equipo cliente desea introducir un
+      mensaje en el sistema de transporte, establece una conexión SMTP con su
+      nodo de reenvío, y le envía todo el correo. Este nodo de reenvío
+      podría ser, pero no necesariamente, el servidor POP3 para
+      el equipo cliente.
+
+      Aunque el nodo de reenvío debe aceptar correo para entrega a direcciones
+      de destino arbitrarias, esta funcionalidad no se requiere para todos los
+      servidores SMTP.
+
+
+
+Myers & Rose                 Standards Track                    [Pág. 2]
+
+RFC 1939                          POP3                          May 1996
+
+
+3. Operación Básica
+
+   Inicialmente, el equipo servidor inicia el servicio POP3 escuchando el puerto
+   TCP 110. Cuando un equipo cliente quiere hacer uso del servicio, establece
+   una conexión TCP con el equipo servidor. Cuando la conexión se ha establecido,
+   el servidor POP3 envía un saludo. El cliente y el servidor POP3 a partir de
+   entonces intercambian órdenes y respuestas (respectivamente) hasta que se
+   cierre o interrumpa la conexión.
+
+   Las órdenes en el protocolo POP3 consisten en una serie de palabras claves
+   sin diferenciar mayúsculas de minúsculas, posiblemente seguidas de uno o
+   más argumentos. Todos las órdenes terminan con un par CRLF (Carriage Return
+   Line Feed, Retorno de Carro Nueva Línea). Las órdenes y sus argumentos están
+   compuestos de caracteres ASCII imprimibles, separados de sus argumentos por
+   un sólo carácter ESPACIO. Las órdenes tiene tres o cuatro caracteres de
+   longitud. Cada argumento puede tener hasta 40 caracteres.
+
+   Las respuestas en el POP3 están formada por un indicador de estado y una
+   palabra clave, posiblemente seguida de información adicional. Todas las
+   respuestas están terminadas por un par CRLF. Las respuestas pueden tener
+   hasta 512 caracteres de longitud, incluyendo el CRLF del final. Actualmente
+   hay dos indicadores de estado: el positivo ("+OK") y el negativo ("-ERR").
+   Los servidores DEBEN enviar "+OK" y el "-ERR" en mayúsculas.
+
+   Las respuestas a ciertas órdenes son multilínea. En esos casos, que se
+   indicarán claramente más adelante, tras enviar la primera línea de la
+   respuestas y un CRLF, pueden enviarse más líneas, cada una de ellas también
+   terminadas por el par CRLF. Cuando se han enviado todas las líneas de la
+   respuesta, se envía una línea final que consiste en un octeto terminal
+   (código decimal 046, ".") y un par CRLF. Si cualquier línea de la
+   respuesta multilínea comienza con el octeto terminal, se antepone
+   el octeto terminal a esa línea en la respuesta. De este modo, una respuesta
+   multilínea termina con los cinco octetos "CRLF.CRLF".
+   Cuando examina una respuesta multilínea, el cliente comprueba si la línea
+   comienza con el octeto terminal. Si es así y si le siguen otros octetos que
+   no sean CRLF, el primer octeto de la línea (el octeto terminador) se elimina.
+   Tras esto, y si al carácter terminador le sigue un CRLF, entonces la
+   respuesta del servidor POP termina, y la línea que contiene ".CRLF" no se
+   considerará parte de la respuesta multilínea.
+
+   Una sesión POP3 pasa por varios estados durante su periodo de vida. Una vez
+   abierta la conexión TCP y tras enviar el servidor POP3 el saludo,
+   la sesión entra en la fase de AUTORIZACIÓN. En esta fase, el cliente debe
+   identificarse ante el servidor POP3. Una vez el cliente lo realiza con éxito,
+   el servidor adquiere los recursos asociados con el buzón del cliente, y la
+   sesión entra en la fase de TRANSACCIÓN. En esta fase, el
+   cliente solicita la actuación al servidor POP3. Tras el envío por el cliente
+   de la orden QUIT, la sesión entra en la fase de AUTORIZACIÓN. En esta fase,
+
+
+
+Myers & Rose                 Standards Track                    [Pág. 3]
+
+RFC 1939                          POP3                          May 1996
+
+
+   el servidor POP3 libera cualquier recurso adquirido durante la fase de
+   TRANSACCIÓN, y dice adiós. En ese momento se cierra la conexión TCP.
+
+   Un servidor DEBE responder a una orden no reconocida, no implementada o
+   no válida sintácticamente, con un indicador de estado negativo. El servidor
+   DEBE responder a una orden enviada en una fase incorrecta con un indicador
+   de estado negativo. No existe un método general para que un cliente pueda
+   distinguir entre un servidor que no implementa una orden opcional y otro
+   que no puede o no quiere procesarla.
+
+   Un servidor POP3 PUEDE tener un contador de inactividad para cerrar la
+   conexión. Ese contador DEBE de ser de al menos 10 minutos de duración. La
+   recepción de cualquier orden durante el intervalo debería bastar para
+   reiniciar el contador. Cuando el contador se agota, la sesión NO entra en
+   fase de ACTUALIZACIÓN: el servidor debería cerrar la conexión TCP sin
+   eliminar ningún mensaje ni enviar ninguna respuesta al cliente.
+
+4. La fase de AUTORIZACIÓN
+
+   Una vez que el cliente POP3 abre la conexión TCP, el servidor POP3 lanza
+   una línea de saludo. Esta puede ser cualquier respuesta positiva. Un
+   ejemplo podría ser:
+
+      S:  +OK servidor POP3 preparado
+
+   La sesión POP3 está ahora en la fase de AUTORIZACIÓN. El cliente debe
+   identificarse y autentificarse al servidor POP3. En este memorándum
+   se describen dos posibles mecanismos para hacer esto: la combinación
+   de órdenes USER y PASS, y la orden APOP. Ambos mecanismos se
+   describen posteriormente en este memorándum. En el [RFC1734] se
+   describen mecanismos adicionales de autenticación. Mientras no haya
+   un mecanismo de autenticación requerido para todos los servidores
+   POP3, estos deberán implementar al menos uno de los dos métodos.
+
+   Una vez que el servidor POP3 ha determinado a través del uso de las
+   órdenes de autenticación que puede autorizar el acceso del cliente al
+   buzón adecuado, el servidor POP3 abre un acceso exclusivo al buzón,
+   siendo esto necesario para evitar que los mensajes puedan ser
+   modificados o eliminados antes de que la sesión entre en la fase de
+   actualización. Si se adquiere correctamente el acceso exclusivo, el
+   servidor POP3 responde con una indicación de estado positiva. La
+   sesión POP3 entra ahora en la fase de TRANSACCIÓN, en la cual no hay
+   ningún mensaje marcado para su borrado. Si el buzón no puede abrirse
+   por alguna razón (por ejemplo, la exclusividad no puede adquirirse,
+   al cliente se le ha denegado el acceso, o el buzón no puede ser
+   examinado), el servidor POP3 responde con un indicador de estado
+   negativo. (Si la exclusividad fue adquirida pero el servidor POP3
+   responde con un indicador de estado negativo, el servidor POP3 debe
+
+
+
+Myers & Rose                 Standards Track                    [Pág. 4]
+
+RFC 1939                          POP3                          May 1996
+
+
+   dejar su exclusividad antes de rechazar la orden.)
+
+   Tras devolver un indicador de estado negativo, el servidor puede
+   cerrar la conexión. Si el servidor no cierra la conexión, el cliente
+   puede elegir tanto enviar una nueva orden de autenticación y empezar
+   de nuevo, como enviar la orden QUIT.
+
+   Después de que el servidor POP3 halla abierto el buzón, asigna un
+   número a cada mensaje, y mira el tamaño de cada uno en octetos. Al
+   primer mensaje en el buzón se le asigna el número "1", al segundo se
+   le asigna el "2", y así seguido, de modo que el enésimo mensaje del
+   buzón tiene asignado el número de mensaje "N". En las órdenes y
+   respuestas POP3, los números y tamaños de todos los mensajes se
+   expresan en base 10 (decimal).
+
+   Este es un resumen de la orden QUIT cuando se utiliza en la fase de
+   AUTORIZACIÓN:
+
+      QUIT
+
+         Argumentos: ninguno
+
+         Restricciones: ninguna
+
+         Respuestas posibles:
+             +OK
+
+         Ejemplos:
+             C: QUIT
+             S: +OK dewey POP3 server signing off
+
+5. La fase de TRANSACCIÓN
+
+   Una vez que el cliente se ha identificado a si mismo con éxito ante
+   el servidor POP3, y éste ha puesto el cerrojo y abierto el buzón
+   adecuado, la sesión POP3 se encuentra en la fase de TRANSACCIÓN. El
+   cliente ahora puede enviar repetidamente cualquiera de las órdenes
+   POP3 que detallaremos a continuación. Tras recibir cada orden, el
+   servidor POP3 envía una respuesta. Eventualmente, el cliente puede
+   enviar la orden QUIT y la sesión POP3 entrar en la fase de
+   ACTUALIZACIÓN.
+
+   Aquí se muestran las órdenes POP3 válidos en la fase de TRANSACCIÓN.
+
+      STAT
+
+         Argumentos: ninguno
+
+
+
+
+Myers & Rose                 Standards Track                    [Pág. 5]
+
+RFC 1939                          POP3                          May 1996
+
+
+         Restricciones:
+             sólo puede utilizarse en la fase de TRANSACCIÓN.
+
+         Comentario:
+          El servidor POP3 enviará un respuesta positiva con una línea que
+          contendrá información del buzón. A esta línea se le denomina
+          el "análisis de buzón" ("drop listing") para ese buzón.
+
+          Para simplificar el análisis, todos los servidores POP3 deben
+          usar un formato determinado para los listados de mensajes. La
+          respuesta positiva consiste en un "+OK" seguido de un espacio, el
+          número de mensajes en el buzón, otro espacio, y el tamaño del
+          buzón en octetos. Este memorándum no especifica qué dato debe
+          seguir al tamaño del buzón. Una implementación mínima simplemente
+          debería finalizar esa línea con un par CRLF. Implementaciones más
+          avanzadas pueden incluir otra información.
+
+          NOTA: Este memorándum desaconseja ENÉRGICAMENTE que las
+          implementaciones suministren información adicional en el
+          listado de mensajes. Más adelante se discuten otras
+          facilidades opcionales para permitir al cliente analizar los
+          mensajes en el buzón.
+
+          Obsérvese que los mensaje marcados como borrados no se cuentan en
+          ninguno de ambos totales.
+
+         Respuestas posibles:
+             +OK nn mm
+
+         Ejemplos:
+             C: STAT
+             S: +OK 2 320
+
+
+      LIST [msj]
+
+         Argumentos:
+          Un número de mensaje (opcional) que, si existe, NO puede
+          hacer referencia a un mensaje marcado como borrado.
+
+         Restricciones:
+          solo puede darse en la fase de TRANSACCIÓN
+
+         Comentario:
+          Si se envía el argumento, el servidor POP3 devuelve una
+          respuesta positiva con una línea conteniendo información para ese
+          mensaje. Esta línea se denomina de análisis de mensaje
+          (scan listing) para ese mensaje.
+
+
+
+Myers & Rose                 Standards Track                    [Pág. 6]
+
+RFC 1939                          POP3                          May 1996
+
+
+          Si no se da ningún argumento y el servidor POP3 devuelve una
+          respuesta positiva, entonces ésta es multilínea. Tras la respuesta
+          +OK inicial, por cada mensaje en el buzón el servidor POP3 responde
+          con una línea que contiene información de ese mensaje. Esta línea
+          también se denomina de análisis de mensaje (scan listing) para
+          ese mensaje. Si no hay mensaje en el buzón, el servidor POP3 responde
+          sin análisis de mensajes: envía una respuesta positiva seguida de
+          una línea que contiene el octeto terminal y un par CRLF.
+
+          Para simplificar el análisis, todos los servidores POP3 tienen
+          que usar un formato determinado de listados. Un listado consiste
+          en el número del mensaje, seguido de un espacio, y el tamaño
+          máximo del mensaje en octetos. Más adelante, la sección
+          "Formato de los Mensajes" describe los métodos para calcular el
+          tamaño exacto del mensaje. Este memorándum no especifica qué viene
+          a continuación del tamaño del mensaje. Una implementación mínima
+          simplemente debería terminar esa línea de respuesta con un par CRLF.
+          Implementaciones más avanzadas pueden incluir otra información
+          como resultado de un análisis del mensaje.
+
+          NOTA: Este memorándum desaconseja ENÉRGICAMENTE que las
+          implementaciones suministren información adicional en el
+          listado. Más adelante se comentarán otras facilidades
+          adicionales que permitirán al cliente analizar los mensajes
+          del buzón.
+
+             Note that messages marked as deleted are not listed.
+
+         Respuestas posibles:
+             +OK scan listing follows
+             -ERR no such message
+
+         Ejemplos:
+             C: LIST
+             S: +OK 2 messages (320 octets)
+             S: 1 120
+             S: 2 200
+             S: .
+               ...
+             C: LIST 2
+             S: +OK 2 200
+               ...
+             C: LIST 3
+             S: -ERR no such message, only 2 messages in mail
+
+
+      RETR msj
+
+
+
+
+Myers & Rose                 Standards Track                    [Pág. 7]
+
+RFC 1939                          POP3                          May 1996
+
+
+         Argumentos:
+          un número de mensaje (requerido) que NO puede hacer referencia a
+          un mensaje marcado como borrado.
+
+         Restricciones:
+          sólo puede darse en la fase de TRANSACCIÓN
+
+         Comentario:
+          Si el servidor POP3 envía una respuesta positiva, entonces ésta
+          es multilínea. Tras el +OK inicial el servidor POP3 envía el
+          mensaje correspondiente al número de mensaje dado, teniendo
+          cuidado de anteponer el carácter terminal (como en todas las
+          respuestas multilínea).
+
+         Respuestas posibles:
+             +OK message follows
+             -ERR no such message
+
+         Ejemplos:
+             C: RETR 1
+             S: +OK 120 octets
+             S: <Aquí el servidor POP3 envía el mensaje entero>
+             S: .
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Myers & Rose                 Standards Track                    [Pág. 8]
+
+RFC 1939                          POP3                          May 1996
+
+
+      DELE msj
+
+         Argumentos:
+          un número de mensaje (requerido) que NO puede referirse a un
+          mensaje marcado como borrado.
+
+         Restricciones:
+          sólo puede darse en la fase de TRANSACCIÓN
+
+         Comentario:
+          El servidor POP3 marca el mensaje como borrado. Cualquier
+          referencia futura al número asociado al mensaje en el
+          servidor POP3 genera un error. El servidor POP3 realmente no
+          borra ningún mensaje hasta que la sesión POP3 entra en fase de
+          actualización.
+
+         Respuestas posibles:
+             +OK message deleted
+             -ERR no such message
+
+         Ejemplos:
+             C: DELE 1
+             S: +OK message 1 deleted
+                ...
+             C: DELE 2
+             S: -ERR message 2 already deleted
+
+
+      NOOP
+
+         Argumentos: ninguno
+
+         Restricciones:
+          sólo puede darse en la fase de TRANSACCIÓN
+
+         Comentario:
+          El servidor POP3 no hace nada, simplemente devuelve una respuesta
+          positiva.
+
+         Respuestas posibles:
+             +OK
+
+         Ejemplos:
+             C: NOOP
+             S: +OK
+
+
+      RSET
+
+
+
+Myers & Rose                 Standards Track                    [Pág. 9]
+
+RFC 1939                          POP3                          May 1996
+
+
+         Argumentos: ninguno
+
+         Restricciones:
+          sólo puede darse en la fase de TRANSACCIÓN
+
+         Comentario:
+          Si el servidor POP3 ha marcado algún mensaje como borrado, se
+          elimina esa marca. El servidor POP3 devuelve una respuesta positiva.
+
+         Respuestas posibles:
+             +OK
+
+         Ejemplos:
+             C: RSET
+             S: +OK mailbox has 2 messages (320 octets)
+
+6. La fase de ACTUALIZACIÓN
+
+   Cuando el cliente envía la orden QUIT en la fase de TRANSACCIÓN, la
+   sesión POP3 entra en la fase de ACTUALIZACIÓN. (Obsérvese que si el
+   cliente envía una orden QUIT durante la fase de AUTORIZACIÓN, la
+   sesión POP3 termina pero NO entra en la fase de ACTUALIZACIÓN.)
+
+   Si la sesión termina por cualquier motivo que no sea una orden QUIT
+   enviada por el cliente, la sesión POP3 NO entra en la fase de
+   actualización y NO DEBE eliminar ningún mensaje del buzón.
+
+            QUIT
+
+               Argumentos: ninguno
+
+               Restricciones: ninguna
+
+               Comentario:
+                El servidor POP3 elimina cualquier mensaje marcado como borrado
+                del buzón y responde según el resultado de esta operación. Si hay
+                algún error, como escasez de recursos, encontrado cuando se
+                estaba eliminando el mensaje, puede darse el caso de que el buzón
+                tenga algunos o ninguno de los mensajes marcados para borrado. En
+                ningún caso el servidor debe eliminar mensajes que no estén
+                marcados para borrado.
+                Independientemente de que el borrado se haya llevado a cabo con
+                éxito o no, el servidor libera el cerrojo de acceso exclusivo
+                sobre el buzón y cierra la conexión TCP.
+
+               Respuestas posibles:
+                   +OK
+                   -ERR some deleted messages not removed
+
+
+
+Myers & Rose                 Standards Track                   [Pág. 10]
+
+RFC 1939                          POP3                          May 1996
+
+
+               Ejemplos:
+                   C: QUIT
+                   S: +OK dewey POP3 server signing off (mailbox empty)
+                      ...
+                   C: QUIT
+
+7. Órdenes POP3 opcionales
+
+   Las órdenes POP3 comentados con anterioridad deben ser compatibles
+   con todas las implementaciones mínimas de servidor POP3.
+
+   Las órdenes POP3 opcionales descritos a continuación permiten al
+   cliente POP3 una mayor libertad en el manejo de mensajes, mientras se
+   preserva una implementación mínima del servidor POP3.
+
+      NOTA: Este memorándum aconseja FUERTEMENTE que las
+      implementaciones admitan estos órdenes en lugar de desarrollar
+      mensajes de análisis de buzón y mensaje (drop & scan listings)
+      aumentados. En resumen, la filosofía de este memorándum es poner
+      la inteligencia del lado del cliente POP3 y no del servidor POP3.
+
+      TOP msj n
+
+         Argumentos:
+          Un número de mensaje (requerido), que NO puede referirse a un
+          mensaje marcado como borrado, y un número no negativo de líneas
+          (requerido).
+
+         Restricciones:
+             sólo puede darse en la fase de TRANSACCIÓN
+
+         Comentario:
+          Si el servidor POP3 envía una respuesta positiva, entonces ésta
+          es multilínea. Tras el +OK inicial, el servidor POP3 envía las
+          cabeceras del mensaje, y el número de líneas del cuerpo del
+          mensaje, cuidando especialmente de anteponer el carácter de
+          terminación (como en todas las respuestas multilínea).
+
+          Obsérvese que si el número de líneas requeridas por el cliente POP3
+          es mayor que el número de líneas del cuerpo, el servidor POP3
+          enviará el mensaje entero.
+
+         Respuestas posibles:
+             +OK top of message follows
+             -ERR no such message
+
+         Ejemplos:
+             C: TOP 1 10
+
+
+
+Myers & Rose                 Standards Track                   [Pág. 11]
+
+RFC 1939                          POP3                          May 1996
+
+
+             S: +OK
+             S: <el servidor POP3 envía las cabeceras de mensaje, una línea en
+                blanco y las primeras 10 líneas del mensaje>
+             S: .
+                ...
+             C: TOP 100 3
+             S: -ERR no such message
+
+
+      UIDL [msj]
+
+      Argumentos:
+          un número de mensaje (opcional) el cual, si está presente, NO puede
+       hacer referencia a un mensaje marcado como borrado.
+
+      Restricciones:
+          sólo puede darse en la fase de TRANSACCIÓN
+
+      Comentario:
+          Si el argumento fue transmitido, el servidor POP3 devuelve una
+       respuesta positiva con una línea con información para ese mensaje.
+       Esta línea se denomina un listado de ID exclusiva (unique-id listing)
+       para ese mensaje.
+
+       Si no se dio ningún argumento y el servidor POP3 devuelve una
+       respuesta positiva, entonces esa respuesta es multilínea. Tras el
+       +OK inicial, por cada mensaje en el buzón el servidor POP3
+       responderá con una línea que contendrá información para ese mensaje.
+       Esta línea se denomina listado de ID exclusiva para ese mensaje.
+
+       Para simplificar el análisis, todos los servidores POP3 deben usar
+       un formato determinado para los listados de ID exclusiva. Un listado de
+       ID exclusiva consiste en el número de mensaje, seguido de un sólo
+       espacio, y el ID exclusiva del mensaje. Ninguna información sigue
+       al ID exclusiva en el listado de ID exclusiva.
+
+       La ID exclusiva del mensaje es una cadena determinada arbitrariamente
+       por el servidor que consiste en uno de los 70 caracteres en el rango
+       de 0x21 a 0x7E, que unívocamente identifica un mensaje dentro del
+       buzón y que persiste entre sesiones. Esta persistencia se requiere
+       incluso si la sesión no entra en la fase de ACTUALIZACIÓN. El
+       servidor nunca debería volver a utilizar una ID exclusiva para un
+       mismo buzón, mientras la entidad que utiliza actualmente la ID
+       exclusiva siga existiendo.
+
+          Obsérvese que los mensajes marcados como borrados no se enumeran.
+
+       Aunque es generalmente preferible que las implementaciones de
+
+
+
+Myers & Rose                 Standards Track                   [Pág. 12]
+
+RFC 1939                          POP3                          May 1996
+
+
+       los servidores asignen ID exclusivas de forma arbitraria al buzón, esta
+       especificación permite calcular las ID exclusivas a partir de una
+       función hash del mensaje. Los clientes deberían ser capaces de manejar
+       una situación en la que dos copias idénticas de un mensaje en un buzón
+       comparten la misma ID exclusiva.
+
+      Respuestas posibles:
+          +OK unique-id listing follows
+          -ERR no such message
+
+      Ejemplos:
+          C: UIDL
+          S: +OK
+          S: 1 whqtswO00WBw418f9t5JxYwZ
+          S: 2 QhdPYR:00WBw1Ph7x7
+          S: .
+             ...
+          C: UIDL 2
+          S: +OK 2 QhdPYR:00WBw1Ph7x7
+             ...
+          C: UIDL 3
+          S: -ERR no such message, only 2 messages in mailbox
+
+
+      USER nombre
+
+         Argumentos:
+          una cadena que identifica un buzón (requerido) que SÓLO tiene
+          significado para el servidor.
+
+         Restricciones:
+          solo puede darse en la fase de AUTORIZACIÓN después de que el
+          servidor POP3 envíe el saludo o tras unos órdenes USER o
+          PASS fallidos.
+
+         Comentario:
+          Para autentificar utilizando la combinación de órdenes USER y
+          PASS, el cliente primero debe enviar la orden USER. Si el
+          servidor POP3 responde con un indicador de estado positivo
+          ("+OK"), entonces el cliente puede enviar tanto la orden PASS
+          para completar la autenticación, como la orden QUIT para
+          terminar la sesión POP3. Si el servidor POP3 responde con un
+          indicador de estado negativo ("-ERR") la orden USER, entonces
+          el cliente puede tanto enviar una nueva orden de autenticación
+          como enviar la orden QUIT.
+
+          El servidor puede devolver una respuesta positiva incluso si no
+          existe tal buzón. El servidor puede devolver una respuesta
+
+
+
+Myers & Rose                 Standards Track                   [Pág. 13]
+
+RFC 1939                          POP3                          May 1996
+
+
+          negativa si el buzón existe, pero no permite autenticación por
+          texto plano.
+
+         Respuestas posibles:
+             +OK name is a valid mailbox
+             -ERR never heard of mailbox name
+
+         Ejemplos:
+             C: USER frated
+             S: -ERR sorry, no mailbox for frated here
+                ...
+             C: USER mrose
+             S: +OK mrose is a real hoopy frood
+
+
+      PASS cadena
+
+         Argumentos:
+          una clave específica del servidor y el buzón (requerida).
+
+         Restricciones:
+          sólo puede darse en la fase de AUTORIZACIÓN, después de una orden
+          USER con éxito.
+
+         Comentario:
+          Cuando el cliente envía la orden PASS, el servidor POP3 utiliza
+          el par de argumentos de las órdenes USER y PASS para determinar
+          si al cliente debería proporcionársele el acceso al buzón
+          adecuado.
+          POP3 puede tratar los espacios en el argumento como parte de la
+          contraseña en lugar de como separador de argumentos.
+
+         Respuestas posibles:
+             +OK buzón locked and ready
+             -ERR invalid password
+             -ERR unable to lock mailbox
+
+         Ejemplos:
+             C: USER mrose
+             S: +OK mrose is a real hoopy frood
+             C: PASS secret
+             S: -ERR mailbox already locked
+               ...
+             C: USER mrose
+             S: +OK mrose is a real hoopy frood
+             C: PASS secret
+             S: +OK mrose's mailbox has 2 messages (320 octets)
+
+
+
+
+Myers & Rose                 Standards Track                   [Pág. 14]
+
+RFC 1939                          POP3                          May 1996
+
+
+      APOP nombre resumen
+
+         Argumentos:
+          una cadena que identifica un buzón y una cadena resumen MD5
+          (ambas requeridas).
+
+         Restricciones:
+          Sólo puede darse en la fase de AUTORIZACIÓN tras el saludo del
+          servidor POP3 o tras un USER o PASS sin éxito.
+
+         Comentario:
+          Normalmente, cada sesión POP3 empieza con un intercambio
+          USER/PASS. Esto tiene como resultado que una clave específica
+          servidor/usuario se envíe en claro por la red. Para usos
+          intermitentes del POP3, esto puede que no represente un riesgo
+          considerable. Sin embargo, muchas implementaciones de clientes
+          POP3 se conectan al servidor POP3 de forma regular (para
+          comprobar si hay nuevo correo). En este caso el intervalo
+          o inicialización de sesión puede ser del orden de cinco minutos.
+          Por lo tanto el riesgo de que la clave sea capturada aumenta
+          considerablemente.
+
+          Se requiere por tanto un método alternativo de autenticación
+          que proporcione tanto autenticación del origen como protección
+          contra intrusiones, lo cual implica que la clave no debe enviarse
+          en claro por la red. La orden APOP proporciona esta funcionalidad.
+
+          Un servidor POP3 que implemente la orden APOP deberá incluir una
+          marca de tiempo en su mensaje de saludo. La sintaxis de la marca de
+          tiempo se corresponde a la del 'msg-id' del [RFC822], y DEBE ser
+          diferente cada vez que el servidor POP3 envíe el mensaje de
+          saludo. Por ejemplo, en una implementación UNIX en la que
+          se utilicen procesos UNIX separados para cada instancia del
+          servidor POP3, la sintaxis de la marca de tiempo podría ser:
+
+                <ID-proceso.reloj@nombrehuesped>
+
+          Donde "ID proceso" es el valor decimal del PID del proceso,
+          "reloj" es el valor decimal del reloj del sistema, y "nombrehuesped"
+          es el nombre de dominio totalmente cualificado que corresponde al
+          equipo huésped donde se ejecuta el servidor POP3.
+
+          El cliente POP3 toma nota de esta marca de tiempo, y entonces envía
+          la orden APOP. El parámetro "nombre" tiene la misma semántica
+          que el parámetro 'nombre' de la orden USER. El parámetro 'resumen'
+          se calcula aplicando el algoritmo MD5 [RFC1321] a una cadena que
+          consiste en la marca de tiempo (incluyendo los símbolos de mayor y
+          menor), seguidos de un secreto compartido. Este secreto compartido
+
+
+
+Myers & Rose                 Standards Track                   [Pág. 15]
+
+RFC 1939                          POP3                          May 1996
+
+
+          es una cadena conocida sólo por el cliente y el servidor POP3.
+          Debe tenerse mucho cuidado en prevenir un acceso no autorizado a ese
+          secreto, dado que el conocimiento del mismo permitirá a cualquier
+          entidad enmascararse como el usuario nombrado. El propio parámetro
+          'resumen' es un valor de 16 octetos enviado en formato hexadecimal,
+          utilizando caracteres ASCII con letras minúsculas.
+
+          Cuando el servidor POP3 recibe la orden APOP, verifica el
+          resumen proporcionado. Si el resumen es correcto, el servidor POP3
+          envía una respuesta positiva, y la sesión POP3 entra en la fase
+          de transacción. Si no, se envía una respuesta negativa y la sesión
+          POP3 permanece en la fase de AUTORIZACIÓN.
+
+          Obsérvese que según aumenta la longitud del secreto compartido
+          aumenta la dificultad para derivarlo. Por ello, los secretos
+          compartidos deberían ser cadenas largas (considerablemente más largas
+          que el ejemplo de 8 caracteres mostrado más abajo).
+
+         Respuestas posibles:
+             +OK mailbox locked and ready
+             -ERR permission denied
+
+         Ejemplos:
+             S: +OK POP3 server ready <1896.697170952@dbc.mtview.ca.us>
+             C: APOP mrose c4c9334bac560ecc979e58001b3e22fb
+             S: +OK maildrop has 1 message (369 octets)
+
+          En este ejemplo, el secreto compartido es la cadena tanstaaf. De
+          este modo, se aplica el algoritmo MD5 a la cadena
+
+                <1896.697170952@dbc.mtview.ca.us>tanstaaf
+
+             lo que produce un resumen de resultado de
+
+                c4c9334bac560ecc979e58001b3e22fb
+
+8. Consideraciones operativas y de escalabilidad
+
+   Desde que se incluyeron en el protocolo POP3 algunas de las
+   prestaciones opcionales descritas anteriormente, se ha acumulado
+   experiencia utilizándolas en operaciones de correo de gran escala,
+   donde la mayoría de los usuarios no se conocen entre sí. En estas y
+   otras situaciones, los usuarios y proveedores de clientes POP3 han
+   descubierto que la combinación de utilizar la orden UIDL y no enviar
+   la orden DELE puede proporcionar una versión débil de la
+   funcionalidad "buzón como repositorio semipermanente", normalmente
+   asociada con IMAP. Sin embargo otras capacidades de IMAP, como
+   comprobar una conexión existente para ver si hay correo nuevo o dar
+
+
+
+Myers & Rose                 Standards Track                   [Pág. 16]
+
+RFC 1939                          POP3                          May 1996
+
+
+   soporte a múltiples carpetas en el servidor, no están presentes en
+   POP3.
+
+   Cuando estos medios se utilizan de este modo por usuarios casuales,
+   le tendencia es que los mensajes sin leer se acumulen en el servidor
+   sin limitación. Esto evidentemente es una conducta no deseable desde
+   el punto de vista del operador del servidor. Esta situación se agrava
+   por el hecho de que las características limitadas del protocolo POP3
+   no permiten un manejo eficiente de buzones que contienen cientos de
+   miles de mensajes.
+
+   Consecuentemente se recomienda que los operadores de servidores
+   multiusuario de gran escala, especialmente aquellos en los cuales el
+   único acceso del usuario al buzón es mediante el protocolo POP3,
+   consideren alguna de las siguientes opciones:
+
+   *  Imponer una cuota por usuario al buzón o algo similar.
+
+      Una desventaja de esta opción es que la acumulación de mensajes puede
+      tener como consecuencia la incapacidad del usuario de recibir
+      mensajes nuevos en el buzón. Los sitios que elijan esta opción deberían
+      estar seguros de informar al usuarios del inminente (o actual)
+      agotamiento de la cuota, quizás insertando un mensaje apropiado en
+      el buzón del usuario.
+
+   *  Imponer una política local sobre la retención del correo en el servidor
+
+      Cada sitio es libre de establecer políticas locales con respecto
+      a la retención y almacenamiento de mensajes en el servidor, tanto leídos
+      como no leídos. Por ejemplo, un sitio puede borrar los mensajes no
+      leídos del servidor tras 60 días y los mensajes leídos tras 7 días. Esas
+      operaciones de eliminación quedan fuera del alcance del protocolo POP3
+      y no se una violación del mismo.
+
+      Los operadores de los Servidores que impongan políticas de borrado de
+      mensajes deberían tener especial cuidado en asegurarse de que todos los
+      usuarios estén informados de las normas en uso.
+
+      Los clientes no deben asumir que una política local borrará
+      automáticamente los mensajes, y deberían continuar borrando
+      explícitamente los mensajes utilizando la orden DELE cuando sea
+      apropiado.
+
+      Debe observarse que forzar las políticas de borrado de los sitios puede
+      resultar une fuente de confusión para la comunidad de usuarios, dado que
+      sus clientes POP3 pueden ofrecer opciones de configuración con el fin
+      de dejar el correo en el servidor, las cuales pueden no ser de hecho
+      compatibles con el servidor.
+
+
+
+Myers & Rose                 Standards Track                   [Pág. 17]
+
+RFC 1939                          POP3                          May 1996
+
+
+      Un caso especial de política local es aquél en el cual los mensajes sólo
+      pueden descargarse una vez del servidor, y son eliminados después de
+      ello. Esto puede implementarse en el software del servidor POP3, por el
+      siguiente mecanismo: "tras una sesión POP3 de un cliente que ha
+      terminado con una orden QUIT, borrar todos los mensajes descargados
+      durante la sesión con la orden RETR". Es importante que no se borren
+      mensajes en el caso de que se produzca una finalización de conexión
+      anormal (si no se recibió la orden QUIT del cliente), porque el
+      cliente puedo no haber recibido o almacenado los mensajes con éxito.
+      Los servidores que implementen una política de "transferir y borrar"
+      (download-and-delete), pueden querer limitar el uso de la orden
+      opcional TOP, dado que podría ser utilizado como un mecanismo
+      alternativo para transferir mensajes enteros.
+
+9. Resumen de órdenes POP3
+
+      Órdenes POP3 Mínimas:
+
+         USER nombre               valido en la fase de AUTENTICACIÓN
+         PASS cadena
+         QUIT
+
+         STAT                    válido en la fase de TRANSACCIÓN
+         LIST [msj]
+         RETR msj
+         DELE msj
+         NOOP
+         RSET
+         QUIT
+
+      Órdenes opcionales POP3
+
+         APOP nombre resumen      válido en la fase de AUTORIZACIÓN
+
+         TOP msj n               válido en la fase de TRANSACCIÓN
+         UIDL [msj]
+
+      POP3 Responde:
+
+         +OK
+         -ERR
+
+      Obsérvese que a excepción de las órdenes STAT, LIST y UIDL, la respuesta
+      proporcionada por el servidor POP3 a cualquier orden sólo está restringida
+      a las órdenes "+OK" y "-ERR". El cliente puede ignorar cualquier texto
+      tras estas respuestas.
+
+
+
+
+
+Myers & Rose                 Standards Track                   [Pág. 18]
+
+RFC 1939                          POP3                          May 1996
+
+
+10. Sesión de ejemplo POP3
+
+      S: <espera de conexión POP3 por el puerto 110>
+      C: <conexión abierta>
+      S:    +OK POP3 server ready <1896.697170952@dbc.mtview.ca.us>
+      C:    APOP mrose c4c9334bac560ecc979e58001b3e22fb
+      S:    +OK mrose's mailbox has 2 messages (320 octets)
+      C:    STAT
+      S:    +OK 2 320
+      C:    LIST
+      S:    +OK 2 messages (320 octets)
+      S:    1 120
+      S:    2 200
+      S:    .
+      C:    RETR 1
+      S:    +OK 120 octets
+      S:    <el servidor POP3 envía el mensaje 1>
+      S:    .
+      C:    DELE 1
+      S:    +OK message 1 deleted
+      C:    RETR 2
+      S:    +OK 200 octets
+      S:    <el servidor POP3 envía el mensaje 2>
+      S:    .
+      C:    DELE 2
+      S:    +OK message 2 deleted
+      C:    QUIT
+      S:    +OK dewey POP3 server signing off (mailbox empty)
+      C:  <cierre de la conexión>
+      S:  <espera de la siguiente conexión>
+
+11. Formato de los Mensajes
+
+   Se asume que todos los mensajes transmitidos durante una sesión POP3 siguen
+   el estándar para los mensajes de texto de Internet [RFC822].
+
+   Es importante señalar que la cuenta de octetos de un mensaje en el
+   servidor puede diferir de la cuenta de octetos asignada a ese mensaje,
+   debido a convenciones locales para designar el fin de línea. Normalmente
+   durante la fase de AUTORIZACIÓN de la sesión POP3, el servidor POP3
+   puede  calcular el tamaño de cada mensaje en octetos cuando abre el buzón.
+   Por ejemplo, si el equipo servidor POP3 representa internamente el fin de
+   línea como un sólo carácter, entonces el servidor POP3 simplemente contará
+   cada ocurrencia de este carácter en un mensaje como dos octetos.
+   Obsérvese que  las líneas en el mensaje que comienzan con el carácter de
+   terminación no necesitan (y no deben) ser contadas dos veces, dado que el
+   cliente POP3 eliminará todos los caracteres de terminación antepuestos
+   cuando reciba una respuesta multilínea.
+
+
+
+Myers & Rose                 Standards Track                   [Pág. 19]
+
+RFC 1939                          POP3                          May 1996
+
+
+12. Referencias
+
+   [RFC821] Postel, J., "Simple Mail Transfer Protocol", STD 10, RFC
+       821, USC/Information Sciences Institute, August 1982.
+
+   [RFC822] Crocker, D., "Standard for the Format of ARPA-Internet Text
+       Messages", STD 11, RFC 822, University of Delaware, August 1982.
+
+   [RFC1321] Rivest, R., "The MD5 Message-Digest Algorithm", RFC 1321,
+       MIT Laboratory for Computer Science, April 1992.
+
+   [RFC1730] Crispin, M., "Internet Message Access Protocol - Versión
+       4", RFC 1730, University of Washington, December 1994.
+
+   [RFC1734] Myers, J., "POP3 AUTHentication command", RFC 1734,
+       Carnegie Mellon, December 1994.
+
+13. Consideraciones acerca de seguridad
+
+   Se ha contemplado que el uso de la orden APOP proporcione
+   identificación del origen y protección a la respuesta de una sesión
+   POP3. De forma acorde, un servidor POP3 que implemente tanto las
+   órdenes PASS como la APOP no debería permitir ambos métodos de acceso
+   para un usuario dado; es decir, para un nombre de buzón único, se
+   permite tanto la secuencia de órdenes USER/PASS como la orden APOP,
+   pero no ambos.
+
+   Además, debe apuntarse que según se incrementa la longitud del
+   secreto compartido se incrementa la dificultad de su derivación.
+
+   Los servidores que respondan con el mensaje -ERR a la orden USER
+   están dando pistas a atacantes potenciales sobre nombres válidos.
+
+   El uso de la orden PASS envía claves en claro por la red.
+
+   El uso de las órdenes RETR y TOP envía correo en claro sobre la red.
+
+   Aparte de esto, en este memorándum no se comentan consideraciones de
+   seguridad.
+
+14. Reconocimientos
+
+      La familia POP ha tenido una larga y probada historia. Aunque en
+      principio era una pequeña revisión al RFC 1460, el POP3 está
+   basado
+      en las ideas presentadas en los RFC 918, 937, y 1081.
+
+      Además, Alfred Grimstad, Keith McCloghrie, y Neil Ostroff
+
+
+
+Myers & Rose                 Standards Track                   [Pág. 20]
+
+RFC 1939                          POP3                          May 1996
+
+
+      aportaron importantes observaciones sobre la orden APOP.
+
+15. Dirección de los autores
+
+   John G. Myers
+   Carnegie-Mellon University
+   5000 Forbes Ave
+   Pittsburgh, PA 15213
+
+   EMail: jgm+@cmu.edu
+
+
+   Marshall T. Rose
+   Dover Beach Consulting, Inc.
+   420 Whisman Court
+   Mountain View, CA  94043-2186
+
+   EMail: mrose@dbc.mtview.ca.us
+
+   Traductor al español:
+   Juanjo Álvarez Martínez
+   Calle Silicio 21
+   Torrejón de Ardoz, Madrid 28850
+   España
+
+   EMail: jajs@retemail.es
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Myers & Rose                 Standards Track                   [Pág. 21]
+
+RFC 1939                          POP3                          May 1996
+
+
+Anexo A. Diferencias con el RFC 1725
+
+   Este memorándum es una revisión al RFC 1725, un Borrador de Estándar.
+   Hace los siguientes cambios a ese documento:
+
+      - aclara que las órdenes no toman en cuenta la diferencia entre
+      mayúsculas y minúsculas.
+
+      - aclara que los servidores deben enviar "+OK" y "-ERR" en
+     mayúsculas.
+
+      - especifica que el saludo inicial es una respuesta positiva en lugar de
+     cualquier cadena que debería ser una respuesta positiva.
+
+      - aclara el comportamiento para las órdenes no implementadas.
+
+      - hace que las órdenes USER y PASS sean opcionales.
+
+      - aclara el conjunto de posibles respuestas a la orden USER.
+
+      - invierte el orden de los ejemplos de las órdenes USER y PASS para
+     reducir la confusión.
+
+      - aclara que la orden PASS sólo puede darse inmediatamente después
+     de una orden USER con éxito.
+
+      - aclara que se requiere persistencia de los UID y añade algunas
+     notas de implementación.
+
+      - especifica una longitud del UID de uno a 70 octetos.
+
+      - especifica que la longitud de un indicador de estado está limitada a
+     512 octetos, incluyendo el CRLF.
+
+      - aclara que LIST sin argumentos en un buzón vacío devuelve éxito.
+
+      - añade una referencia a la orden LIST en la sección de formato de los
+     mensajes.
+
+      - aclara el comportamiento de la orden QUIT en caso de fallo.
+
+      - aclara en la sección de seguridad que usar la orden APOP no
+     implica el uso de la orden USER.
+
+      - añade referencias a los RFC 1730 y 1734.
+
+      - aclara el método por el cual un UA (User Agent, agente de usuario)
+     puede introducir correo en el sistema de transporte.
+
+
+
+Myers & Rose                 Standards Track                   [Pág. 22]
+
+RFC 1939                          POP3                          May 1996
+
+
+      - aclara que el segundo argumento a la orden TOP es un número de
+     líneas.
+
+      - cambia la sugerencia en la sección sobe las Consideraciones de
+        seguridad sobre que un servidor no acepte dos órdenes PASS y APOP
+         juntos para un mismo usuario de un "debe" a un "debería".
+
+      - agrega una sección sobre Consideraciones operativas y de escalabilidad.
+
+Anexo B. Índice de órdenes
+
+       APOP .......................................................   15
+       DELE .......................................................    8
+       LIST .......................................................    6
+       NOOP .......................................................    9
+       PASS .......................................................   14
+       QUIT .......................................................    5
+       QUIT .......................................................   10
+       RETR .......................................................    8
+       RSET .......................................................    9
+       STAT .......................................................    6
+       TOP ........................................................   11
+       UIDL .......................................................   12
+       USER .......................................................   13
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Myers & Rose                 Standards Track                   [Pág. 23]
+
