@@ -11,7 +11,7 @@ public class TCPServer {
 			while (!Thread.interrupted()) {
 				final Socket connectionSocket = welcomeSocket.accept();
 				System.out.println("Conexión aceptada");
-				final Thread test = new Thread(new MyThread(connectionSocket));
+				final Thread test = new Thread(new EchoSocketServer(connectionSocket));
 				test.start();
 			}
 		} catch (final IOException e) {

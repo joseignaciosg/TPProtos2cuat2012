@@ -3,11 +3,11 @@ import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
-public class MyThread implements Runnable {
+public class EchoSocketServer implements Runnable {
 
 	private Socket connectionSocket;
 
-	public MyThread(final Socket connectionSocket) {
+	public EchoSocketServer(final Socket connectionSocket) {
 		this.connectionSocket = connectionSocket;
 	}
 
@@ -18,17 +18,16 @@ public class MyThread implements Runnable {
 			String capitalizedSentence;
 			do {
 				final BufferedReader inFromClient = new BufferedReader(
-						new InputStreamReader(
-								this.connectionSocket.getInputStream()));
+						new InputStreamReader(connectionSocket.getInputStream()));
 				final DataOutputStream outToClient = new DataOutputStream(
-						this.connectionSocket.getOutputStream());
+						connectionSocket.getOutputStream());
 				clientSentence = inFromClient.readLine();
 				System.out.println("Received: " + clientSentence);
 				capitalizedSentence = clientSentence.toUpperCase() + '\n';
 				outToClient.writeBytes(capitalizedSentence);
 			} while (!capitalizedSentence.equals("END\n"));
 			System.out.println("Cerrando conexión...");
-			this.connectionSocket.close();
+			connectionSocket.close();
 		} catch (final Exception e) {
 		}
 
