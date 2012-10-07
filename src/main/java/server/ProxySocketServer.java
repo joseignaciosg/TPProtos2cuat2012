@@ -1,9 +1,12 @@
+package server;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
-import server.AbstractSockectServer;
+import parser.MimeParser;
+
 
 public class ProxySocketServer extends AbstractSockectServer {
 

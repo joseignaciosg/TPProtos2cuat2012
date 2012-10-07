@@ -1,4 +1,4 @@
-import server.GenericServer;
+package server;
 
 public class ProxyServer {
 
