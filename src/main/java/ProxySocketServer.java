@@ -16,41 +16,81 @@ public class ProxySocketServer implements Runnable {
 		try {
 			String muaSentence;
 			String originServerSentence;
-			do {
-				// Abro socket hacia el origin server
-				Socket proxyToOriginServerSocket;
-				proxyToOriginServerSocket = new Socket("localhost", 9090); // pop3.alu.itba.edu.ar
+			DataOutputStream outToOriginServer;
+			BufferedReader inFromMUA;
+			BufferedReader inFromOriginServer;
+			DataOutputStream outToMUA;
+			Socket proxyToOriginServerSocket;
 
-				final BufferedReader inFromMUA = new BufferedReader(
-						new InputStreamReader(muaSocket.getInputStream()));
+			// Abro socket hacia el origin server en el puerto 110 (ej. pop3.alu.itba.edu.ar)
+			proxyToOriginServerSocket = new Socket("mail.josegalindo.com.ar", 110);
+
+			inFromOriginServer = new BufferedReader(new InputStreamReader(
+					proxyToOriginServerSocket.getInputStream()));
+
+			// Respuesta del origin server
+			originServerSentence = inFromOriginServer.readLine();
+			System.out.println("PROXY: Received from Origin Server: "
+					+ originServerSentence);
+
+			// Le forwardeo los datos que me envió el origin server al MUA
+			outToMUA = new DataOutputStream(muaSocket.getOutputStream());
+			outToMUA.writeBytes(originServerSentence + "\r\n");
+			
+			inFromMUA = new BufferedReader(new InputStreamReader(
+					muaSocket.getInputStream()));
+
+			// Leo datos del MUA
+			muaSentence = inFromMUA.readLine();
+			System.out.println("PROXY: Received MUA Sentence: " + muaSentence);
+
+			// Forwardeo datos del MUA hacia Origin Server
+
+			outToOriginServer = new DataOutputStream(
+					proxyToOriginServerSocket.getOutputStream());
+
+			// Le envio al origin server lo que me paso el MUA
+			outToOriginServer.writeBytes(muaSentence + "\r\n");
+
+			// clientSocket.close();
+			do {
+				
+				if(muaSentence.equals("CAPA") || muaSentence.equals("LIST") || muaSentence.equals("UIDL")
+				  || muaSentence.contains("RETR")){
+					originServerSentence = inFromOriginServer.readLine();
+					while(!originServerSentence.equals(".")){
+						// Le forwardeo los datos que me envió el origin server al MUA
+						System.out.println("PROXY: Forwarding to MUA: " + originServerSentence);
+						outToMUA.writeBytes(originServerSentence + "\r\n");
+						
+						// Respuesta del origin server
+						originServerSentence = inFromOriginServer.readLine();
+						System.out.println("PROXY: Received from Origin Server: " + originServerSentence);
+						
+					}
+					
+					// Le forwardeo los datos que me envió el origin server al MUA
+					outToMUA.writeBytes(".\r\n");
+
+				}else{				
+					// Respuesta del origin server
+					originServerSentence = inFromOriginServer.readLine();
+					System.out.println("PROXY: Received from Origin Server: "
+							+ originServerSentence);
+	
+					// Le forwardeo los datos que me envió el origin server al MUA
+					outToMUA.writeBytes(originServerSentence + "\r\n");
+				}
 				
 				// Leo datos del MUA
 				muaSentence = inFromMUA.readLine();
-				System.out.println("PROXY: Received MUA Sentence: " + muaSentence);
-				
-				// Forwardeo datos del MUA hacia Origin Server
-				
-				final DataOutputStream outToOriginServer = new DataOutputStream(
-						proxyToOriginServerSocket.getOutputStream());
-				
+				System.out.println("PROXY: Received MUA Sentence: "
+						+ muaSentence);
+
 				// Le envio al origin server lo que me paso el MUA
-				outToOriginServer.writeBytes(muaSentence + '\n');
+				outToOriginServer.writeBytes(muaSentence + "\r\n");
 
-				BufferedReader inFromOriginServer = new BufferedReader(
-						new InputStreamReader(System.in));
-				
-				// Respuesta del origin server
-				originServerSentence = inFromOriginServer.readLine();
-				System.out.println("PROXY: Received from Origin Server: " + originServerSentence);
-				
-				// Le forwardeo los datos que me envió el origin server al MUA
-				final DataOutputStream outToMUA = new DataOutputStream(
-						muaSocket.getOutputStream());
-				outToMUA.writeBytes(originServerSentence);
-
-				//clientSocket.close();
-				
-			} while (!muaSentence.equals("END\n"));
+			} while (!muaSentence.toUpperCase().equals("END"));
 			System.out.println("Cerrando conexión...");
 			this.muaSocket.close();
 		} catch (final Exception e) {
