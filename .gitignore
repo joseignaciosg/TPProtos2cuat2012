@@ -1,7 +1,9 @@
-bin
-bin/*
-target/*
-.classpath
 *.class
+*.jar
+*.classpath
+bin/*
+war.*
+target/*
+*~
+*.prefs
 .project
-.settings/*
