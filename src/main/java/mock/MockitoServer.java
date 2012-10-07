@@ -19,9 +19,11 @@ public class MockitoServer implements Server {
 	public MockitoServer() {
 		final Pattern deleteNumber = Pattern.compile("DELE (.+?)");
 		final Pattern apopUser = Pattern.compile("APOP (.+?) ");
+		final Pattern userName = Pattern.compile("USER (.+?) ");
 		
 		mocked = mock(Server.class);
-		when(mocked.exec(null)).thenReturn("+OK POP3 server ready\n");
+		when(mocked.exec(null)).thenReturn("+OK POP3 server ready\r\n");
+		when(mocked.exec("CAPA")).thenReturn("+OK\r\nCAPA\r\nTOP\r\nUIDL\r\nRESP-CODES\r\nPIPELINING\r\nUSER\r\nSASL PLAIN LOGIN\r\n.\r\n");
 		when(mocked.exec(matches("APOP (\\w)+ (\\w)+"))).thenAnswer(
 			new Answer<String>() {
 				@Override
@@ -29,12 +31,13 @@ public class MockitoServer implements Server {
 					Object[] args = invocation.getArguments();
 					Matcher matcher = apopUser.matcher((String) args[0]);
 					matcher.find();
-					return "+OK " + matcher.group(1) + "'s maildrop has 2 messages (240 octets)\n";
+					return "+OK " + matcher.group(1) + "'s maildrop has 2 messages (240 octets)\r\n";
 				}
 			}
 		);
-		when(mocked.exec("STAT")).thenReturn("+OK 2 240\n");
-		when(mocked.exec("LIST")).thenReturn("+OK 2 messages (240 octets)\n1 120\n2 120\n.\n");
+		when(mocked.exec("STAT")).thenReturn("+OK 2 240\r\n");
+		when(mocked.exec("UIDL")).thenReturn("+OK\r\n");
+		when(mocked.exec("LIST")).thenReturn("+OK 2 messages (240 octets)\r\n1 120\r\n2 120\r\n.\r\n");
 		when(mocked.exec(matches("DELE (\\d)+"))).thenAnswer(
 			new Answer<String>() {
 				@Override
@@ -43,7 +46,7 @@ public class MockitoServer implements Server {
 					Matcher matcher = deleteNumber.matcher((String) args[0]);
 					System.out.println(args[0]);
 					matcher.find();
-					return "+OK message " + matcher.group(1) + " deleted\n";
+					return "+OK message " + matcher.group(1) + " deleted\r\n";
 				}
 			}
 		);
@@ -57,11 +60,22 @@ public class MockitoServer implements Server {
 						mail += "A";
 						size--;
 					}
-					return "+OK 120 octets\nThis is the message " + mail + "\n.\n";
+					return "+OK 120 octets\r\nThis is the message " + mail + "\r\n.\r\n";
 				}
 			}
 		);
-		when(mocked.exec("QUIT")).thenReturn("+OK dewey POP3 server signing off (maildrop empty)\n");
+		when(mocked.exec(matches("USER (\\w)+"))).thenAnswer(
+				new Answer<String>() {
+					@Override
+					public String answer(InvocationOnMock invocation) throws Throwable {
+						Object[] args = invocation.getArguments();
+						Matcher matcher = userName.matcher((String) args[0] + " ");
+						matcher.find();
+						return "+OK " + matcher.group(1) + " is a real hoopy frood\r\n";
+					}
+				}
+			);
+		when(mocked.exec("QUIT")).thenReturn("+OK dewey POP3 server signing off (maildrop empty)\r\n");
 	}
 
 	@Override
