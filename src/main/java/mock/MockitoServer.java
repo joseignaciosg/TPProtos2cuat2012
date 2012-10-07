@@ -15,8 +15,10 @@ import server.Server;
 public class MockitoServer implements Server {
 
 	private Server mocked;
+	private boolean authLogin;
 	
 	public MockitoServer() {
+		authLogin = false;
 		final Pattern deleteNumber = Pattern.compile("DELE (.+?)");
 		final Pattern apopUser = Pattern.compile("APOP (.+?) ");
 		final Pattern userName = Pattern.compile("USER (.+?) ");
@@ -37,6 +39,7 @@ public class MockitoServer implements Server {
 		);
 		when(mocked.exec(matches("PASS (.+?)"))).thenReturn("+OK Logged In.\r\n");
 		when(mocked.exec("STAT")).thenReturn("+OK 2 240\r\n");
+		when(mocked.exec("STAT")).thenReturn("+r\n");
 		when(mocked.exec("UIDL")).thenReturn("+OK\r\n1 UID1-" + (int) (Math.random()*1000) + "\r\n2 UID2-" + (int) (Math.random()*1000) + "\r\n.\r\n");
 		when(mocked.exec("LIST")).thenReturn("+OK 2 messages (240 octets)\r\n1 120\r\n2 120\r\n.\r\n");
 		when(mocked.exec(matches("DELE (\\d)+"))).thenAnswer(
@@ -81,6 +84,14 @@ public class MockitoServer implements Server {
 
 	@Override
 	public String exec(String line) {
+		if (authLogin) {
+			authLogin = false;
+			return "+OK Logged in.\r\n";
+		}
+		if ("AUTH PLAIN".equals(line)) {
+			authLogin = true;
+			return "+\r\n";
+		}
 		return mocked.exec(line);
 	}
 
