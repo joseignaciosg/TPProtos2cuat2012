@@ -1,6 +1,6 @@
-package mock;
+package server;
 
-import server.GenericServer;
+import mock.MockedSocketEmailServer;
 
 public class EmailServerMain {
 
