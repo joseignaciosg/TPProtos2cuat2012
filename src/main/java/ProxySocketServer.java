@@ -19,7 +19,7 @@ public class ProxySocketServer implements Runnable {
 			do {
 				// Abro socket hacia el origin server
 				Socket proxyToOriginServerSocket;
-				proxyToOriginServerSocket = new Socket("localhost", 8081); // pop3.alu.itba.edu.ar
+				proxyToOriginServerSocket = new Socket("localhost", 9090); // pop3.alu.itba.edu.ar
 
 				final BufferedReader inFromMUA = new BufferedReader(
 						new InputStreamReader(muaSocket.getInputStream()));
