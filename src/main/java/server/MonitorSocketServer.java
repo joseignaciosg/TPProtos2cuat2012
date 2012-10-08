@@ -27,15 +27,12 @@ public class MonitorSocketServer extends AbstractSockectServer {
 		} else {
 			taskTimer = new Timer();
 			long timerDelay = 2*1000;                   // 5 seconds delay
-
-			// Schedule the two timers to run with different delays.
-			taskTimer.schedule(new MonitorTask("object1"), 0, timerDelay);
-			
 			InputStream in = getClass().getClassLoader().getResourceAsStream(Config.getInstance().get("statistics_file"));
-			Scanner scanner = new Scanner(in);
-			while(scanner.hasNextLine()){
-				outToClient.writeBytes("\n\n" +  scanner.nextLine() + "\n\n" );
-			}
+
+			// Schedule the timer to run the task
+			taskTimer.schedule(new MonitorTask("monitorTask", outToClient, in), 0, timerDelay);
+			
+			
 		}
 		
 		if("QUIT".equals(command.toUpperCase())){
@@ -48,6 +45,7 @@ public class MonitorSocketServer extends AbstractSockectServer {
 
 	private boolean validatePassword(String command) {
 		if (Config.getInstance().get("monitor_password").equals(command)) {
+			loggedIn = true;
 			return true;
 		}
 		return false;
