@@ -58,7 +58,7 @@ public class Config {
 		properties.put(key, value);
 	}
 	
-	public Config getConfig(String fileNamekey) {
+	public synchronized Config getConfig(String fileNamekey) {
 		String file = Config.getInstance().get(fileNamekey);
 		if (specificConfigs.containsKey(file)) {
 			return specificConfigs.get(file);
@@ -74,7 +74,7 @@ public class Config {
 		}
 	}
 	
-	private synchronized Config getSpecific(String file) {
+	private Config getSpecific(String file) {
 		try {
 			String dir = properties.getProperty("specific_conf_dir");
 			Config specific = new Config(dir + file);

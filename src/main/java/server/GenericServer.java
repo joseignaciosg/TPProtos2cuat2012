@@ -18,13 +18,12 @@ public class GenericServer implements Runnable {
 	@Override
 	public void run() {
 		try {
-			System.out.println("TCP Server initialized for attending class " + serverClass + ". Port: " + port);
 			ServerSocket welcomeSocket = new ServerSocket(port);
 			while (!Thread.interrupted()) {
 				final Socket connectionSocket = welcomeSocket.accept();
 				AbstractSockectServer server = createInstance(serverClass);
 				server.setSocket(connectionSocket);
-				System.out.println("Conexión aceptada - new instance of " + serverClass);
+				System.out.println("Conection accepted. Attending Server: " + serverClass);
 				new Thread(server).start();
 			}
 			System.out.println("TCP Server ended, closing connection.");
