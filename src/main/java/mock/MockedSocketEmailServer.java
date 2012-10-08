@@ -31,6 +31,6 @@ public class MockedSocketEmailServer extends AbstractSockectServer {
 		outToClient.writeBytes(ans);
 		return "QUIT".equals(ans.toUpperCase());
 	}
-
+	
 
 }

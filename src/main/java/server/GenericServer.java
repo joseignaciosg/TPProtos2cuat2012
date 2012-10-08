@@ -24,7 +24,7 @@ public class GenericServer implements Runnable {
 				final Socket connectionSocket = welcomeSocket.accept();
 				AbstractSockectServer server = createInstance(serverClass);
 				server.setSocket(connectionSocket);
-				System.out.println("ConexiÃ³n aceptada - new instance of " + serverClass);
+				System.out.println("Conexión aceptada - new instance of " + serverClass);
 				new Thread(server).start();
 			}
 			System.out.println("TCP Server ended, closing connection.");
