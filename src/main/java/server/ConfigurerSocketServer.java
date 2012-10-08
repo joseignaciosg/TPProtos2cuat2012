@@ -1,0 +1,98 @@
+package server;
+
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+import util.Config;
+
+public class ConfigurerSocketServer extends AbstractSockectServer {
+
+	private static Config configurerConfig = Config.getInstance().getConfig(
+			"configurer_conf");
+
+	private DataOutputStream outToClient;
+	private boolean loggedIn = false;
+	private int maxInvalidLogInAttempts;
+
+	@Override
+	public void run() {
+		boolean endOfTransmission;
+		try {
+			this.initialize();
+			do {
+				final BufferedReader inFromClient = new BufferedReader(
+						new InputStreamReader(this.socket.getInputStream()));
+				final char[] clientSentence = new char[100];
+				final int eof = inFromClient.read(clientSentence);
+				final String clientSentenceString = new String(clientSentence);
+				System.out.println(this.getClass().getSimpleName()
+						+ " -- Command: " + clientSentenceString);
+				if (eof != -1) {
+					endOfTransmission = this.exec(clientSentenceString);
+				} else {
+					// Connection has been closed or pipe broken...
+					endOfTransmission = true;
+				}
+			} while (!endOfTransmission);
+			this.end();
+		} catch (final Exception e) {
+			e.printStackTrace();
+		}
+		try {
+			this.socket.close();
+		} catch (final IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	protected boolean exec(final String command) throws Exception {
+		final String[] lines = command.split("\n");
+		System.out.println("dashjdahsjd " + lines[0] + "daghsgdjahs");
+		if (!this.validatePassword(lines[0])) {
+			this.outToClient
+					.writeBytes("The password is not correct. Try again\n.");
+			return true;
+		}
+		for (int i = 0; i < lines.length; i++) {
+			System.out.println("-" + lines[i] + "-");
+			if (lines[i].endsWith(".conf")) {
+				this.outToClient
+						.writeBytes("configuring: " + lines[i++] + "\n");
+				while (!lines[i].equals(".")) {
+					this.outToClient.writeBytes("\t adding:" + lines[i++]
+							+ "\n");
+				}
+			}
+		}
+
+		return true;
+	}
+
+	private boolean validatePassword(final String command) {
+		if (configurerConfig.get("password").equals(command)) {
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	protected void initialize() throws Exception {
+		this.outToClient = new DataOutputStream(this.socket.getOutputStream());
+		this.maxInvalidLogInAttempts = 0;
+		super.initialize();
+		this.outToClient.writeBytes(this.getHeader());
+	}
+
+	@Override
+	protected void end() throws Exception {
+		this.loggedIn = false;
+	}
+
+	private String getHeader() {
+		return "\n\n**********************************************************\n**\t\tPOP3 Proxy - Configurer Server\t\t**\n**********************************************************\n\n\n";
+	}
+
+}
