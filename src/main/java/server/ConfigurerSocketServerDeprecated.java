@@ -6,8 +6,7 @@ import util.Config;
 
 public class ConfigurerSocketServerDeprecated extends AbstractSockectServer {
 
-	private static Config configurerConfig = Config.getInstance().getConfig(
-			"configurer_conf");
+	private static Config configurerConfig = Config.getInstance().getConfig("configurer_conf");
 
 	private DataOutputStream outToClient;
 	private boolean loggedIn = false;

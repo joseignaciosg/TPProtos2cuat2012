@@ -6,7 +6,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
+
 public class Config {
+	
+	private static Logger logger = Logger.getLogger(Config.class);
 	
 	private static final String CONFIG_FILE = "project.properties";
 	
@@ -70,6 +74,7 @@ public class Config {
 	
 	public synchronized void update(String file) {
 		if (specificConfigs.containsKey(file)) {
+			logger.info("Updating content on memory for " + file);
 			specificConfigs.put(file, getSpecific(file));
 		}
 	}

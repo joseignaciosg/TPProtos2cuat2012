@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import org.apache.log4j.Logger;
 
 import util.Config;
+import util.ConfigWriter;
 
 public class ConfigurerSocketServer extends AbstractSockectServer {
 
@@ -61,11 +62,19 @@ public class ConfigurerSocketServer extends AbstractSockectServer {
 			return true;
 		}
 		for (int i = 0; i < lines.length; i++) {
-			if (lines[i].endsWith(".conf")) {
-				this.outToClient.writeBytes("configuring: " + lines[i++] + "\n");
-				while (!lines[i].equals(".")) {
-					this.outToClient.writeBytes("\t adding:" + lines[i++] + "\n");
-				}
+			String fileName = lines[i];
+			if (fileName.endsWith(".conf")) {
+				ConfigWriter writer = new ConfigWriter(fileName);
+				outToClient.writeBytes("configuring: " + lines[i++] + "\n");
+				String line;
+				do {
+					line = lines[i++];
+					if (!".".equals(line)) {
+						writer.appendLine(line);						
+						logger.debug("\tadding:" + line);
+					}
+				} while (!".".equals(line));
+				writer.flush();
 			}
 		}
 		return true;

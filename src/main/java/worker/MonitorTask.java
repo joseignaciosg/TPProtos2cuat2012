@@ -28,7 +28,7 @@ public class MonitorTask extends TimerTask {
 	 * When the timer executes, this code is run.
 	 */
 	public void run() {
-		logger.debug(taskName + " is not excecuting.");
+		// logger.debug(taskName + " is now excecuting.");
 		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
 		String current_time = format.format(new Date());
 		try {
