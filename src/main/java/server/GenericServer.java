@@ -4,8 +4,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import org.apache.log4j.Logger;
+
 
 public class GenericServer implements Runnable {
+	
+	private static Logger logger = Logger.getLogger(GenericServer.class);
 	
 	private int port;
 	private Class<? extends AbstractSockectServer> serverClass;
@@ -23,10 +27,10 @@ public class GenericServer implements Runnable {
 				final Socket connectionSocket = welcomeSocket.accept();
 				AbstractSockectServer server = createInstance(serverClass);
 				server.setSocket(connectionSocket);
-				System.out.println("Conection accepted. Attending Server: " + serverClass);
+				logger.info("Conection accepted. Attending Server: " + serverClass);
 				new Thread(server).start();
 			}
-			System.out.println("TCP Server ended, closing connection.");
+			logger.info("TCP Server ended, closing connection.");
 			welcomeSocket.close();
 		} catch (Exception e) {
 			e.printStackTrace();

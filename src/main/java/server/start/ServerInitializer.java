@@ -3,12 +3,16 @@ package server.start;
 import java.io.InputStream;
 import java.util.Scanner;
 
+import org.apache.log4j.Logger;
+
 import server.AbstractSockectServer;
 import server.GenericServer;
 import util.StringUtil;
 
 public class ServerInitializer {
 
+	private static Logger logger = Logger.getLogger(ProxyInitializer.class);
+	
 	public void initialize(String fileName) {
 		InputStream in = getClass().getClassLoader().getResourceAsStream(fileName);
 		Scanner scanner = new Scanner(in);
@@ -42,20 +46,20 @@ public class ServerInitializer {
 				new Thread(new GenericServer(port, clazz)).start();
 				return true;
 			} else {
-				System.out.println(className + " does not extend " + AbstractSockectServer.class);
+				logger.error(className + " does not extend " + AbstractSockectServer.class);
 				return false;
 			}
 		} catch (ClassNotFoundException e) {
-			System.out.println("Could not find class " + className);
+			logger.error("Could not find class " + className);
 			return false;
 		}
 	}
 	
 	private void printStatus(String status, boolean isError) {
 		if (isError) {
-			System.out.println("[ERROR]\t " + status);
+			logger.error("[ERROR]\t " + status);
 		} else {
-			System.out.println("[OK]\t " + status);
+			logger.info("[OK]\t " + status);
 		}
 	}
 }
