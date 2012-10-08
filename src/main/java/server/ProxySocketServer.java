@@ -5,9 +5,8 @@ import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
-import parser.MimeParser;
+import parser.impl.MailWorker;
 import util.Config;
-
 
 public class ProxySocketServer extends AbstractSockectServer {
 
@@ -15,39 +14,45 @@ public class ProxySocketServer extends AbstractSockectServer {
 	private BufferedReader inFromOriginServer;
 	private DataOutputStream outToMUA;
 	private DataOutputStream outToOriginServer;
-	private MimeParser mimeParser;
+	private MailWorker mailWorker;
 
 	@Override
 	protected void initialize() throws Exception {
-		mimeParser = new MimeParser();
+		this.mailWorker = new MailWorker();
 		String originServerSentence;
-		String address = Config.getInstance().get("mail_address");
-		int port = Config.getInstance().getInt("mail_port");
-		originServerSocket = new Socket(address, port);
-		inFromOriginServer = new BufferedReader(new InputStreamReader(originServerSocket.getInputStream()));
-		outToOriginServer = new DataOutputStream(originServerSocket.getOutputStream());
-		originServerSentence = inFromOriginServer.readLine();
-		System.out.println("PROXY: Received from Origin Server: " + originServerSentence);
-		outToMUA = new DataOutputStream(socket.getOutputStream());
-		outToMUA.writeBytes(originServerSentence + "\r\n");
+		final String address = Config.getInstance().get("mail_address");
+		final int port = Config.getInstance().getInt("mail_port");
+		this.originServerSocket = new Socket(address, port);
+		this.inFromOriginServer = new BufferedReader(new InputStreamReader(
+				this.originServerSocket.getInputStream()));
+		this.outToOriginServer = new DataOutputStream(
+				this.originServerSocket.getOutputStream());
+		originServerSentence = this.inFromOriginServer.readLine();
+		System.out.println("PROXY: Received from Origin Server: "
+				+ originServerSentence);
+		this.outToMUA = new DataOutputStream(this.socket.getOutputStream());
+		this.outToMUA.writeBytes(originServerSentence + "\r\n");
 	}
 
 	@Override
 	protected boolean exec(final String command) throws Exception {
 		String serverResponse;
-		outToOriginServer.writeBytes(command + "\r\n");
-		if (command.equals("CAPA") || command.equals("LIST") || command.equals("UIDL")) {
+		this.outToOriginServer.writeBytes(command + "\r\n");
+		if (command.equals("CAPA") || command.equals("LIST")
+				|| command.equals("UIDL")) {
 			do {
-				serverResponse = inFromOriginServer.readLine();
-				outToMUA.writeBytes(serverResponse + "\r\n");
-				System.out.println("PROXY: Received from Origin Server: " + serverResponse);
+				serverResponse = this.inFromOriginServer.readLine();
+				this.outToMUA.writeBytes(serverResponse + "\r\n");
+				System.out.println("PROXY: Received from Origin Server: "
+						+ serverResponse);
 			} while (!serverResponse.equals("."));
 		} else if (command.contains("RETR")) {
-			mimeParser.parse(inFromOriginServer, outToMUA);
+			this.mailWorker.parse(this.inFromOriginServer, this.outToMUA);
 		} else {
-			serverResponse = inFromOriginServer.readLine();
-			outToMUA.writeBytes(serverResponse + "\r\n");
-			System.out.println("PROXY: Received from Origin Server: " + serverResponse);
+			serverResponse = this.inFromOriginServer.readLine();
+			this.outToMUA.writeBytes(serverResponse + "\r\n");
+			System.out.println("PROXY: Received from Origin Server: "
+					+ serverResponse);
 		}
 		return "QUIT".equals(command.toUpperCase());
 	}
