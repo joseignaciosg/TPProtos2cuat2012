@@ -49,7 +49,7 @@ public class ProxySocketServer extends AbstractSockectServer {
 			outToMUA.writeBytes(serverResponse + "\r\n");
 			System.out.println("PROXY: Received from Origin Server: " + serverResponse);
 		}
-		return false;
+		return "QUIT".equals(command.toUpperCase());
 	}
 
 }

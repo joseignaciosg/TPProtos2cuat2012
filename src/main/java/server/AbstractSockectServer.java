@@ -1,6 +1,7 @@
 package server;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
@@ -21,10 +22,19 @@ public abstract class AbstractSockectServer implements Runnable {
 				final BufferedReader inFromClient = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 				String clientSentence = inFromClient.readLine();
 				System.out.println(getClass().getSimpleName() + " -- Command: " + clientSentence);
-				endOfTransmission = exec(clientSentence);
+				if (clientSentence != null) {					
+					endOfTransmission = exec(clientSentence);
+				} else {
+					// Connection has been closed or pipe broken...
+					endOfTransmission = true;
+				}
 			} while (!endOfTransmission);
-			socket.close();
 		} catch (final Exception e) {
+			e.printStackTrace();
+		}
+		try {
+			socket.close();
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
