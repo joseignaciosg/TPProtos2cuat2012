@@ -5,9 +5,18 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 
-public class GenericServer {
+public class GenericServer implements Runnable {
 	
-	public void run(int port, Class<? extends AbstractSockectServer> serverClass) {
+	private int port;
+	private Class<? extends AbstractSockectServer> serverClass;
+
+	public GenericServer(int port, Class<? extends AbstractSockectServer> serverClass) {
+		this.port = port;
+		this.serverClass = serverClass;
+	}
+	
+	@Override
+	public void run() {
 		try {
 			System.out.println("TCP Server initialized for attending class " + serverClass + ". Port: " + port);
 			ServerSocket welcomeSocket = new ServerSocket(port);
