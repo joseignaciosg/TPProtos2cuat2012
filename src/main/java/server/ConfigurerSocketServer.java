@@ -13,9 +13,7 @@ public class ConfigurerSocketServer extends AbstractSockectServer {
 			"configurer_conf");
 
 	private DataOutputStream outToClient;
-	private boolean loggedIn = false;
-	private int maxInvalidLogInAttempts;
-
+	
 	@Override
 	public void run() {
 		boolean endOfTransmission;
@@ -36,7 +34,6 @@ public class ConfigurerSocketServer extends AbstractSockectServer {
 					endOfTransmission = true;
 				}
 			} while (!endOfTransmission);
-			this.end();
 		} catch (final Exception e) {
 			e.printStackTrace();
 		}
@@ -47,6 +44,12 @@ public class ConfigurerSocketServer extends AbstractSockectServer {
 		}
 	}
 
+	@Override
+	protected void initialize() throws Exception {
+		this.outToClient = new DataOutputStream(this.socket.getOutputStream());
+		this.outToClient.writeBytes(this.getHeader());
+	}
+	
 	@Override
 	protected boolean exec(final String command) throws Exception {
 		final String[] lines = command.split("\n");
@@ -76,19 +79,6 @@ public class ConfigurerSocketServer extends AbstractSockectServer {
 			return true;
 		}
 		return false;
-	}
-
-	@Override
-	protected void initialize() throws Exception {
-		this.outToClient = new DataOutputStream(this.socket.getOutputStream());
-		this.maxInvalidLogInAttempts = 0;
-		super.initialize();
-		this.outToClient.writeBytes(this.getHeader());
-	}
-
-	@Override
-	protected void end() throws Exception {
-		this.loggedIn = false;
 	}
 
 	private String getHeader() {
