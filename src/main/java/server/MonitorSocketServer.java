@@ -1,8 +1,6 @@
 package server;
 
 import java.io.DataOutputStream;
-import java.io.InputStream;
-import java.util.Scanner;
 import java.util.Timer;
 
 import monitor.MonitorTask;
@@ -10,6 +8,8 @@ import util.Config;
 
 public class MonitorSocketServer extends AbstractSockectServer {
 
+	private static Config monitorConfig = Config.getInstance().getConfig("monitor_conf");
+	
 	private DataOutputStream outToClient;
 	private boolean loggedIn = false;
 	private int maxInvalidLogInAttempts;
@@ -26,25 +26,20 @@ public class MonitorSocketServer extends AbstractSockectServer {
 			return false;
 		} else {
 			taskTimer = new Timer();
-			long timerDelay = 2*1000;                   // 5 seconds delay
-			InputStream in = getClass().getClassLoader().getResourceAsStream(Config.getInstance().get("statistics_file"));
-
+			long timerDelay = monitorConfig.getInt("refresh_rate_ms");                   // 5 seconds delay
+			
 			// Schedule the timer to run the task
-			taskTimer.schedule(new MonitorTask("monitorTask", outToClient, in), 0, timerDelay);
-			
-			
+			taskTimer.schedule(new MonitorTask("monitorTask", outToClient), 0, timerDelay);
 		}
-		
-		if("QUIT".equals(command.toUpperCase())){
+		if ("QUIT".equals(command.toUpperCase())) {
 			end();
 			return true;
 		}
-		
 		return false;
 	}
 
 	private boolean validatePassword(String command) {
-		if (Config.getInstance().get("monitor_password").equals(command)) {
+		if (monitorConfig.get("password").equals(command)) {
 			loggedIn = true;
 			return true;
 		}
@@ -62,13 +57,12 @@ public class MonitorSocketServer extends AbstractSockectServer {
 	
 	@Override
 	protected void end() throws Exception {
-		if(taskTimer != null){
-			taskTimer.cancel();
-		}
+		taskTimer.cancel();
+		loggedIn = false;
 	}
 
 	private String getHeader() {
-		return Config.getInstance().get("monitor_header");
+		return "\n\n**********************************************************\n**\t\tPOP3 Proxy - Monitor Server\t\t**\n**********************************************************\n\n\n";
 	}
 
 }
