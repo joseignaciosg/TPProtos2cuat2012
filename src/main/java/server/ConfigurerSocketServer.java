@@ -5,10 +5,13 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import org.apache.log4j.Logger;
+
 import util.Config;
 
 public class ConfigurerSocketServer extends AbstractSockectServer {
 
+	private static Logger logger = Logger.getLogger(ConfigurerSocketServer.class);
 	private static Config configurerConfig = Config.getInstance().getConfig(
 			"configurer_conf");
 
@@ -25,8 +28,7 @@ public class ConfigurerSocketServer extends AbstractSockectServer {
 				final char[] clientSentence = new char[100];
 				final int eof = inFromClient.read(clientSentence);
 				final String clientSentenceString = new String(clientSentence);
-				System.out.println(this.getClass().getSimpleName()
-						+ " -- Command: " + clientSentenceString);
+				logger.info(this.getClass().getSimpleName() + " -- Command: " + clientSentenceString);
 				if (eof != -1) {
 					endOfTransmission = this.exec(clientSentenceString);
 				} else {
@@ -53,24 +55,19 @@ public class ConfigurerSocketServer extends AbstractSockectServer {
 	@Override
 	protected boolean exec(final String command) throws Exception {
 		final String[] lines = command.split("\n");
-		System.out.println("dashjdahsjd " + lines[0] + "daghsgdjahs");
 		if (!this.validatePassword(lines[0])) {
 			this.outToClient
 					.writeBytes("The password is not correct. Try again\n.");
 			return true;
 		}
 		for (int i = 0; i < lines.length; i++) {
-			System.out.println("-" + lines[i] + "-");
 			if (lines[i].endsWith(".conf")) {
-				this.outToClient
-						.writeBytes("configuring: " + lines[i++] + "\n");
+				this.outToClient.writeBytes("configuring: " + lines[i++] + "\n");
 				while (!lines[i].equals(".")) {
-					this.outToClient.writeBytes("\t adding:" + lines[i++]
-							+ "\n");
+					this.outToClient.writeBytes("\t adding:" + lines[i++] + "\n");
 				}
 			}
 		}
-
 		return true;
 	}
 
