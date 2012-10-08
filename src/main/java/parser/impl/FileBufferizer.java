@@ -31,11 +31,11 @@ public class FileBufferizer implements Bufferizer {
 	@Override
 	public void send(final DataOutputStream outputBuffer) throws IOException {
 		String serverResponse;
-		final BufferedReader reader = new BufferedReader(new FileReader(
-				this.tmp));
+		final BufferedReader reader = new BufferedReader(new FileReader(this.tmp));
 		while ((serverResponse = reader.readLine()) != null) {
 			outputBuffer.writeBytes(serverResponse + "\r\n");
 		}
+		reader.close();
 		this.tmp.delete();
 	}
 
