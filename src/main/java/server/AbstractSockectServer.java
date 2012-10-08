@@ -29,7 +29,7 @@ public abstract class AbstractSockectServer implements Runnable {
 					endOfTransmission = true;
 				}
 			} while (!endOfTransmission);
-			finalizeTransmission();
+			end();
 		} catch (final Exception e) {
 			e.printStackTrace();
 		}
@@ -39,14 +39,12 @@ public abstract class AbstractSockectServer implements Runnable {
 			e.printStackTrace();
 		}
 	}
-	
-	protected void finalizeTransmission() throws Exception{
-		
-	}
 
 	protected void initialize() throws Exception {
 	}
 	
 	protected abstract boolean exec(String command) throws Exception;
 	
+	protected void end() throws Exception {
+	}
 }
