@@ -74,8 +74,9 @@ public class Config {
 	
 	public synchronized void update(String file) {
 		if (specificConfigs.containsKey(file)) {
+			Config old = specificConfigs.get(file);
+			old.properties = getSpecific(file).properties;
 			logger.info("Updating content on memory for " + file);
-			specificConfigs.put(file, getSpecific(file));
 		}
 	}
 	

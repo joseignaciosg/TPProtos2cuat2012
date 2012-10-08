@@ -28,8 +28,8 @@ public class ProxyInitializer {
 		try {
 			String[] dirs = { Config.getInstance().get("specific_conf_dir") };
 			DirectoryWatcher watcher = new DirectoryWatcher(dirs, false);
-			watcher.suscribe(StandardWatchEventKinds.ENTRY_CREATE,
-					new ConfigWatcherCallback("Modification Listener"));
+			watcher.suscribe(StandardWatchEventKinds.ENTRY_CREATE, new ConfigWatcherCallback("Creation Listener"));
+			watcher.suscribe(StandardWatchEventKinds.ENTRY_MODIFY, new ConfigWatcherCallback("Modification Listener"));
 			new Thread(watcher).start();
 		} catch (IOException e) {
 			throw new IllegalStateException("Could not initialize file watcher");
