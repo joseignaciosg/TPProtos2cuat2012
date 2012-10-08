@@ -10,7 +10,6 @@ import util.StringUtil;
 public class ServerInitializer {
 
 	public void initialize(String fileName) {
-		System.out.println("Initializing server from file " + fileName);
 		InputStream in = getClass().getClassLoader().getResourceAsStream(fileName);
 		Scanner scanner = new Scanner(in);
 		while (scanner.hasNextLine()) {
@@ -33,7 +32,6 @@ public class ServerInitializer {
 			}
 		}
 		scanner.close();
-		System.out.println("Finished initializer.");
 	}
 	
 	private boolean initialize(int port, String className) {

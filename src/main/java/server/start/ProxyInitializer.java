@@ -22,9 +22,8 @@ public class ProxyInitializer {
 	
 	private void initFileWatcher() {
 		try {
-			boolean recursive = false;
 			String[] dirs = {Config.getInstance().get("specific_conf_dir")};
-			DirectoryWatcher watcher = new DirectoryWatcher(dirs, recursive);
+			DirectoryWatcher watcher = new DirectoryWatcher(dirs, false);
 			watcher.suscribe(StandardWatchEventKinds.ENTRY_CREATE, 
 				new ConfigWatcherCallback("Modification Listener"));
 			new Thread(watcher).start();
