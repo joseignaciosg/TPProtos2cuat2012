@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 
 import parser.MimeParser;
+import util.Config;
 
 
 public class ProxySocketServer extends AbstractSockectServer {
@@ -18,41 +19,35 @@ public class ProxySocketServer extends AbstractSockectServer {
 
 	@Override
 	protected void initialize() throws Exception {
-		this.mimeParser = new MimeParser();
+		mimeParser = new MimeParser();
 		String originServerSentence;
-		// originServerSocket = new Socket("localhost", 8082);
-		this.originServerSocket = new Socket("mail.josegalindo.com.ar", 110);
-		this.inFromOriginServer = new BufferedReader(new InputStreamReader(
-				this.originServerSocket.getInputStream()));
-		this.outToOriginServer = new DataOutputStream(
-				this.originServerSocket.getOutputStream());
-		originServerSentence = this.inFromOriginServer.readLine();
-		System.out.println("PROXY: Received from Origin Server: "
-				+ originServerSentence);
-		this.outToMUA = new DataOutputStream(this.socket.getOutputStream());
-		this.outToMUA.writeBytes(originServerSentence + "\r\n");
+		String address = Config.getInstance().get("mail_address");
+		int port = Config.getInstance().getInt("mail_port");
+		originServerSocket = new Socket(address, port);
+		inFromOriginServer = new BufferedReader(new InputStreamReader(originServerSocket.getInputStream()));
+		outToOriginServer = new DataOutputStream(originServerSocket.getOutputStream());
+		originServerSentence = inFromOriginServer.readLine();
+		System.out.println("PROXY: Received from Origin Server: " + originServerSentence);
+		outToMUA = new DataOutputStream(socket.getOutputStream());
+		outToMUA.writeBytes(originServerSentence + "\r\n");
 	}
 
 	@Override
 	protected boolean exec(final String command) throws Exception {
 		String serverResponse;
-		this.outToOriginServer.writeBytes(command + "\r\n");
-		if (command.equals("CAPA") || command.equals("LIST")
-				|| command.equals("UIDL")) {
+		outToOriginServer.writeBytes(command + "\r\n");
+		if (command.equals("CAPA") || command.equals("LIST") || command.equals("UIDL")) {
 			do {
-				serverResponse = this.inFromOriginServer.readLine();
-				this.outToMUA.writeBytes(serverResponse + "\r\n");
-				System.out.println("PROXY: Received from Origin Server: "
-						+ serverResponse);
+				serverResponse = inFromOriginServer.readLine();
+				outToMUA.writeBytes(serverResponse + "\r\n");
+				System.out.println("PROXY: Received from Origin Server: " + serverResponse);
 			} while (!serverResponse.equals("."));
 		} else if (command.contains("RETR")) {
-			this.mimeParser.parse(this.inFromOriginServer, this.outToMUA);
+			mimeParser.parse(inFromOriginServer, outToMUA);
 		} else {
-
-			serverResponse = this.inFromOriginServer.readLine();
-			this.outToMUA.writeBytes(serverResponse + "\r\n");
-			System.out.println("PROXY: Received from Origin Server: "
-					+ serverResponse);
+			serverResponse = inFromOriginServer.readLine();
+			outToMUA.writeBytes(serverResponse + "\r\n");
+			System.out.println("PROXY: Received from Origin Server: " + serverResponse);
 		}
 		return false;
 	}
