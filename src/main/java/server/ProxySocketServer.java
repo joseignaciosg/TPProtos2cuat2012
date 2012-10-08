@@ -5,7 +5,7 @@ import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
-import parser.impl.MailWorker;
+import parser.impl.MailRetriever;
 import util.Config;
 
 public class ProxySocketServer extends AbstractSockectServer {
@@ -14,11 +14,11 @@ public class ProxySocketServer extends AbstractSockectServer {
 	private BufferedReader inFromOriginServer;
 	private DataOutputStream outToMUA;
 	private DataOutputStream outToOriginServer;
-	private MailWorker mailWorker;
+	private MailRetriever mailWorker;
 
 	@Override
 	protected void initialize() throws Exception {
-		this.mailWorker = new MailWorker();
+		this.mailWorker = new MailRetriever();
 		String originServerSentence;
 		final String address = Config.getInstance().get("mail_address");
 		final int port = Config.getInstance().getInt("mail_port");
@@ -47,7 +47,7 @@ public class ProxySocketServer extends AbstractSockectServer {
 						+ serverResponse);
 			} while (!serverResponse.equals("."));
 		} else if (command.contains("RETR")) {
-			this.mailWorker.parse(this.inFromOriginServer, this.outToMUA);
+			this.mailWorker.retrieve(this.inFromOriginServer, this.outToMUA);
 		} else {
 			serverResponse = this.inFromOriginServer.readLine();
 			this.outToMUA.writeBytes(serverResponse + "\r\n");

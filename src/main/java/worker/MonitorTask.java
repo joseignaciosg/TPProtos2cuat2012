@@ -1,4 +1,4 @@
-package monitor;
+package worker;
 
 import java.io.DataOutputStream;
 import java.io.IOException;

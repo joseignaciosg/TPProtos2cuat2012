@@ -5,10 +5,13 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import parser.api.Bufferizer;
+import util.Config;
 
-public class MailWorker {
-
-	public void parse(final BufferedReader inputBuffer,
+public class MailRetriever {
+	
+	private final static int maxMemorySize = Config.getInstance().getInt("min_size_to_save_in_disk_kb");
+	
+	public void retrieve(final BufferedReader inputBuffer,
 			final DataOutputStream outputBuffer) throws IOException {
 		String serverResponse;
 
@@ -17,7 +20,7 @@ public class MailWorker {
 															// the mail message
 		final int length = Integer.valueOf(serverResponse.split(" ")[1]);
 		Bufferizer bufferizer;
-		if (length < 512 * 1024) {
+		if (length < maxMemorySize) {
 			bufferizer = new InMemoryBufferizer();
 		} else {
 			bufferizer = new FileBufferizer();
