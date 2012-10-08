@@ -16,7 +16,7 @@ public class MonitorTask extends TimerTask {
 
 	private static Logger logger = Logger.getLogger(TimerTask.class);
 	
-	private String taskName; // A string to output
+	private String taskName;
 	private DataOutputStream outputStream;
 
 	public MonitorTask(String objectName, DataOutputStream outputStream) {
