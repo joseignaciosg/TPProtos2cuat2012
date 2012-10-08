@@ -36,7 +36,7 @@ public class FileBufferizer implements Bufferizer {
 		while ((serverResponse = reader.readLine()) != null) {
 			outputBuffer.writeBytes(serverResponse + "\r\n");
 		}
-		// tmp.delete();
+		this.tmp.delete();
 	}
 
 }
