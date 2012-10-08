@@ -47,7 +47,7 @@ dest_servers.conf
 juan@gmail.com = mail.google.com
 
 notdelete_maxage.conf
-juan@gmail.com = 15/98/2012
+juan@gmail.com = 15/08/2012 (dd/mm/yyyy)
 
 notdelete_sender.conf
 juan@gmail.com

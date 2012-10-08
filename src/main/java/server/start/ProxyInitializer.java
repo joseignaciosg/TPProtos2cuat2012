@@ -13,25 +13,30 @@ public class ProxyInitializer {
 
 	private static Logger logger = Logger.getLogger(ProxyInitializer.class);
 
-	public static void main(String[] args) {
+	public static void main(final String[] args) {
 		new ProxyInitializer().initialize();
+
 	}
 
 	public void initialize() {
 		logger.trace("Initializing proxy.....");
 		new ServerInitializer().initialize("server.init");
-		initFileWatcher();
+		this.initFileWatcher();
 		logger.trace("Proxy Started succesfully!");
 	}
 
 	private void initFileWatcher() {
 		try {
-			String[] dirs = { Config.getInstance().get("specific_conf_dir") };
-			DirectoryWatcher watcher = new DirectoryWatcher(dirs, false);
-			watcher.suscribe(StandardWatchEventKinds.ENTRY_CREATE, new ConfigWatcherCallback("Creation Listener"));
-			watcher.suscribe(StandardWatchEventKinds.ENTRY_MODIFY, new ConfigWatcherCallback("Modification Listener"));
+			final String[] dirs = { Config.getInstance().get(
+					"specific_conf_dir") };
+			final DirectoryWatcher watcher = new DirectoryWatcher(dirs, false);
+			watcher.suscribe(StandardWatchEventKinds.ENTRY_CREATE,
+					new ConfigWatcherCallback("Creation Listener"));
+			watcher.suscribe(StandardWatchEventKinds.ENTRY_MODIFY,
+					new ConfigWatcherCallback("Modification Listener"));
+
 			new Thread(watcher).start();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new IllegalStateException("Could not initialize file watcher");
 		}
 	}
