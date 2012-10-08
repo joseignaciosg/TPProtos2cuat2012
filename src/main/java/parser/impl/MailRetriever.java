@@ -11,11 +11,8 @@ public class MailRetriever {
 	
 	private final static int maxMemorySize = Config.getInstance().getInt("min_size_to_save_in_disk_kb");
 	
-	public void retrieve(final BufferedReader inputBuffer,
-			final DataOutputStream outputBuffer) throws IOException {
-		String serverResponse;
-
-		serverResponse = inputBuffer.readLine();
+	public void retrieve(final BufferedReader inputBuffer, final DataOutputStream outputBuffer) throws IOException {
+		String serverResponse = inputBuffer.readLine();
 		outputBuffer.writeBytes(serverResponse + ".\r\n"); // +OK not part of
 															// the mail message
 		final int length = Integer.valueOf(serverResponse.split(" ")[1]);
@@ -26,10 +23,9 @@ public class MailRetriever {
 			bufferizer = new FileBufferizer();
 		}
 		bufferizer.buffer(inputBuffer);
-		// bufferizer.transform();
+		
 		bufferizer.send(outputBuffer);
-
 		outputBuffer.writeBytes(".\r\n"); // the final point is not part of the
-											// mails message
 	}
+	
 }

@@ -20,6 +20,11 @@ public class InMemoryBufferizer implements Bufferizer {
 			serverResponse = inputBuffer.readLine();
 		}
 	}
+	
+	@Override
+	public void transform() {
+		
+	}
 
 	@Override
 	public void send(final DataOutputStream outputBuffer) throws IOException {

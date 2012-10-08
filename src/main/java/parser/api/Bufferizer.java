@@ -6,8 +6,9 @@ import java.io.IOException;
 
 public interface Bufferizer {
 
-	public void buffer(final BufferedReader inputBuffer) throws IOException;
+	void buffer(final BufferedReader inputBuffer) throws IOException;
+	
+	void send(final DataOutputStream outputBuffer) throws IOException;
 
-	public void send(final DataOutputStream outputBuffer) throws IOException;
-
+	void transform();
 }
