@@ -2,6 +2,8 @@ package util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 public class Config {
@@ -9,7 +11,8 @@ public class Config {
 	private static final String CONFIG_FILE = "project.properties";
 	
 	private static Config instance;
-
+	private Map<String, Config> specificConfigs;
+	
 	public static Config getInstance() {
 		if (instance == null) {
 			try {
@@ -25,6 +28,7 @@ public class Config {
 	private Properties properties;
 	
 	private Config() throws IOException {
+		specificConfigs = new HashMap<String, Config>();
 		properties = new Properties();
 		InputStream in = this.getClass().getClassLoader().getResourceAsStream(CONFIG_FILE);
 		properties.load(in);
@@ -36,16 +40,6 @@ public class Config {
 		InputStream in = this.getClass().getClassLoader().getResourceAsStream(file);
 		properties.load(in);
 		in.close();
-	}
-	
-	public Config getConfig(String key) {
-		String file = Config.getInstance().get(key);
-		try {
-			String dir = properties.getProperty("specific_conf_dir");
-			return new Config(dir + file);
-		} catch (IOException e) {
-			 throw new IllegalArgumentException(file + " does not exists");
-		}
 	}
 	
 	public String get(String key) {
@@ -64,4 +58,30 @@ public class Config {
 		properties.put(key, value);
 	}
 	
+	public Config getConfig(String fileNamekey) {
+		String file = Config.getInstance().get(fileNamekey);
+		if (specificConfigs.containsKey(file)) {
+			return specificConfigs.get(file);
+		}
+		Config specific = getSpecific(file);
+		specificConfigs.put(file, specific);
+		return specific;
+	}
+	
+	public synchronized void update(String file) {
+		if (specificConfigs.containsKey(file)) {
+			specificConfigs.put(file, getSpecific(file));
+		}
+	}
+	
+	private synchronized Config getSpecific(String file) {
+		try {
+			String dir = properties.getProperty("specific_conf_dir");
+			Config specific = new Config(dir + file);
+			specificConfigs.put(file, specific);
+			return specific;
+		} catch (IOException e) {
+			 throw new IllegalArgumentException(file + " does not exists");
+		}
+	}
 }

@@ -9,10 +9,6 @@ import util.StringUtil;
 
 public class ServerInitializer {
 
-	public static void main(String[] args) {
-		new ServerInitializer().initialize("server.init");
-	}
-	
 	public void initialize(String fileName) {
 		System.out.println("Initializing server from file " + fileName);
 		InputStream in = getClass().getClassLoader().getResourceAsStream(fileName);
