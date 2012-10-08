@@ -39,7 +39,7 @@ public class MonitorSocketServer extends AbstractSockectServer {
 		}
 		
 		if("QUIT".equals(command.toUpperCase())){
-			finalizeTransmission();
+			end();
 			return true;
 		}
 		
@@ -63,7 +63,7 @@ public class MonitorSocketServer extends AbstractSockectServer {
 	}
 	
 	@Override
-	protected void finalizeTransmission() throws Exception {
+	protected void end() throws Exception {
 		if(taskTimer != null){
 			taskTimer.cancel();
 		}
