@@ -5,7 +5,7 @@ import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
-import parser.MimeParser;
+import parser.impl.MailWorker;
 import util.Config;
 
 
@@ -15,11 +15,11 @@ public class ProxySocketServer extends AbstractSockectServer {
 	private BufferedReader inFromOriginServer;
 	private DataOutputStream outToMUA;
 	private DataOutputStream outToOriginServer;
-	private MimeParser mimeParser;
+	private MailWorker mimeParser;
 
 	@Override
 	protected void initialize() throws Exception {
-		mimeParser = new MimeParser();
+		mimeParser = new MailWorker();
 		String originServerSentence;
 		String address = Config.getInstance().get("mail_address");
 		int port = Config.getInstance().getInt("mail_port");
