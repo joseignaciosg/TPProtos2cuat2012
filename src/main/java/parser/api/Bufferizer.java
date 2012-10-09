@@ -7,8 +7,8 @@ import java.io.IOException;
 public interface Bufferizer {
 
 	void buffer(final BufferedReader inputBuffer) throws IOException;
-	
+
 	void send(final DataOutputStream outputBuffer) throws IOException;
 
-	void transform();
+	void transform() throws IOException;
 }

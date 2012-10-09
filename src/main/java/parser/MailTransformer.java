@@ -1,7 +1,10 @@
 package parser;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 public interface MailTransformer {
 
-	void transform();
-	
+	void transform() throws FileNotFoundException, IOException;
+
 }
