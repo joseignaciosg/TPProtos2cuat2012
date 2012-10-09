@@ -13,8 +13,7 @@ import util.ConfigWriter;
 public class ConfigurerSocketServer extends AbstractSockectServer {
 
 	private static Logger logger = Logger.getLogger(ConfigurerSocketServer.class);
-	private static Config configurerConfig = Config.getInstance().getConfig(
-			"configurer_conf");
+	private static Config configurerConfig = Config.getInstance().getConfig("configurer_conf");
 
 	private DataOutputStream outToClient;
 	
