@@ -1,8 +1,10 @@
 package validator;
 
+import java.io.InputStream;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Scanner;
 
 import org.apache.log4j.Logger;
 
@@ -11,21 +13,25 @@ import util.Config;
 public class IpValidator {
 
 	private static Logger logger = Logger.getLogger(IpValidator.class);
-	private static Config accessIpConfig = Config.getInstance().getConfig("access_ip");
 
-	public boolean validate(String user, String userIp) {
-		String ipString = accessIpConfig.get(user);
-		if (ipString == null) {
-			return true;
+	public boolean validate(String userIp) {
+		String fileName = Config.getInstance().get("specific_conf_dir") + "access_ip.conf";
+		InputStream in = getClass().getClassLoader().getResourceAsStream(fileName);
+		Scanner scannerIps = new Scanner(in);
+		boolean hasAccess = false;
+		while (scannerIps.hasNextLine() && !hasAccess) {
+			String ip = scannerIps.nextLine();
+			String[] inetAddressParts = ip.split("/");
+			if (inetAddressParts.length < 2) { // No subnet mask declaration
+				hasAccess = userIp.equals(inetAddressParts[0]);
+			} else { 
+				// access_ip.conf has an ip with subnet mask declaration
+				// (i.e. 200.232.44.0/16 )
+				hasAccess = belongsToSubnet(userIp, inetAddressParts[1]);
+			}
 		}
-		String[] inetAddressParts = ipString.split("/");
-		if (inetAddressParts.length < 2) { // No subnet mask declaration
-			return userIp.equals(inetAddressParts[0]);
-		} else { 
-			// access_ip.conf has an ip with subnet mask declaration
-			// (i.e. 200.232.44.0/16 )
-			return belongsToSubnet(inetAddressParts[0], inetAddressParts[1]);
-		}
+		scannerIps.close();
+		return hasAccess;
 	}
 
 	private boolean belongsToSubnet(String ipAddress, String subnet) { 
