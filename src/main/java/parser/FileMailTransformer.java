@@ -13,14 +13,14 @@ import util.ConfigSimpleReader;
 
 public class FileMailTransformer implements MailTransformer {
 
-    final Config specific = Config.getInstance().getConfig(
+    Config specific = Config.getInstance().getConfig(
 	    "transform_path.properties");
     private File mail;
     private static Logger logger = Logger.getLogger(FileMailTransformer.class);
     private static Config configurerConfig = Config.getInstance().getConfig(
 	    "configurer_conf");
     HeaderReader headerReader;
-
+    
     public FileMailTransformer(final File mail) {
 	this.mail = mail;
 	this.headerReader = new HeaderReader(mail);
