@@ -14,12 +14,11 @@ public abstract class ConfigReader {
 	BufferedReader reader;
 
 	public ConfigReader(final String fileName) throws FileNotFoundException {
-		final String file = Config.getInstance().get("specific_conf_dir")
+		String file = Config.getInstance().get("specific_conf_dir")
 				+ fileName;
-		final String path = this.getClass().getClassLoader().getResource(file)
-				.getPath();
+		String path = IOUtil.getResource(file).getPath();
+		reader = new BufferedReader(new FileReader(path));
 		logger.trace("Reading config file: " + fileName);
-		this.reader = new BufferedReader(new FileReader(path));
 	}
 
 	public abstract String readLine() throws IOException;

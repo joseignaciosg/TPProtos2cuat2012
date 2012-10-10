@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import parser.HeaderReader;
+import util.IOUtil;
 
 public class HeaderReaderTest {
 
@@ -13,9 +14,8 @@ public class HeaderReaderTest {
 
 	@Before
 	public void init() {
-		this.mail_path = this.getClass().getClassLoader()
-				.getResource(this.mail).getPath();
-		this.reader = new HeaderReader(this.mail_path);
+		mail_path = IOUtil.getResource(mail).getPath();
+		reader = new HeaderReader(this.mail_path);
 	}
 
 	@Test

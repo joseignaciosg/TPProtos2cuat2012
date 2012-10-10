@@ -24,7 +24,7 @@ public class ConfigWriter {
 	
 	public void flush() {
 		String file = Config.getInstance().get("specific_conf_dir") + fileName;
-		String path = getClass().getClassLoader().getResource(file).getPath();
+		String path = IOUtil.getResource(file).getPath();
 		logger.trace("Guardo archivo de configuracion para " + fileName);
 		try {
 			BufferedWriter out = new BufferedWriter(new FileWriter(path));

@@ -1,12 +1,12 @@
 package server.start;
 
-import java.io.InputStream;
 import java.util.Scanner;
 
 import org.apache.log4j.Logger;
 
 import server.AbstractSockectServer;
 import server.GenericServer;
+import util.IOUtil;
 import util.StringUtil;
 
 public class ServerInitializer {
@@ -14,8 +14,7 @@ public class ServerInitializer {
 	private static Logger logger = Logger.getLogger(ProxyInitializer.class);
 	
 	public void initialize(String fileName) {
-		InputStream in = getClass().getClassLoader().getResourceAsStream(fileName);
-		Scanner scanner = new Scanner(in);
+		Scanner scanner = IOUtil.createScanner(fileName);
 		while (scanner.hasNextLine()) {
 			String line = scanner.nextLine();
 			if (StringUtil.empty(line) || line.startsWith("#")) {

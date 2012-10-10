@@ -11,6 +11,7 @@ import java.util.TimerTask;
 import org.apache.log4j.Logger;
 
 import util.Config;
+import util.IOUtil;
 
 public class MonitorTask extends TimerTask {
 
@@ -45,8 +46,7 @@ public class MonitorTask extends TimerTask {
 	}
 	
 	private Scanner reset() {
-		InputStream in = getClass().getClassLoader().getResourceAsStream(Config.getInstance().get("statistics_file"));
-		return new Scanner(in);
+		return IOUtil.createScanner(Config.getInstance().get("statistics_file"));
 	}
 	
 }

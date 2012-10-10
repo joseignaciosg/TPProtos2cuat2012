@@ -34,14 +34,14 @@ public class Config {
 	private Config() throws IOException {
 		specificConfigs = new HashMap<String, Config>();
 		properties = new Properties();
-		InputStream in = this.getClass().getClassLoader().getResourceAsStream(CONFIG_FILE);
+		InputStream in = IOUtil.getStream(CONFIG_FILE);
 		properties.load(in);
 		in.close();
 	}
 	
 	private Config(String file) throws IOException {
 		properties = new Properties();
-		InputStream in = this.getClass().getClassLoader().getResourceAsStream(file);
+		InputStream in = IOUtil.getStream(file);
 		properties.load(in);
 		in.close();
 	}

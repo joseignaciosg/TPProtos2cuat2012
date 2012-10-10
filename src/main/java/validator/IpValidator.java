@@ -1,6 +1,5 @@
 package validator;
 
-import java.io.InputStream;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -9,6 +8,7 @@ import java.util.Scanner;
 import org.apache.log4j.Logger;
 
 import util.Config;
+import util.IOUtil;
 
 public class IpValidator {
 
@@ -16,8 +16,7 @@ public class IpValidator {
 
 	public boolean validate(String userIp) {
 		String fileName = Config.getInstance().get("specific_conf_dir") + "access_ip.conf";
-		InputStream in = getClass().getClassLoader().getResourceAsStream(fileName);
-		Scanner scannerIps = new Scanner(in);
+		Scanner scannerIps = IOUtil.createScanner(fileName);
 		boolean hasAccess = false;
 		while (scannerIps.hasNextLine() && !hasAccess) {
 			String ip = scannerIps.nextLine();

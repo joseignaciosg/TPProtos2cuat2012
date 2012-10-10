@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Set;
 
 import util.Config;
+import util.IOUtil;
 
 public class DirectoryWatcher implements Runnable {
 
@@ -67,11 +68,11 @@ public class DirectoryWatcher implements Runnable {
 	
 	private Path getDirectoriesPath(String[] directories) {
 		if (directories.length == 1) {
-			return Paths.get(getClass().getClassLoader().getResource(directories[0]).getPath());
+			return Paths.get(IOUtil.getResource(directories[0]).getPath());
 		}
 		String[] paths = new String[directories.length - 1];
 		for (int i = 1; i < paths.length; i++) {
-			paths[i - 1] = getClass().getClassLoader().getResource("conf/").getPath();
+			paths[i - 1] = IOUtil.getResource("conf/").getPath();
 		}
 		return Paths.get(directories[0], paths);
 	}
