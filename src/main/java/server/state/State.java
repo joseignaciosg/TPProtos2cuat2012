@@ -1,5 +1,7 @@
 package server.state;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 
 import server.AbstractSockectService;
@@ -15,6 +17,10 @@ public abstract class State {
 	public State(AbstractSockectService owner) {
 		this.owner = owner;
 		commandRecognizer = new ServiceCommandRecognizer(owner);
+	}
+	
+	public List<String> getAvailableCommands() {
+		return commandRecognizer.availableCommands();
 	}
 	
 	public void enter() {

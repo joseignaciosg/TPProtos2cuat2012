@@ -19,6 +19,10 @@ public class ServiceStateMachine {
 		current.enter();
 	}
 	
+	public State getCurrent() {
+		return current;
+	}
+	
 	public void exec(String[] params) {
 		current.exec(params);
 	}

@@ -1,6 +1,8 @@
 package server.command;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -22,6 +24,14 @@ public class ServiceCommandRecognizer {
 	
 	public void register(String cmdName, Class<? extends ServiceCommand> clazz) {
 		commands.put(cmdName.toLowerCase(), clazz);
+	}
+	
+	public List<String> availableCommands() {
+		List<String> available = new LinkedList<String>();
+		for (String name : commands.keySet()) {
+			available.add(name);
+		}
+		return available;
 	}
 	
 	public void exec(String[] params) {

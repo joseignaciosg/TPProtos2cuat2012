@@ -1,6 +1,6 @@
 package server;
 
-import server.state.AuthorityState;
+import server.state.impl.AuthorityState;
 
 public class ConfigurerService extends AbstractSockectService {
 	
@@ -16,11 +16,6 @@ public class ConfigurerService extends AbstractSockectService {
 	@Override
 	protected void exec(String command) throws Exception {
 		stateMachine.exec(command.split(" "));
-	}
-	
-	@Override
-	protected void onConnectionClosed() throws Exception {
-		echoLine("+OK 0 [Connection closed!]");
 	}
 
 }
