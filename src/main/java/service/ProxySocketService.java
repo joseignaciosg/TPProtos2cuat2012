@@ -8,7 +8,7 @@ import java.net.Socket;
 import parser.impl.MailRetriever;
 import util.Config;
 
-public class ProxySocketServer extends AbstractSockectService {
+public class ProxySocketService extends AbstractSockectService {
 
 	private Socket originServerSocket;
 	private BufferedReader inFromOriginServer;

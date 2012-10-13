@@ -4,9 +4,7 @@ import java.util.Map;
 
 import service.AbstractSockectService;
 import service.command.ServiceCommand;
-import service.state.impl.configurer.ReadState;
 import util.CollectionUtil;
-
 
 public abstract class AuthCommand extends ServiceCommand {
 

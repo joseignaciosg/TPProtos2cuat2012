@@ -1,11 +1,11 @@
 # Start Proxy Server
-service.ProxySocketServer, 8080
+service.ProxySocketService, 8080
 
 # Start a Mocked Email Server
-mock.MockedSocketEmailServer, 8082
+mock.MockedSocketEmailService, 8082
 
 # Start a Monitor Socket Server
-service.MonitorSocketServer, 8083
+service.MonitorSocketService, 8083
 
 # Start a Configurer Socket Server
 service.ConfigurerService, 8084

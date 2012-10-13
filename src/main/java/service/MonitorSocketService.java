@@ -2,9 +2,9 @@ package service;
 
 import service.state.impl.monitor.AuthorityState;
 
-public class MonitorSocketServer extends AbstractSockectService {
+public class MonitorSocketService extends AbstractSockectService {
 
-	public MonitorSocketServer() {
+	public MonitorSocketService() {
 		stateMachine.setState(new AuthorityState(this));
 	}
 	

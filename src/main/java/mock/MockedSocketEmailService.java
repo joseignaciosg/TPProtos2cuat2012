@@ -6,11 +6,11 @@ import service.AbstractSockectService;
 import service.Server;
 
 
-public class MockedSocketEmailServer extends AbstractSockectService {
+public class MockedSocketEmailService extends AbstractSockectService {
 	
 	private Server server;
 	
-	public MockedSocketEmailServer() {
+	public MockedSocketEmailService() {
 		server = new MockitoServer();
 	}
 		
