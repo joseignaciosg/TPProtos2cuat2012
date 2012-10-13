@@ -1,5 +1,7 @@
 package service.command;
 
+import java.util.Map;
+
 import service.AbstractSockectService;
 
 
@@ -15,5 +17,9 @@ public abstract class ServiceCommand {
 	
 	public AbstractSockectService getOwner() {
 		return owner;
+	}
+	
+	public Map<String, Object> getBundle() {
+		return owner.getStateMachine().getCurrent().getBundle();
 	}
 }

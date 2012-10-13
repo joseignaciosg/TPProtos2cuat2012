@@ -1,6 +1,6 @@
 package service;
 
-import service.state.impl.AuthorityState;
+import service.state.impl.configurer.AuthorityState;
 
 public class ConfigurerService extends AbstractSockectService {
 	
@@ -10,7 +10,7 @@ public class ConfigurerService extends AbstractSockectService {
 	
 	@Override
 	protected void onConnectionEstabished() throws Exception {
-		echoLine("+OK 0 [Configurer ready]");
+		echoLine(0, "Configurer ready");
 	}
 	
 	@Override

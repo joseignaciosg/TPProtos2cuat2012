@@ -1,6 +1,8 @@
 package service.state;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 
@@ -13,10 +15,12 @@ public abstract class State {
 	
 	protected ServiceCommandRecognizer commandRecognizer;
 	protected AbstractSockectService owner;
+	protected Map<String, Object> bundle;
 	
 	public State(AbstractSockectService owner) {
 		this.owner = owner;
 		commandRecognizer = new ServiceCommandRecognizer(owner);
+		bundle = new HashMap<String, Object>();
 	}
 	
 	public List<String> getAvailableCommands() {
@@ -33,4 +37,7 @@ public abstract class State {
 		logger.trace("Exiting state: " + getClass().getSimpleName());
 	}
 
+	public Map<String, Object> getBundle() {
+		return bundle;
+	}
 }

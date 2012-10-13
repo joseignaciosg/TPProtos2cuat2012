@@ -3,6 +3,7 @@ package service;
 import java.io.DataOutputStream;
 import java.util.Timer;
 
+import service.state.impl.monitor.AuthorityState;
 import util.Config;
 import worker.MonitorTask;
 
@@ -15,16 +16,19 @@ public class MonitorSocketServer extends AbstractSockectService {
 	private int maxInvalidLogInAttempts;
 	private Timer taskTimer;
 
+	public MonitorSocketServer() {
+		stateMachine.setState(new AuthorityState(this));
+	}
+	
 	@Override
 	protected void onConnectionEstabished() throws Exception {
-		outToClient = new DataOutputStream(socket.getOutputStream());
-		maxInvalidLogInAttempts = 0;
-		outToClient.writeBytes(getHeader());
-		outToClient.writeBytes("PASSWORD: ");
+		echoLine(0, "Monitor ready");
 	}
 	
 	@Override
 	protected void exec(String command) throws Exception {
+		stateMachine.exec(command.split(" "));
+		/*
 		if (!loggedIn) {
 			boolean validPass = validatePassword(command);
 			if (!validPass) {
@@ -47,6 +51,7 @@ public class MonitorSocketServer extends AbstractSockectService {
 			return;
 		}
 		endOfTransmission = "QUIT".equals(command.toUpperCase());
+		*/
 	}
 
 	private boolean validatePassword(String command) {

@@ -1,4 +1,4 @@
-package service.state.impl;
+package service.state.impl.configurer;
 
 import service.AbstractSockectService;
 import service.command.impl.AddCommand;
