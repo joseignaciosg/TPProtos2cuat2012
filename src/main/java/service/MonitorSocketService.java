@@ -17,10 +17,5 @@ public class MonitorSocketService extends AbstractSockectService {
 	protected void exec(String command) throws Exception {
 		stateMachine.exec(command.split(" "));
 	}
-	
-	@Override
-	protected void onConnectionClosed() throws Exception {
-		super.onConnectionClosed();
-	}
 
 }
