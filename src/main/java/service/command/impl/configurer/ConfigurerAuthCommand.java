@@ -10,7 +10,7 @@ public class ConfigurerAuthCommand extends AuthCommand {
 
 	public ConfigurerAuthCommand(AbstractSockectService owner) {
 		super(owner);
-		getBundle().put("password", Config.getInstance().getConfig("configurer").get("password"));
+		getBundle().put("password", Config.getInstance().getConfig("configurer_conf").get("password"));
 	}
 
 	@Override

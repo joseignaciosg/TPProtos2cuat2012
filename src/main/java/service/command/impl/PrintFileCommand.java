@@ -8,9 +8,9 @@ import util.CollectionUtil;
 import util.Config;
 import util.IOUtil;
 
-public class ShowCommand extends ServiceCommand {
+public class PrintFileCommand extends ServiceCommand {
 
-	public ShowCommand(AbstractSockectService owner) {
+	public PrintFileCommand(AbstractSockectService owner) {
 		super(owner);
 	}
 
@@ -32,7 +32,7 @@ public class ShowCommand extends ServiceCommand {
 		scanner.close();
 		owner.echoLine(".");
 		scanner.close();
-		owner.echoLine(0, "File " + params[0] + " updated");
+		owner.echoLine(0, "File " + params[0] + " printed");
 	}
 
 }
