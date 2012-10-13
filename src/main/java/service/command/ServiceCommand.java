@@ -9,11 +9,11 @@ public abstract class ServiceCommand {
 
 	protected AbstractSockectService owner;
 	
-	public abstract void execute(String[] params);
-	
-	public void setOwner(AbstractSockectService owner) {
+	public ServiceCommand(AbstractSockectService owner) {
 		this.owner = owner;
 	}
+	
+	public abstract void execute(String[] params);
 	
 	public AbstractSockectService getOwner() {
 		return owner;

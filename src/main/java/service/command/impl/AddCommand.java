@@ -3,6 +3,7 @@ package service.command.impl;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import service.AbstractSockectService;
 import service.command.ServiceCommand;
 import util.CollectionUtil;
 import util.Config;
@@ -10,6 +11,10 @@ import util.IOUtil;
 
 
 public class AddCommand extends ServiceCommand {
+	
+	public AddCommand(AbstractSockectService owner) {
+		super(owner);
+	}
 	
 	@Override
 	public void execute(String[] params) {

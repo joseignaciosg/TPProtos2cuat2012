@@ -49,13 +49,12 @@ public class ServiceCommandRecognizer {
 		String[] parts = new String[params.length - 1];
 		System.arraycopy(params, 1, parts, 0, params.length - 1);
 		ServiceCommand command = createInstance(clazz);
-		command.setOwner(owner);
 		command.execute(parts);
 	}
 	
 	private ServiceCommand createInstance(Class<? extends ServiceCommand> clazz) {
 		try {
-			return (ServiceCommand) clazz.getConstructors()[0].newInstance();
+			return (ServiceCommand) clazz.getConstructors()[0].newInstance(owner);
 		} catch (Exception e) {
 			logger.error("Could not instantiate class " + clazz + ". Reason: " + e.getMessage());
 			throw new IllegalStateException();

@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.Timer;
 
 import service.AbstractSockectService;
-import service.command.impl.LogOutCommand;
+import service.command.impl.configurer.LogOutCommand;
 import service.state.State;
 import util.Config;
 import worker.MonitorTask;

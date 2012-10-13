@@ -3,8 +3,8 @@ package service.state.impl.configurer;
 import service.AbstractSockectService;
 import service.command.impl.AddCommand;
 import service.command.impl.ListCommand;
-import service.command.impl.LogOutCommand;
 import service.command.impl.ShowCommand;
+import service.command.impl.configurer.LogOutCommand;
 import service.state.State;
 
 public class ReadState extends State {

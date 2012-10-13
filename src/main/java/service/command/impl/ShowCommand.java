@@ -2,12 +2,17 @@ package service.command.impl;
 
 import java.util.Scanner;
 
+import service.AbstractSockectService;
 import service.command.ServiceCommand;
 import util.CollectionUtil;
 import util.Config;
 import util.IOUtil;
 
 public class ShowCommand extends ServiceCommand {
+
+	public ShowCommand(AbstractSockectService owner) {
+		super(owner);
+	}
 
 	@Override
 	public void execute(String[] params) {

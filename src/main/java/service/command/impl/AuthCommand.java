@@ -2,23 +2,23 @@ package service.command.impl;
 
 import java.util.Map;
 
+import service.AbstractSockectService;
 import service.command.ServiceCommand;
 import service.state.impl.configurer.ReadState;
 import util.CollectionUtil;
 
 
-public class AuthCommand extends ServiceCommand {
+public abstract class AuthCommand extends ServiceCommand {
 
 	private static final int MAX_INVALID_ATTEMPTS = 3;
-	
-	private String passwd;
-	
-	public AuthCommand() {
-		passwd = "123456";
+
+	public AuthCommand(AbstractSockectService owner) {
+		super(owner);
 	}
 	
 	@Override
 	public void execute(String[] params) {
+		String passwd = (String) getBundle().get("password");
 		if (CollectionUtil.empty(params) || !passwd.equals(params[0])) {
 			int attempts = incrementLoginAttempts();
 			if (attempts == MAX_INVALID_ATTEMPTS) {
@@ -30,7 +30,7 @@ public class AuthCommand extends ServiceCommand {
 			return;
 		}
 		getOwner().echoLine(0, "Password accepted");
-		getOwner().getStateMachine().setState(new ReadState(owner));
+		onLogin();
 	}
 
 	private int incrementLoginAttempts() {
@@ -41,4 +41,6 @@ public class AuthCommand extends ServiceCommand {
 		bundle.put("invalidLogInAttempts", invalidAttempts);
 		return invalidAttempts;
 	}
+	
+	public abstract void onLogin();
 }

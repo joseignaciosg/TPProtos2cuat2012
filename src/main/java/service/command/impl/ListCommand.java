@@ -2,9 +2,14 @@ package service.command.impl;
 
 import java.util.List;
 
+import service.AbstractSockectService;
 import service.command.ServiceCommand;
 
 public class ListCommand extends ServiceCommand {
+
+	public ListCommand(AbstractSockectService owner) {
+		super(owner);
+	}
 
 	@Override
 	public void execute(String[] params) {
