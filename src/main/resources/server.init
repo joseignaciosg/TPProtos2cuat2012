@@ -8,4 +8,4 @@ mock.MockedSocketEmailServer, 8082
 server.MonitorSocketServer, 8083
 
 # Start a Configurer Socket Server
-server.ConfigurerSocketServer, 8084
+server.ConfigurerService, 8084

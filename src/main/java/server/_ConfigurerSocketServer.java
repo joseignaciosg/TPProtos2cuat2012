@@ -10,27 +10,25 @@ import org.apache.log4j.Logger;
 import util.Config;
 import util.ConfigWriter;
 
-public class ConfigurerSocketServer extends AbstractSockectServer {
+public class _ConfigurerSocketServer extends AbstractSockectService {
 
-	private static Logger logger = Logger.getLogger(ConfigurerSocketServer.class);
+	private static Logger logger = Logger.getLogger(_ConfigurerSocketServer.class);
 	private static Config configurerConfig = Config.getInstance().getConfig("configurer_conf");
 
 	private DataOutputStream outToClient;
 	
 	@Override
 	public void run() {
-		boolean endOfTransmission;
 		try {
-			this.initialize();
+			onConnectionEstabished();
 			do {
-				final BufferedReader inFromClient = new BufferedReader(
-						new InputStreamReader(this.socket.getInputStream()));
-				final char[] clientSentence = new char[100];
-				final int eof = inFromClient.read(clientSentence);
-				final String clientSentenceString = new String(clientSentence);
-				logger.info(this.getClass().getSimpleName() + " -- Command: " + clientSentenceString);
+				BufferedReader inFromClient = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+				char[] clientSentence = new char[100];
+				int eof = inFromClient.read(clientSentence);
+				String clientSentenceString = new String(clientSentence);
+				logger.info(getClass().getSimpleName() + " -- Command: " + clientSentenceString);
 				if (eof != -1) {
-					endOfTransmission = this.exec(clientSentenceString);
+					exec(clientSentenceString);
 				} else {
 					// Connection has been closed or pipe broken...
 					endOfTransmission = true;
@@ -40,25 +38,25 @@ public class ConfigurerSocketServer extends AbstractSockectServer {
 			e.printStackTrace();
 		}
 		try {
-			this.socket.close();
-		} catch (final IOException e) {
+			socket.close();
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
 	@Override
-	protected void initialize() throws Exception {
-		this.outToClient = new DataOutputStream(this.socket.getOutputStream());
-		this.outToClient.writeBytes(this.getHeader());
+	protected void onConnectionEstabished() throws Exception {
+		outToClient = new DataOutputStream(socket.getOutputStream());
+		outToClient.writeBytes(getHeader());
 	}
 	
 	@Override
-	protected boolean exec(final String command) throws Exception {
-		final String[] lines = command.split("\n");
-		if (!this.validatePassword(lines[0])) {
-			this.outToClient
-					.writeBytes("The password is not correct. Try again\n.");
-			return true;
+	protected void exec(String command) throws Exception {
+		String[] lines = command.split("\n");
+		if (!validatePassword(lines[0])) {
+			outToClient.writeBytes("The password is not correct. Try again\n.");
+			endOfTransmission = true;
+			return;
 		}
 		for (int i = 0; i < lines.length; i++) {
 			String fileName = lines[i];
@@ -76,7 +74,7 @@ public class ConfigurerSocketServer extends AbstractSockectServer {
 				writer.flush();
 			}
 		}
-		return true;
+		endOfTransmission = true;
 	}
 
 	private boolean validatePassword(final String command) {

@@ -6,7 +6,7 @@ import java.util.Timer;
 import util.Config;
 import worker.MonitorTask;
 
-public class MonitorSocketServer extends AbstractSockectServer {
+public class MonitorSocketServer extends AbstractSockectService {
 
 	private static Config monitorConfig = Config.getInstance().getConfig("monitor_conf");
 	
@@ -16,7 +16,7 @@ public class MonitorSocketServer extends AbstractSockectServer {
 	private Timer taskTimer;
 
 	@Override
-	protected void initialize() throws Exception {
+	protected void onConnectionEstabished() throws Exception {
 		outToClient = new DataOutputStream(socket.getOutputStream());
 		maxInvalidLogInAttempts = 0;
 		outToClient.writeBytes(getHeader());
@@ -24,7 +24,7 @@ public class MonitorSocketServer extends AbstractSockectServer {
 	}
 	
 	@Override
-	protected boolean exec(String command) throws Exception {
+	protected void exec(String command) throws Exception {
 		if (!loggedIn) {
 			boolean validPass = validatePassword(command);
 			if (!validPass) {
@@ -32,10 +32,11 @@ public class MonitorSocketServer extends AbstractSockectServer {
 				if (maxInvalidLogInAttempts == 3) {
 					outToClient.writeBytes(
 						"Error: Reached maximum attemps of invalid logins. Closing connection...\n");
-					return true;
+					endOfTransmission = true;
+					return;
 				} else {
 					outToClient.writeBytes("PASSWORD: ");
-					return false;
+					return;
 				}
 			} else {
 				taskTimer = new Timer();
@@ -43,9 +44,9 @@ public class MonitorSocketServer extends AbstractSockectServer {
 				taskTimer.schedule(new MonitorTask("monitorTask", outToClient), 0, timerDelay);
 				loggedIn = true;
 			}
-			return false;
+			return;
 		}
-		return "QUIT".equals(command.toUpperCase());
+		endOfTransmission = "QUIT".equals(command.toUpperCase());
 	}
 
 	private boolean validatePassword(String command) {
@@ -57,7 +58,7 @@ public class MonitorSocketServer extends AbstractSockectServer {
 	}
 	
 	@Override
-	protected void end() throws Exception {
+	protected void onConnectionClosed() throws Exception {
 		taskTimer.cancel();
 		loggedIn = false;
 	}

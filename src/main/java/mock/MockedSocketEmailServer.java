@@ -2,11 +2,11 @@ package mock;
 
 import java.io.DataOutputStream;
 
-import server.AbstractSockectServer;
+import server.AbstractSockectService;
 import server.Server;
 
 
-public class MockedSocketEmailServer extends AbstractSockectServer {
+public class MockedSocketEmailServer extends AbstractSockectService {
 	
 	private Server server;
 	
@@ -15,21 +15,22 @@ public class MockedSocketEmailServer extends AbstractSockectServer {
 	}
 		
 	@Override
-	protected void initialize() throws Exception {
+	protected void onConnectionEstabished() throws Exception {
 		DataOutputStream outToClient = new DataOutputStream(socket.getOutputStream());
 		outToClient.writeBytes(server.exec(null));
 	}
 	
 	@Override
-	protected boolean exec(String command) throws Exception {
+	protected void exec(String command) throws Exception {
 		DataOutputStream outToClient = new DataOutputStream(socket.getOutputStream());
 		String ans = server.exec(command);
 		if (ans == null) {
 			outToClient.writeBytes("I can break the rules too, good bye!\n");
-			return true;
+			endOfTransmission = true;
+			return;
 		}
 		outToClient.writeBytes(ans);
-		return "QUIT".equals(ans.toUpperCase());
+		endOfTransmission = "QUIT".equals(ans.toUpperCase());
 	}
 	
 

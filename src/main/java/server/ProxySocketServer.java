@@ -8,7 +8,7 @@ import java.net.Socket;
 import parser.impl.MailRetriever;
 import util.Config;
 
-public class ProxySocketServer extends AbstractSockectServer {
+public class ProxySocketServer extends AbstractSockectService {
 
 	private Socket originServerSocket;
 	private BufferedReader inFromOriginServer;
@@ -17,7 +17,7 @@ public class ProxySocketServer extends AbstractSockectServer {
 	private MailRetriever mailWorker;
 
 	@Override
-	protected void initialize() throws Exception {
+	protected void onConnectionEstabished() throws Exception {
 		this.mailWorker = new MailRetriever();
 		String originServerSentence;
 		final String address = Config.getInstance().get("mail_address");
@@ -35,26 +35,23 @@ public class ProxySocketServer extends AbstractSockectServer {
 	}
 
 	@Override
-	protected boolean exec(final String command) throws Exception {
+	protected void exec(final String command) throws Exception {
 		String serverResponse;
 		this.outToOriginServer.writeBytes(command + "\r\n");
-		if (command.equals("CAPA") || command.equals("LIST")
-				|| command.equals("UIDL")) {
+		if (command.equals("CAPA") || command.equals("LIST") || command.equals("UIDL")) {
 			do {
-				serverResponse = this.inFromOriginServer.readLine();
-				this.outToMUA.writeBytes(serverResponse + "\r\n");
-				System.out.println("PROXY: Received from Origin Server: "
-						+ serverResponse);
+				serverResponse = inFromOriginServer.readLine();
+				outToMUA.writeBytes(serverResponse + "\r\n");
+				System.out.println("PROXY: Received from Origin Server: " + serverResponse);
 			} while (!serverResponse.equals("."));
 		} else if (command.contains("RETR")) {
-			this.mailWorker.retrieve(this.inFromOriginServer, this.outToMUA);
+			mailWorker.retrieve(inFromOriginServer, outToMUA);
 		} else {
-			serverResponse = this.inFromOriginServer.readLine();
-			this.outToMUA.writeBytes(serverResponse + "\r\n");
-			System.out.println("PROXY: Received from Origin Server: "
-					+ serverResponse);
+			serverResponse = inFromOriginServer.readLine();
+			outToMUA.writeBytes(serverResponse + "\r\n");
+			System.out.println("PROXY: Received from Origin Server: " + serverResponse);
 		}
-		return "QUIT".equals(command.toUpperCase());
+		endOfTransmission = "QUIT".equals(command.toUpperCase());
 	}
 
 }

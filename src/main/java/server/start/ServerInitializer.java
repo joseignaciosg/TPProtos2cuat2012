@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 import org.apache.log4j.Logger;
 
-import server.AbstractSockectServer;
+import server.AbstractSockectService;
 import server.GenericServer;
 import util.IOUtil;
 import util.StringUtil;
@@ -39,13 +39,13 @@ public class ServerInitializer {
 	
 	private boolean initialize(int port, String className) {
 		try {
-			Class<? extends AbstractSockectServer> clazz;
-			if (AbstractSockectServer.class.isAssignableFrom(Class.forName(className))) {				
-				clazz = (Class<? extends AbstractSockectServer>) Class.forName(className);
+			Class<? extends AbstractSockectService> clazz;
+			if (AbstractSockectService.class.isAssignableFrom(Class.forName(className))) {				
+				clazz = (Class<? extends AbstractSockectService>) Class.forName(className);
 				new Thread(new GenericServer(port, clazz)).start();
 				return true;
 			} else {
-				logger.error(className + " does not extend " + AbstractSockectServer.class);
+				logger.error(className + " does not extend " + AbstractSockectService.class);
 				return false;
 			}
 		} catch (ClassNotFoundException e) {

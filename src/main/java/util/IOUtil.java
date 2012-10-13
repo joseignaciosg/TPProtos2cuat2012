@@ -6,8 +6,15 @@ import java.util.Scanner;
 
 public class IOUtil {
 
+	public static String fullPath(String resourcePath) {
+		URL url = getResource(resourcePath);
+		return url == null ? null : url.getPath();
+	}
+	
+	@SuppressWarnings("resource")
 	public static Scanner createScanner(String resourcePath) {
-		return new Scanner(getStream(resourcePath));
+		InputStream is = getStream(resourcePath);
+		return (is == null) ? null : new Scanner(is);
 	}
 	
 	public static InputStream getStream(String resourcePath) {
