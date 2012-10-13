@@ -1,8 +1,9 @@
-package server.command;
+package server.command.impl;
 
 import java.io.FileWriter;
 import java.io.IOException;
 
+import server.command.ServiceCommand;
 import util.CollectionUtil;
 import util.Config;
 import util.IOUtil;

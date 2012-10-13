@@ -1,7 +1,7 @@
 package server.state;
 
 import server.AbstractSockectService;
-import server.command.AuthCommand;
+import server.command.impl.AuthCommand;
 
 public class AuthorityState extends State {
 

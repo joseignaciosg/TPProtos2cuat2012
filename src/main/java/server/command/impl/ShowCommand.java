@@ -1,7 +1,8 @@
-package server.command;
+package server.command.impl;
 
 import java.util.Scanner;
 
+import server.command.ServiceCommand;
 import util.CollectionUtil;
 import util.Config;
 import util.IOUtil;

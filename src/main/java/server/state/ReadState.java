@@ -1,8 +1,8 @@
 package server.state;
 
 import server.AbstractSockectService;
-import server.command.AddCommand;
-import server.command.ShowCommand;
+import server.command.impl.AddCommand;
+import server.command.impl.ShowCommand;
 
 public class ReadState extends State {
 	

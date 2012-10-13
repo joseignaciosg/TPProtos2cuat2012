@@ -1,5 +1,6 @@
-package server.command;
+package server.command.impl;
 
+import server.command.ServiceCommand;
 import server.state.ReadState;
 import util.CollectionUtil;
 
