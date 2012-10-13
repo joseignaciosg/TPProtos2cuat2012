@@ -1,4 +1,4 @@
-package server;
+package service;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.ServerSocket;

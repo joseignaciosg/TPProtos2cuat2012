@@ -1,6 +1,6 @@
-package server.command.impl;
+package service.command.impl;
 
-import server.command.ServiceCommand;
+import service.command.ServiceCommand;
 
 public class ExitCommand extends ServiceCommand {
 

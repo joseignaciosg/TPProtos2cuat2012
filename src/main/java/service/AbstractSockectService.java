@@ -1,4 +1,4 @@
-package server;
+package service;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -8,7 +8,7 @@ import java.net.Socket;
 
 import org.apache.log4j.Logger;
 
-import server.state.ServiceStateMachine;
+import service.state.ServiceStateMachine;
 
 public abstract class AbstractSockectService implements Runnable {
 

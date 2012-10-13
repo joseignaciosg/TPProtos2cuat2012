@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-import server.Server;
+import service.Server;
 
 public class MockitoServer implements Server {
 

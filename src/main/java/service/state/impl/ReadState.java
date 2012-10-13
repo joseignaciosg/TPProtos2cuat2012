@@ -1,11 +1,11 @@
-package server.state.impl;
+package service.state.impl;
 
-import server.AbstractSockectService;
-import server.command.impl.AddCommand;
-import server.command.impl.ListCommand;
-import server.command.impl.LogOutCommand;
-import server.command.impl.ShowCommand;
-import server.state.State;
+import service.AbstractSockectService;
+import service.command.impl.AddCommand;
+import service.command.impl.ListCommand;
+import service.command.impl.LogOutCommand;
+import service.command.impl.ShowCommand;
+import service.state.State;
 
 public class ReadState extends State {
 	

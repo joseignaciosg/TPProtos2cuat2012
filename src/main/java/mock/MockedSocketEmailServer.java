@@ -2,8 +2,8 @@ package mock;
 
 import java.io.DataOutputStream;
 
-import server.AbstractSockectService;
-import server.Server;
+import service.AbstractSockectService;
+import service.Server;
 
 
 public class MockedSocketEmailServer extends AbstractSockectService {

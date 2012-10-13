@@ -1,6 +1,6 @@
-package server.state;
+package service.state;
 
-import server.AbstractSockectService;
+import service.AbstractSockectService;
 
 public class ServiceStateMachine {
 	

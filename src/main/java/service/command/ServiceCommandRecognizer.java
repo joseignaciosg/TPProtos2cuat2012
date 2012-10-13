@@ -1,4 +1,4 @@
-package server.command;
+package service.command;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -7,7 +7,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import server.AbstractSockectService;
+import service.AbstractSockectService;
 
 
 public class ServiceCommandRecognizer {

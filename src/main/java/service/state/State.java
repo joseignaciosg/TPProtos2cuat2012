@@ -1,11 +1,11 @@
-package server.state;
+package service.state;
 
 import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import server.AbstractSockectService;
-import server.command.ServiceCommandRecognizer;
+import service.AbstractSockectService;
+import service.command.ServiceCommandRecognizer;
 
 public abstract class State {
 

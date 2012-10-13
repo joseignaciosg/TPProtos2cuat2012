@@ -1,8 +1,8 @@
-package server.command.impl;
+package service.command.impl;
 
 import java.util.List;
 
-import server.command.ServiceCommand;
+import service.command.ServiceCommand;
 
 public class ListCommand extends ServiceCommand {
 

@@ -1,11 +1,11 @@
-package server.start;
+package service.start;
 
 import java.util.Scanner;
 
 import org.apache.log4j.Logger;
 
-import server.AbstractSockectService;
-import server.GenericServer;
+import service.AbstractSockectService;
+import service.GenericServer;
 import util.IOUtil;
 import util.StringUtil;
 

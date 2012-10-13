@@ -1,9 +1,9 @@
-package server.state.impl;
+package service.state.impl;
 
-import server.AbstractSockectService;
-import server.command.impl.AuthCommand;
-import server.command.impl.ExitCommand;
-import server.state.State;
+import service.AbstractSockectService;
+import service.command.impl.AuthCommand;
+import service.command.impl.ExitCommand;
+import service.state.State;
 
 public class AuthorityState extends State {
 

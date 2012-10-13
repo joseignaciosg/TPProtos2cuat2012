@@ -1,7 +1,7 @@
-package server.command.impl;
+package service.command.impl;
 
-import server.command.ServiceCommand;
-import server.state.impl.ReadState;
+import service.command.ServiceCommand;
+import service.state.impl.ReadState;
 import util.CollectionUtil;
 
 

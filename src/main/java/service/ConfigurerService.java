@@ -1,6 +1,6 @@
-package server;
+package service;
 
-import server.state.impl.AuthorityState;
+import service.state.impl.AuthorityState;
 
 public class ConfigurerService extends AbstractSockectService {
 	

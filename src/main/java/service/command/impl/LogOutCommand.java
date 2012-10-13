@@ -1,7 +1,7 @@
-package server.command.impl;
+package service.command.impl;
 
-import server.command.ServiceCommand;
-import server.state.impl.AuthorityState;
+import service.command.ServiceCommand;
+import service.state.impl.AuthorityState;
 
 public class LogOutCommand extends ServiceCommand {
 

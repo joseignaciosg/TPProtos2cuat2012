@@ -1,6 +1,6 @@
-package server.command;
+package service.command;
 
-import server.AbstractSockectService;
+import service.AbstractSockectService;
 
 
 public abstract class ServiceCommand {
