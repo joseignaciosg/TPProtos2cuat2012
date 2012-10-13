@@ -11,7 +11,7 @@ import service.command.ServiceCommandRecognizer;
 
 public abstract class State {
 
-	private static final Logger logger = Logger.getLogger(State.class);
+	protected static final Logger logger = Logger.getLogger(State.class);
 	
 	protected ServiceCommandRecognizer commandRecognizer;
 	protected AbstractSockectService owner;

@@ -30,4 +30,10 @@ public class ServiceStateMachine {
 	public AbstractSockectService getOwner() {
 		return owner;
 	}
+	
+	public void exit() {
+		if (current != null) {
+			current.exit();
+		}
+	}
 }

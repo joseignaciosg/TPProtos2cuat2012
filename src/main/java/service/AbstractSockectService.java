@@ -58,6 +58,7 @@ public abstract class AbstractSockectService implements Runnable {
 	protected abstract void exec(String command) throws Exception;
 	
 	protected void onConnectionClosed() throws Exception {
+		stateMachine.exit();
 	}
 	
 	public void echoLine(int code, String message) {
@@ -87,5 +88,9 @@ public abstract class AbstractSockectService implements Runnable {
 	
 	public ServiceStateMachine getStateMachine() {
 		return stateMachine;
+	}
+	
+	public Socket getSocket() {
+		return socket;
 	}
 }
