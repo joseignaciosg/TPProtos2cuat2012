@@ -17,9 +17,8 @@ public class QuitCommand extends ServiceCommand {
 		owner.setEndOfTransmission(true);
 		MailSocketService mailService = ((MailSocketService) owner);
 		mailService.echoLineToOriginServer(getOriginalLine());
-		String response;
 		try {
-			response = mailService.readFromOriginServer().readLine();
+			String response = mailService.readFromOriginServer().readLine();
 			mailService.echoLine(response);
 		} catch (IOException e) {
 			System.out.println("No se pudo terminar la coenccion con el servidor.");
