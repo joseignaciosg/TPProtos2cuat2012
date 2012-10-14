@@ -19,17 +19,17 @@ public class FileMailTransformer implements MailTransformer {
 	    "transform_path.properties");
 
     private File mail;
-    private MailHeader headerReader;
+    private MailHeader mailHeader;
 
     public FileMailTransformer(File mail) {
 	this.mail = mail;
-	this.headerReader = new MailHeader(mail);
+	this.mailHeader = new MailHeader(mail);
     }
 
     @Override
     public void transform() throws IOException {
 	// read transformations file to know what transformations should be
-	// applyed
+	// applied
 	this.specific.get("l33t");
 	ConfigReader configReader = new ConfigSimpleReader("transformation");
 	String option;
@@ -41,10 +41,10 @@ public class FileMailTransformer implements MailTransformer {
 
     private void executeTransformation(final String option) throws IOException {
 	String service;
-	logger.debug("Printing headers: " + this.headerReader.getHeaders());
+	logger.debug("Printing headers: " + this.mailHeader.getHeaders());
 	if ("l33t".equals(option)) {
 	    service = this.specific.get("l33t");
-	    this.l33tTransformation();
+//	    this.l33tTransformation();
 	} else if ("rotateimages".equals(option)) {
 	    service = this.specific.get("rotateimages");
 	} else if ("hidesender".equals(option)) {
@@ -52,10 +52,4 @@ public class FileMailTransformer implements MailTransformer {
 	}
     }
 
-    private void l33tTransformation() throws IOException {
-	// for reading the mail
-	logger.info("Transforming to l33t");
-	BufferedReader reader = new BufferedReader(new FileReader(mail));
-	reader.close();
-    }
 }

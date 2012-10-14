@@ -45,7 +45,7 @@ public class MailHeader {
 	    return null;
 	}
 
-	private String getBoundary() throws IOException {
+	public String getBoundary() throws IOException {
 		Scanner scanner = new Scanner(this.mail);
 		while (scanner.hasNextLine()) {
 			String line = scanner.nextLine();
