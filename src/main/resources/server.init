@@ -1,5 +1,5 @@
 # Start Proxy Server
-service.ProxySocketService, 8080
+service.MailSocketService, 8080
 
 # Start a Mocked Email Server
 mock.MockedSocketEmailService, 8082

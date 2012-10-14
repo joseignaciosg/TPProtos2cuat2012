@@ -18,8 +18,6 @@ public class MailHeader {
 
 	public String getHeaders() throws IOException {
 		StringBuilder builder = new StringBuilder();
-		// final BufferedReader reader = new BufferedReader(new FileReader(
-		// this.mail_string));
 		Scanner scanner = new Scanner(mail);
 		final String boundary = this.getBoundary();
 		logger.debug("Reading boundary:" + boundary);
@@ -36,8 +34,15 @@ public class MailHeader {
 		return builder.toString();
 	}
 
-	public String getHeader(String name) {
-		return null;
+	public String getHeader(String name) throws IOException {
+	    String header = getHeaders();
+	    String[] lines = header.split("\r\n");
+	    for(String line : lines){
+		if(Pattern.matches(name + ".*", line)){
+		    return line.split(":")[1];
+		}
+	    }
+	    return null;
 	}
 
 	private String getBoundary() throws IOException {

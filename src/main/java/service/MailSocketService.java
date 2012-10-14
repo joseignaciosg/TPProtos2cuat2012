@@ -25,7 +25,8 @@ public class MailSocketService extends AbstractSockectService {
 		
 		this.mailWorker = new MailRetriever();
 		String originServerSentence;
-		final String address = Config.getInstance().get("mail_address");
+		final String address = getAddress();
+		
 		final int port = Config.getInstance().getInt("mail_port");
 		this.originServerSocket = new Socket(address, port);
 		this.inFromOriginServer = new BufferedReader(new InputStreamReader(
@@ -37,6 +38,13 @@ public class MailSocketService extends AbstractSockectService {
 				+ originServerSentence);
 		this.outToMUA = new DataOutputStream(this.socket.getOutputStream());
 		this.outToMUA.writeBytes(originServerSentence + "\r\n");
+	}
+
+	private String getAddress() {
+	    Config conf = Config.getInstance().getConfig("origin_server_conf");
+	    //TODO get account from bundle
+	    final String address = conf.get("default");
+	    return address;
 	}
 
 	@Override
