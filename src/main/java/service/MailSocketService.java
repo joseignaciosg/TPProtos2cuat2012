@@ -10,7 +10,6 @@ import org.apache.log4j.Logger;
 
 import parser.impl.MailRetriever;
 import service.state.impl.mail.ParseMailState;
-import util.Config;
 
 public class MailSocketService extends AbstractSockectService {
 
@@ -26,7 +25,7 @@ public class MailSocketService extends AbstractSockectService {
 	@Override
 	protected void onConnectionEstabished() throws Exception {
 		originServerSocket = new Socket("mail.josegalindo.com.ar", 110);
-		String line = readFromOriginServer();
+		String line = readFromOriginServer().readLine();
 		echoLine(line);
 		logger.trace("PROXY: Received from Origin Server: " + line);
 	}
@@ -54,8 +53,18 @@ public class MailSocketService extends AbstractSockectService {
 		 */
 	}
 	
+	@Override
+	protected void onConnectionClosed() throws Exception {
+		originServerSocket.close();
+		super.onConnectionClosed();
+	}
+	
 	public void setOriginServerSocket(Socket mailServerSocket) {
 		this.originServerSocket = mailServerSocket;
+	}
+	
+	public Socket getOriginServerSocket() {
+		return originServerSocket;
 	}
 	
 	public MailRetriever getMailRetriever() {
@@ -75,10 +84,9 @@ public class MailSocketService extends AbstractSockectService {
 		}
 	}
 	
-	public String readFromOriginServer() {
+	public BufferedReader readFromOriginServer() {
 		try {
-			BufferedReader in = new BufferedReader(new InputStreamReader(originServerSocket.getInputStream()));
-			return in.readLine();
+			return new BufferedReader(new InputStreamReader(originServerSocket.getInputStream()));
 		} catch (IOException e) {
 			logger.error("Could not write to output stream!. Reason: " + e.getMessage());
 			throw new IllegalStateException("Could not read from server!");
