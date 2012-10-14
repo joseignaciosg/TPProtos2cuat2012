@@ -40,24 +40,6 @@ public class MailSocketService extends AbstractSockectService {
 	@Override
 	protected void exec(String command) throws Exception {
 		stateMachine.exec(command.split(" "));
-		/*
-		String serverResponse;
-		this.outToOriginServer.writeBytes(command + "\r\n");
-		if (command.equals("CAPA") || command.equals("LIST") || command.equals("UIDL")) {
-			do {
-				serverResponse = inFromOriginServer.readLine();
-				outToMUA.writeBytes(serverResponse + "\r\n");
-				System.out.println("PROXY: Received from Origin Server: " + serverResponse);
-			} while (!serverResponse.equals("."));
-		} else if (command.contains("RETR")) {
-			mailWorker.retrieve(inFromOriginServer, outToMUA);
-		} else {
-			serverResponse = inFromOriginServer.readLine();
-			outToMUA.writeBytes(serverResponse + "\r\n");
-			System.out.println("PROXY: Received from Origin Server: " + serverResponse);
-		}
-		endOfTransmission = "QUIT".equals(command.toUpperCase());
-		 */
 	}
 	
 	@Override

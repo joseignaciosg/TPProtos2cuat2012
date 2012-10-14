@@ -6,7 +6,6 @@ import java.io.IOException;
 import service.AbstractSockectService;
 import service.MailSocketService;
 import service.command.ServiceCommand;
-import util.CollectionUtil;
 
 public class EchoUntilPointCommand  extends ServiceCommand {
 
@@ -17,7 +16,7 @@ public class EchoUntilPointCommand  extends ServiceCommand {
 	@Override
 	public void execute(String[] params) {
 		MailSocketService service = (MailSocketService) getOwner();
-		service.echoLineToOriginServer(CollectionUtil.join(originalParams, " "));
+		service.echoLineToOriginServer(getOriginalLine());
 		BufferedReader responseBuffer = service.readFromOriginServer();
 		String statusLine = readLine(responseBuffer);
 		service.echoLine(statusLine);

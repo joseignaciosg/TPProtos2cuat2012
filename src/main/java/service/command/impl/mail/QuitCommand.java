@@ -5,7 +5,6 @@ import java.io.IOException;
 import service.AbstractSockectService;
 import service.MailSocketService;
 import service.command.ServiceCommand;
-import util.CollectionUtil;
 
 public class QuitCommand extends ServiceCommand {
 
@@ -17,7 +16,7 @@ public class QuitCommand extends ServiceCommand {
 	public void execute(String[] params) {
 		owner.setEndOfTransmission(true);
 		MailSocketService mailService = ((MailSocketService) owner);
-		mailService.echoLineToOriginServer(CollectionUtil.join(originalParams, " "));
+		mailService.echoLineToOriginServer(getOriginalLine());
 		String response;
 		try {
 			response = mailService.readFromOriginServer().readLine();

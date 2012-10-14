@@ -3,6 +3,7 @@ package service.command;
 import java.util.Map;
 
 import service.AbstractSockectService;
+import util.CollectionUtil;
 
 
 public abstract class ServiceCommand {
@@ -30,5 +31,9 @@ public abstract class ServiceCommand {
 	
 	public String[] getOriginalParams() {
 		return originalParams;
+	}
+	
+	public String getOriginalLine() {
+		return CollectionUtil.join(originalParams, " ");
 	}
 }
