@@ -33,7 +33,7 @@ public class MailSocketService extends AbstractSockectService {
 				logger.trace("PROXY: Received from Origin Server: " + line);
 			} catch (Exception e) {
 				logger.error("Error en estado de valdiacion del servidor");
-			}			
+			}
 		}
 	}
 

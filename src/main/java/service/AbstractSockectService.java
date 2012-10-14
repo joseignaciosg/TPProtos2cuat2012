@@ -32,10 +32,10 @@ public abstract class AbstractSockectService implements Runnable {
 		try {
 			onConnectionEstabished();
 			while (!endOfTransmission) {
-				BufferedReader inFromClient = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+				BufferedReader inFromClient = read();
 				String clientSentence = inFromClient.readLine(); 
 				System.out.println(getClass().getSimpleName() + " -- Command: " + clientSentence);
-				if (clientSentence != null) {					
+				if (clientSentence != null) {
 					exec(clientSentence);
 				} else {
 					// Connection has been closed or pipe broken...
@@ -43,7 +43,7 @@ public abstract class AbstractSockectService implements Runnable {
 				}
 			}
 		} catch (Exception e) {
-			
+			logger.error("Closing Connection. Exception cought on AbstractSocketService: + " + e.getMessage());
 		}
 		try {
 			onConnectionClosed();
@@ -58,8 +58,8 @@ public abstract class AbstractSockectService implements Runnable {
 	protected abstract void exec(String command) throws Exception;
 	
 	protected void onConnectionClosed() throws Exception {
-		stateMachine.exit();		
 		try {
+			stateMachine.exit();		
 			socket.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -84,6 +84,15 @@ public abstract class AbstractSockectService implements Runnable {
 			out.writeBytes(s);
 		} catch (IOException e) {
 			logger.error("Could not write to output stream!. Reason: " + e.getMessage());
+		}
+	}
+	
+	public BufferedReader read() {
+		try {
+			return new BufferedReader(new InputStreamReader(socket.getInputStream()));
+		} catch (IOException e) {
+			logger.error("Could not write to output stream!. Reason: " + e.getMessage());
+			throw new IllegalStateException("Could not read from server!");
 		}
 	}
 	
