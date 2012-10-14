@@ -25,20 +25,19 @@ public class MailHeaderTest {
     }
     
     
-    @Test
+//    @Test
     public void getHeadersTest() throws IOException{
 	System.out.println(reader.getHeaders());
     }
     
-    @Test
+//    @Test
     public void getHeaderTest() throws IOException{
 	String from = reader.getHeader("From");
 	System.out.println(from);
 	Assert.assertTrue(from.equals(" John Doe <example@example.com>"));
 	
 	String notexistent = reader.getHeader("notexistent");
-	Assert.assertTrue(notexistent == null);
-	
+	Assert.assertTrue(notexistent == null);	
     }
     
 }
