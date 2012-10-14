@@ -8,16 +8,21 @@ import java.net.Socket;
 import parser.impl.MailRetriever;
 import util.Config;
 
-public class ProxySocketService extends AbstractSockectService {
+public class MailSocketService extends AbstractSockectService {
 
 	private Socket originServerSocket;
 	private BufferedReader inFromOriginServer;
 	private DataOutputStream outToMUA;
 	private DataOutputStream outToOriginServer;
 	private MailRetriever mailWorker;
+	
+	public MailSocketService() {
+		
+	}
 
 	@Override
 	protected void onConnectionEstabished() throws Exception {
+		
 		this.mailWorker = new MailRetriever();
 		String originServerSentence;
 		final String address = Config.getInstance().get("mail_address");

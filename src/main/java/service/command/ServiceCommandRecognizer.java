@@ -15,15 +15,21 @@ public class ServiceCommandRecognizer {
 	private static final Logger logger = Logger.getLogger(ServiceCommandRecognizer.class);
 	
 	private Map<String, Class<? extends ServiceCommand>> commands;
-	private AbstractSockectService owner; 
+	private Class<? extends ServiceCommand> defaultCommand;
+	private AbstractSockectService owner;
 	
 	public ServiceCommandRecognizer(AbstractSockectService owner) {
 		this.owner = owner;
 		commands = new HashMap<String, Class<? extends ServiceCommand>>();
+		defaultCommand = null;
 	}
 	
 	public void register(String cmdName, Class<? extends ServiceCommand> clazz) {
 		commands.put(cmdName.toLowerCase(), clazz);
+	}
+	
+	public void registerDefault(Class<? extends ServiceCommand> clazz) {
+		this.defaultCommand = clazz;
 	}
 	
 	public List<String> availableCommands() {
@@ -39,7 +45,8 @@ public class ServiceCommandRecognizer {
 			owner.echoLine(100, "Unrecognized Command");
 			return;
 		}
-		Class<? extends ServiceCommand> clazz = commands.get(params[0].toLowerCase());
+		Class<? extends ServiceCommand> clazz = commands.get(params[0].toLowerCase());		
+		clazz = (clazz == null) ? defaultCommand : clazz;
 		if (clazz == null) {
 			owner.echoLine(100, "Unrecognized Command");
 			logger.trace("Unrecognized command");
