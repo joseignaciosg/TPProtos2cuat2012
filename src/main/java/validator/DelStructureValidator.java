@@ -14,12 +14,12 @@ public class DelStructureValidator implements EmailValidator {
 
 	@Override
 	public boolean validate(User user, Email email) {
-		if(user == null || email == null){
+		if (user == null || email == null) {
 			logger.info("User and Email cant be null");
 			throw new IllegalStateException();
 		}
 		String[] desiredStructure = CollectionUtil.splitAndTrim(deleteStructureConfig.get(user.getMail()), ",");
-		if(desiredStructure == null || desiredStructure.length == 0){
+		if (desiredStructure == null || desiredStructure.length == 0) {
 			// No restrictions for this user
 			return true;
 		}

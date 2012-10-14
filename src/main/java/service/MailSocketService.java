@@ -44,7 +44,7 @@ public class MailSocketService extends AbstractSockectService {
 	
 	@Override
 	protected void onConnectionClosed() throws Exception {
-		if(originServerSocket != null){
+		if (originServerSocket != null) {
 			originServerSocket.close();
 		}
 		super.onConnectionClosed();
