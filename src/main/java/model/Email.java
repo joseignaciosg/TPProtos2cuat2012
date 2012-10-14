@@ -1,16 +1,21 @@
 package model;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
 
 import parser.MailHeader;
+import service.command.impl.mail.DeleCommand;
 import util.StringUtil;
 
 public class Email {
 	
+	protected static final Logger logger = Logger.getLogger(Email.class);
+
 	private Double size;
 	private LocalDate date;
 	private String sender;
@@ -43,6 +48,16 @@ public class Email {
 	
 	public boolean hasAttachmentWithExtension(String str){
 		return attachmentsExtension.contains(str.trim());
+	}
+	
+	
+	public String getHeader(String str){
+		try {
+			return header.getHeader(str);
+		} catch (IOException e) {
+			logger.error("IO error while trying to retrive mail header " + str);
+			throw new IllegalStateException();
+		}
 	}
 	
 	
