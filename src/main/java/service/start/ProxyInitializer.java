@@ -26,8 +26,7 @@ public class ProxyInitializer {
 
 	private void initFileWatcher() {
 		try {
-			final String[] dirs = { Config.getInstance().get(
-					"specific_conf_dir") };
+			final String[] dirs = { Config.getInstance().get("specific_conf_dir") };
 			final DirectoryWatcher watcher = new DirectoryWatcher(dirs, false);
 			watcher.suscribe(StandardWatchEventKinds.ENTRY_CREATE,
 					new ConfigWatcherCallback("Creation Listener"));

@@ -23,7 +23,7 @@ public class MailRetriever {
 			bufferizer = new FileBufferizer();
 		}
 		bufferizer.buffer(inputBuffer);
-		
+		bufferizer.transform();
 		bufferizer.send(outputBuffer);
 		outputBuffer.writeBytes(".\r\n"); // the final point is not part of the
 	}

@@ -13,13 +13,13 @@ import parser.api.Bufferizer;
 
 public class FileBufferizer implements Bufferizer {
 
-	private File tmp;
+	private File tmpMailFile;
 
 	@Override
-	public void buffer(final BufferedReader inputBuffer) throws IOException {
+	public void buffer(BufferedReader inputBuffer) throws IOException {
 		String serverResponse;
-		this.tmp = File.createTempFile("mail", "proxy");
-		final BufferedWriter out = new BufferedWriter(new FileWriter(this.tmp));
+		tmpMailFile = File.createTempFile("mail", "proxy");
+		BufferedWriter out = new BufferedWriter(new FileWriter(tmpMailFile));
 		serverResponse = inputBuffer.readLine();
 		while (!serverResponse.equals(".")) {
 			out.write(serverResponse + "\r\n");
@@ -30,19 +30,18 @@ public class FileBufferizer implements Bufferizer {
 
 	@Override
 	public void transform() throws IOException {
-		new FileMailTransformer(this.tmp).transform();
+		new FileMailTransformer(this.tmpMailFile).transform();
 	}
 
 	@Override
-	public void send(final DataOutputStream outputBuffer) throws IOException {
+	public void send(DataOutputStream outputBuffer) throws IOException {
 		String serverResponse;
-		final BufferedReader reader = new BufferedReader(new FileReader(
-				this.tmp));
+		BufferedReader reader = new BufferedReader(new FileReader(tmpMailFile));
 		while ((serverResponse = reader.readLine()) != null) {
 			outputBuffer.writeBytes(serverResponse + "\r\n");
 		}
 		reader.close();
-		this.tmp.delete();
+		tmpMailFile.delete();
 	}
 
 }
