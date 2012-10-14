@@ -9,8 +9,7 @@ import java.net.Socket;
 import org.apache.log4j.Logger;
 
 import parser.impl.MailRetriever;
-import service.state.impl.mail.ParseMailState;
-import validator.IpValidator;
+import service.state.impl.mail.ValidationState;
 
 public class MailSocketService extends AbstractSockectService {
 
@@ -20,26 +19,22 @@ public class MailSocketService extends AbstractSockectService {
 	private MailRetriever mailRetriever;
 	
 	public MailSocketService() {
-		stateMachine.setState(new ParseMailState(this));
+		stateMachine.setState(new ValidationState(this));
 	}
 
 	@Override
 	protected void onConnectionEstabished() throws Exception {
-		IpValidator ipValidator = new IpValidator();
-		String clientIp = getSocket().getInetAddress().getHostAddress();
-		logger.info("Checking access for new connection: " + getSocket().getInetAddress().getHostAddress());
-		boolean isClientIpBanned = ipValidator.validate(clientIp);
-		if(isClientIpBanned == true){
-			logger.info("Client ip: " +  clientIp + " is banned, closing connection...");
-			echoLine("-ERR " + "Connection closed by server. Cause: IP " + clientIp + " has been banned");
-			throw new ClientBannedException();
+		stateMachine.exec(null);
+		if (!endOfTransmission) {
+			try {
+				setOriginServerSocket(new Socket("mail.josegalindo.com.ar", 110));
+				String line = readFromOriginServer().readLine();
+				echoLine(line);
+				logger.trace("PROXY: Received from Origin Server: " + line);
+			} catch (Exception e) {
+				logger.error("Error en estado de valdiacion del servidor");
+			}			
 		}
-		logger.info("Access guaranteed for " + clientIp);
-
-		originServerSocket = new Socket("mail.josegalindo.com.ar", 110);
-		String line = readFromOriginServer().readLine();
-		echoLine(line);
-		logger.trace("PROXY: Received from Origin Server: " + line);
 	}
 
 	@Override

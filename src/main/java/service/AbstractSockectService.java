@@ -20,6 +20,7 @@ public abstract class AbstractSockectService implements Runnable {
 
 	public AbstractSockectService() {
 		stateMachine = new ServiceStateMachine(this);
+		endOfTransmission = false;
 	}
 	
 	public void setSocket(Socket socket) {
@@ -30,7 +31,7 @@ public abstract class AbstractSockectService implements Runnable {
 	public void run() {
 		try {
 			onConnectionEstabished();
-			do {
+			while (!endOfTransmission) {
 				BufferedReader inFromClient = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 				String clientSentence = inFromClient.readLine(); 
 				System.out.println(getClass().getSimpleName() + " -- Command: " + clientSentence);
@@ -40,7 +41,7 @@ public abstract class AbstractSockectService implements Runnable {
 					// Connection has been closed or pipe broken...
 					endOfTransmission = true;
 				}
-			} while (!endOfTransmission);
+			}
 		} catch (Exception e) {
 			
 		}
