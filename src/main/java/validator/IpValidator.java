@@ -17,7 +17,7 @@ public class IpValidator {
 
 	private static Logger logger = Logger.getLogger(IpValidator.class);
 
-	public boolean validate(String userIp) {
+	public boolean isBanned(String userIp) {
 		String fileName = Config.getInstance().get("specific_conf_dir")
 				+ "access_ip.conf";
 		Scanner scannerIps = IOUtil.createScanner(fileName);

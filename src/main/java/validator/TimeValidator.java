@@ -12,7 +12,7 @@ public class TimeValidator {
     private static Config accessTimeConfig = Config.getInstance().getConfig(
 	    "access_time");
 
-    public boolean validate(final String user) {
+    public boolean canAccess(final String user) {
 	String timeRestriction = accessTimeConfig.get(user);
 	if (timeRestriction == null) {
 	    return true;

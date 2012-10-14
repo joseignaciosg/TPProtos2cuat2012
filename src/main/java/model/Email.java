@@ -9,14 +9,12 @@ import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
 
 import parser.MailHeader;
-import service.command.impl.mail.DeleCommand;
-import util.StringUtil;
 
 public class Email {
 	
 	protected static final Logger logger = Logger.getLogger(Email.class);
 
-	private Double size;
+	private long sizeInBytes;
 	private LocalDate date;
 	private String sender;
 	private MailHeader header;
@@ -27,8 +25,8 @@ public class Email {
 		header = new MailHeader(mailFile);
 	}
 	
-	public Double getSize() {
-		return size;
+	public long getSize() {
+		return sizeInBytes;
 	}
 	public LocalDate getDate() {
 		return date;
@@ -47,9 +45,12 @@ public class Email {
 	}
 	
 	public boolean hasAttachmentWithExtension(String str){
-		return attachmentsExtension.contains(str.trim());
+		if(hasAttachments()){
+			return attachmentsExtension.contains(str);
+		}
+		
+		return false;
 	}
-	
 	
 	public String getHeader(String str){
 		try {
@@ -60,6 +61,13 @@ public class Email {
 		}
 	}
 	
-	
+	public String getHumanReadableSize() {
+		boolean si = true;
+	    int unit = si ? 1000 : 1024;
+	    if (sizeInBytes < unit) return sizeInBytes + " B";
+	    int exp = (int) (Math.log(sizeInBytes) / Math.log(unit));
+	    String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp-1) + (si ? "" : "i");
+	    return String.format("%.1f %sB", sizeInBytes / Math.pow(unit, exp), pre);
+	}
 
 }

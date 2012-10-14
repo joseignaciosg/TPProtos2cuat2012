@@ -18,7 +18,7 @@ public class ValidationState extends State {
 		Socket serviceSocket = owner.getSocket();
 		String clientIp = serviceSocket.getInetAddress().getHostAddress();
 		logger.info("Checking access for new connection: " + serviceSocket.getInetAddress().getHostAddress());
-		boolean isClientIpBanned = ipValidator.validate(clientIp);
+		boolean isClientIpBanned = ipValidator.isBanned(clientIp);
 		if(isClientIpBanned == true){
 			logger.info("Client ip: " +  clientIp + " is banned, closing connection...");
 			owner.echoLine("-ERR " + "Connection closed by server. Cause: IP " + clientIp + " has been banned");

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.Email;
+import model.User;
 
 import org.apache.log4j.Logger;
 
@@ -13,7 +14,7 @@ import service.MailSocketService;
 import service.command.ServiceCommand;
 import validator.DelContentTypeValidator;
 import validator.DelHeaderPatternValidator;
-import validator.DelMaxAgeValidator;
+import validator.DelMaxDateValidator;
 import validator.DelSenderValidator;
 import validator.DelSizeValidator;
 import validator.DelStructureValidator;
@@ -30,7 +31,7 @@ public class DeleCommand extends ServiceCommand {
 		validators = new ArrayList<EmailValidator>();
 		validators.add(new DelContentTypeValidator());
 		validators.add(new DelHeaderPatternValidator());
-		validators.add(new DelMaxAgeValidator());
+		validators.add(new DelMaxDateValidator());
 		validators.add(new DelSenderValidator());
 		validators.add(new DelSizeValidator());
 		validators.add(new DelStructureValidator());
@@ -42,10 +43,9 @@ public class DeleCommand extends ServiceCommand {
 		owner.getStateMachine().exec(retrParams);
 		Email email = (Email) getBundle().get("DELE_" + params[0]);
 		for (EmailValidator v : validators) {
-			if (!v.validate(email)) {
-				// error
-				getBundle().remove(params[0]);
-
+			if (!v.validate((User) getBundle().get("AUTH_USER"), email)) {
+				// Error
+				getBundle().remove("DELE_" + params[0]);
 				return;
 			}
 		}

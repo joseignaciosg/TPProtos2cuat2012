@@ -25,4 +25,12 @@ public class CollectionUtil {
 		}
 		return result;
 	}
+
+	public static String[] splitAndTrim(String string, String separator) {
+		String[] ans = string.trim().split(separator);
+		for (int i = 0; i < ans.length; i++) {
+			ans[i] = ans[i].trim();
+		}
+		return ans;
+	}
 }
