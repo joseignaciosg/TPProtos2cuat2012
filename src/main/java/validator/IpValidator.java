@@ -1,13 +1,8 @@
 package validator;
 
-import java.net.Inet4Address;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.Scanner;
-import java.util.StringTokenizer;
 
 import org.apache.commons.net.util.SubnetUtils;
-import org.apache.commons.net.util.SubnetUtils.SubnetInfo;
 import org.apache.log4j.Logger;
 
 import util.Config;

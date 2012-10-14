@@ -1,6 +1,5 @@
 package validator;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -37,7 +36,7 @@ public class DelHeaderPatternValidator implements EmailValidator {
 		Map<String, String> headerPatternMap = new HashMap<String, String>();
 		
 		for(String s: headerPatterns){
-			String[] lineSplit = CollectionUtil.splitAndTrim(s , "eq");
+			String[] lineSplit = CollectionUtil.splitAndTrim(s, "eq");
 			headerPatternMap.put(lineSplit[0], lineSplit[1]);
 		}
 		

@@ -6,7 +6,6 @@ import model.Email;
 import model.User;
 
 import org.apache.log4j.Logger;
-import org.mockito.internal.util.ArrayUtils;
 
 import util.CollectionUtil;
 import util.Config;
