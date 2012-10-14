@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 
 import parser.impl.MailRetriever;
 import service.state.impl.mail.ParseMailState;
+import util.Config;
 
 public class MailSocketService extends AbstractSockectService {
 
