@@ -15,10 +15,11 @@ public class LeetTransformer extends Transformer {
 	//TODO llamar app externa
 	//TODO VER SI ES TXT EN LOS HEADERS PARA TRANSFORMAR
 	List<String> commands = new LinkedList<String>(); 
-	commands.add("java");
-	commands.add("-jar");
-	commands.add("l33tTransformer");
-	commands.add(part.getAbsolutePath());
+//	commands.add("java");
+//	commands.add("-jar");
+//	commands.add("l33tTransformer");
+//	commands.add(part.getAbsolutePath());
+	commands.add("ls");
 	ProcessBuilder pb = new ProcessBuilder(commands);
 	Process process = pb.start();
 	try {
@@ -27,6 +28,9 @@ public class LeetTransformer extends Transformer {
 	    e.printStackTrace();
 	}
 	 Scanner scanner = new Scanner( process.getInputStream() );
+	 while(scanner.hasNextLine()){
+	    System.out.println(scanner.nextLine()); 
+	 }
 	return part;
     }	 
 }	

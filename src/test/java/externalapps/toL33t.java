@@ -12,7 +12,8 @@ public class toL33t {
 	//TODO pisar archivo
 	File transformedPart = File.createTempFile("transformedpart", "proxy");
 	BufferedWriter out = new BufferedWriter(new FileWriter(transformedPart));
-	Scanner partScanner = new Scanner(args[1]);
+	File mail = new File(args[1]);
+	Scanner partScanner = new Scanner(mail);
 	while (partScanner.hasNextLine()) {
 	    String line = partScanner.nextLine();
 	    line = line.replaceAll("a", "4");
@@ -22,6 +23,15 @@ public class toL33t {
 	    out.write(line + "\r\n");
 	}
 	out.close();
+	
+	partScanner = new Scanner(transformedPart);
+	FileWriter out2 = new FileWriter(mail);
+	while (partScanner.hasNextLine()) {
+	    String line = partScanner.nextLine();
+	    out2.write(line + "\r\n");
+	}
+	out2.close();
 	partScanner.close();
     }
+    
 }

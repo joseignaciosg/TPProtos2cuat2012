@@ -1,6 +1,8 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Scanner;
 
 import org.junit.Before;
@@ -33,12 +35,14 @@ public class TransformerTest {
 	
     }
     
-    private  void printFile(File file) throws FileNotFoundException{
+    private  void printFile(File file) throws IOException{
 	Scanner s = new Scanner(file);
 	while (s.hasNextLine()){
 	    System.out.println(s.nextLine());
 	}
 	s.close();
+	
+	
     }
     
     
