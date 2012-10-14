@@ -34,7 +34,7 @@ public class Email {
 	public String getSender() {
 		return sender;
 	}
-	public MailHeader getHeader() {
+	public MailHeader getHeaders() {
 		return header;
 	}
 	public boolean hasAttachments() {
@@ -68,6 +68,10 @@ public class Email {
 	    int exp = (int) (Math.log(sizeInBytes) / Math.log(unit));
 	    String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp-1) + (si ? "" : "i");
 	    return String.format("%.1f %sB", sizeInBytes / Math.pow(unit, exp), pre);
+	}
+
+	public boolean hasHeaderValue(String key, String value) {
+		return false;
 	}
 
 }
