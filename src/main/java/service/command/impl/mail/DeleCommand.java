@@ -39,7 +39,7 @@ public class DeleCommand extends ServiceCommand {
 
 	@Override
 	public void execute(String[] params) {
-		String[] retrParams = { "RETR", params[0] };
+		String[] retrParams = { "RETR", params[0], "false" };
 		owner.getStateMachine().exec(retrParams);
 		Email email = (Email) getBundle().get("DELE_" + params[0]);
 		for (EmailValidator v : validators) {
