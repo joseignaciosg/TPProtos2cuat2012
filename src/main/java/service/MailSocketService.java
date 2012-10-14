@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 
 import parser.impl.MailRetriever;
 import service.state.impl.mail.ParseMailState;
+import validator.IpValidator;
 
 public class MailSocketService extends AbstractSockectService {
 
@@ -24,6 +25,17 @@ public class MailSocketService extends AbstractSockectService {
 
 	@Override
 	protected void onConnectionEstabished() throws Exception {
+		IpValidator ipValidator = new IpValidator();
+		String clientIp = getSocket().getInetAddress().getHostAddress();
+		logger.info("Checking access for new connection: " + getSocket().getInetAddress().getHostAddress());
+		boolean isClientIpBanned = ipValidator.validate(clientIp);
+		if(isClientIpBanned == true){
+			logger.info("Client ip: " +  clientIp + " is banned, closing connection...");
+			echoLine("-ERR " + "Connection closed by server. Cause: IP " + clientIp + " has been banned");
+			throw new ClientBannedException();
+		}
+		logger.info("Access guaranteed for " + clientIp);
+
 		originServerSocket = new Socket("mail.josegalindo.com.ar", 110);
 		String line = readFromOriginServer().readLine();
 		echoLine(line);
@@ -55,7 +67,9 @@ public class MailSocketService extends AbstractSockectService {
 	
 	@Override
 	protected void onConnectionClosed() throws Exception {
-		originServerSocket.close();
+		if(originServerSocket != null){
+			originServerSocket.close();
+		}
 		super.onConnectionClosed();
 	}
 	

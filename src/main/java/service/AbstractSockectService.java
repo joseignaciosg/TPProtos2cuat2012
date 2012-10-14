@@ -41,14 +41,13 @@ public abstract class AbstractSockectService implements Runnable {
 					endOfTransmission = true;
 				}
 			} while (!endOfTransmission);
-			onConnectionClosed();
-		} catch (final Exception e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			
 		}
 		try {
-			socket.close();
-		} catch (IOException e) {
-			e.printStackTrace();
+			onConnectionClosed();
+		} catch (Exception e) {
+			logger.error("Could not close connection " + e.getMessage());
 		}
 	}
 
@@ -58,7 +57,12 @@ public abstract class AbstractSockectService implements Runnable {
 	protected abstract void exec(String command) throws Exception;
 	
 	protected void onConnectionClosed() throws Exception {
-		stateMachine.exit();
+		stateMachine.exit();		
+		try {
+			socket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void echoLine(int code, String message) {
