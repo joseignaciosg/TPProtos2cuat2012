@@ -2,11 +2,15 @@ package service.command;
 
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import service.AbstractSockectService;
 import util.CollectionUtil;
 
 
 public abstract class ServiceCommand {
+	
+	protected static final Logger logger = Logger.getLogger(ServiceCommand.class);
 
 	protected AbstractSockectService owner;
 	protected String[] originalParams;
