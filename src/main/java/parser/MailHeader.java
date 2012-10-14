@@ -53,9 +53,9 @@ public class MailHeader {
 		if (line.startsWith(".")) {
 			return;
 		}
-		if (line.startsWith("\t\t")) {
-			String lastValue = headers.get(lastKey);
-			headers.put(lastKey, lastValue + line);
+		if (line.startsWith(" ")) {
+			line = line.trim();
+			parseHeadersCont(line);
 			return;
 		}
 		String[] parts = line.split(";");
@@ -71,7 +71,7 @@ public class MailHeader {
 		int splitIndex = s.indexOf(":");
 		if (splitIndex != -1) {
 			String key = s.substring(0, splitIndex);
-			String value = s.substring(splitIndex + 1);
+			String value = s.substring(splitIndex + 2);
 			headers.put(key, value);
 		}
 	}
@@ -80,7 +80,15 @@ public class MailHeader {
 		String[] parts = s.split("=");
 		if (parts.length == 2) {
 			String key = parts[0].trim();
-			headers.put(key, parts[1].trim());
+			lastKey = key;
+			String value = parts[1].trim();
+			if (value.startsWith("\"")) {
+				value = value.substring(1);
+			}
+			if (value.endsWith("\"")) {
+				value = value.substring(0, value.length() - 1);
+			}
+			headers.put(key, value);
 		}
 	}
 	
