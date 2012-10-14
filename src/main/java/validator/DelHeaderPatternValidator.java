@@ -32,19 +32,14 @@ public class DelHeaderPatternValidator implements EmailValidator {
 			// No restrictions for this user
 			return true;
 		}
-		
 		Map<String, String> headerPatternMap = new HashMap<String, String>();
-		
 		for(String s: headerPatterns){
 			String[] lineSplit = CollectionUtil.splitAndTrim(s, "eq");
 			headerPatternMap.put(lineSplit[0], lineSplit[1]);
 		}
-		
-		
-		for(Entry<String, String> entry: headerPatternMap.entrySet()){
-			if(email.hasHeaderValue(entry.getKey(), entry.getValue())){
-				logger.info("Restricting message deletion because mail has the following header " +
-						 entry);
+		for (Entry<String, String> entry: headerPatternMap.entrySet()) {
+			if (email.headerMatches(entry.getKey(), entry.getValue())) {
+				logger.info("Restricting message deletion because mail has the following header " + entry);
 				return false;
 			}
 		}

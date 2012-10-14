@@ -4,15 +4,14 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
+
+import model.Email;
 
 import org.apache.log4j.Logger;
 
-import model.Email;
 import service.AbstractSockectService;
 import service.MailSocketService;
 import service.command.ServiceCommand;
-import util.IOUtil;
 
 public class RetrCommand extends ServiceCommand {
 	protected static final Logger logger = Logger.getLogger(DeleCommand.class);
@@ -25,47 +24,48 @@ public class RetrCommand extends ServiceCommand {
 	public void execute(String[] params) {
 		boolean showToClient = true;
 		if (params.length == 3) {
-			showToClient = params[3].equals("false") ? false : true;
+			showToClient = Boolean.valueOf(params[3]);
 		}
-		FileWriter mailFile;
+		File mail;
+		FileWriter mailFileWriter;
 		try {
-			mailFile = new FileWriter(File.createTempFile("mail" + params[0],
-					".mail"));
+			mail = File.createTempFile("mail" + params[0], ".mail");
+			mailFileWriter = new FileWriter(mail);
 		} catch (IOException e) {
 			logger.error("Error while trying to create the temporary mail file");
 			throw new IllegalStateException();
-
 		}
-
 		MailSocketService mailService = (MailSocketService) owner;
-		mailService.echoLineToOriginServer("RETR " + params[0]);
-
+		mailService.echoLineToOriginServer(getOriginalLine());
 		BufferedReader responseBuffer = mailService.readFromOriginServer();
+		String firstLine = null;
 		String line;
 		do {
 			line = readLine(responseBuffer);
+			if (firstLine == null) {
+				firstLine = line;
+			}
 			try {
-				mailFile.append(line);
+				mailFileWriter.append(line);
 			} catch (IOException e) {
-				throw new IllegalStateException("Error writing line - "
-						+ e.getMessage());
+				try {
+					mailFileWriter.close();
+				} catch (IOException e1) {
+				}
+				throw new IllegalStateException("Error writing line - " + e.getMessage());
 			}
 			if (showToClient) {
 				mailService.echoLine(line);
 			}
-		} while (!line.equals(".\r\n"));
-		
+		} while (!line.equals("."));
+		Email email = new Email(firstLine, mail);
 		if (!showToClient) {
-			getBundle().put("DELE_" + params[0],
-					new Email(new File(IOUtil.fullPath("test_mail.txt"))));
+			getBundle().put("DELE_" + params[0], email);
 		}
-		
 		try {
-			mailFile.close();
+			mailFileWriter.close();
 		} catch (IOException e) {
-			throw new IllegalStateException(
-					"Error while closing temporary mail file - "
-							+ e.getMessage());
+			throw new IllegalStateException("Error while closing temporary mail file - " + e.getMessage());
 		}
 	}
 

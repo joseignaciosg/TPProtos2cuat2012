@@ -15,26 +15,20 @@ public class DelSizeValidator implements EmailValidator {
 
 	@Override
 	public boolean validate(User user, Email email) {
-		
-		if(user == null || email == null){
+		if (user == null || email == null) {
 			logger.info("User and Email cant be null");
 			throw new IllegalStateException();
 		}
-		
-		
 		String maxSizeAccepted = deleteSizeConfig.get(user.getMail()).trim();
-		if(maxSizeAccepted == null){
-			// No restrictions for this user
+		if (maxSizeAccepted == null) {
 			return true;
 		}
-
-		if(Long.valueOf(maxSizeAccepted) > email.getSize()){
+		if (Long.valueOf(maxSizeAccepted) > email.size()) {
 			logger.info("Restricting message deletion because it's size ("
-					+ maxSizeAccepted + " bytes) is bigger than the maximum accepted size for" +
-							" this account (" + email.getSize() + "bytes)");
+				+ maxSizeAccepted + " bytes) is bigger than the maximum accepted size for" +
+				" this account (" + email.size() + "bytes)");
 			return false;
 		}
-
 		return true;
 	}
 	
