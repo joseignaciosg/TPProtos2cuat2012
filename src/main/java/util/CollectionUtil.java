@@ -14,4 +14,15 @@ public class CollectionUtil {
 		}
 		return result;
 	}
+	
+	public static String join(String[] array, String joint) {
+		String result = "";
+		for (int i = 0; i < array.length; i++) {
+			result += array[i];
+			if (i < array.length - 1) {
+				result += joint;
+			}
+		}
+		return result;
+	}
 }

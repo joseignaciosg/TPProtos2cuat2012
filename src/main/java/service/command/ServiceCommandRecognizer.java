@@ -56,6 +56,7 @@ public class ServiceCommandRecognizer {
 		String[] parts = new String[params.length - 1];
 		System.arraycopy(params, 1, parts, 0, params.length - 1);
 		ServiceCommand command = createInstance(clazz);
+		command.setOriginalParams(params);
 		command.execute(parts);
 	}
 	

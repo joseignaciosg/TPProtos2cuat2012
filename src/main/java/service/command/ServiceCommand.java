@@ -8,7 +8,8 @@ import service.AbstractSockectService;
 public abstract class ServiceCommand {
 
 	protected AbstractSockectService owner;
-	
+	protected String[] originalParams;
+
 	public ServiceCommand(AbstractSockectService owner) {
 		this.owner = owner;
 	}
@@ -21,5 +22,13 @@ public abstract class ServiceCommand {
 	
 	public Map<String, Object> getBundle() {
 		return owner.getStateMachine().getCurrent().getBundle();
+	}
+	
+	public void setOriginalParams(String[] originalParams) {
+		this.originalParams = originalParams;
+	}
+	
+	public String[] getOriginalParams() {
+		return originalParams;
 	}
 }

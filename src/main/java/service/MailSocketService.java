@@ -2,45 +2,38 @@ package service;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
+import org.apache.log4j.Logger;
+
 import parser.impl.MailRetriever;
-import util.Config;
+import service.state.impl.mail.ParseMailState;
 
 public class MailSocketService extends AbstractSockectService {
 
+	private static final Logger logger = Logger.getLogger(MailSocketService.class);
+	
 	private Socket originServerSocket;
-	private BufferedReader inFromOriginServer;
-	private DataOutputStream outToMUA;
-	private DataOutputStream outToOriginServer;
-	private MailRetriever mailWorker;
+	private MailRetriever mailRetriever;
 	
 	public MailSocketService() {
-		
+		stateMachine.setState(new ParseMailState(this));
 	}
 
 	@Override
 	protected void onConnectionEstabished() throws Exception {
-		
-		this.mailWorker = new MailRetriever();
-		String originServerSentence;
-		final String address = Config.getInstance().get("mail_address");
-		final int port = Config.getInstance().getInt("mail_port");
-		this.originServerSocket = new Socket(address, port);
-		this.inFromOriginServer = new BufferedReader(new InputStreamReader(
-				this.originServerSocket.getInputStream()));
-		this.outToOriginServer = new DataOutputStream(
-				this.originServerSocket.getOutputStream());
-		originServerSentence = this.inFromOriginServer.readLine();
-		System.out.println("PROXY: Received from Origin Server: "
-				+ originServerSentence);
-		this.outToMUA = new DataOutputStream(this.socket.getOutputStream());
-		this.outToMUA.writeBytes(originServerSentence + "\r\n");
+		originServerSocket = new Socket("mail.josegalindo.com.ar", 110);
+		String line = readFromOriginServer();
+		echoLine(line);
+		logger.trace("PROXY: Received from Origin Server: " + line);
 	}
 
 	@Override
-	protected void exec(final String command) throws Exception {
+	protected void exec(String command) throws Exception {
+		stateMachine.exec(command.split(" "));
+		/*
 		String serverResponse;
 		this.outToOriginServer.writeBytes(command + "\r\n");
 		if (command.equals("CAPA") || command.equals("LIST") || command.equals("UIDL")) {
@@ -57,6 +50,37 @@ public class MailSocketService extends AbstractSockectService {
 			System.out.println("PROXY: Received from Origin Server: " + serverResponse);
 		}
 		endOfTransmission = "QUIT".equals(command.toUpperCase());
+		 */
+	}
+	
+	public void setOriginServerSocket(Socket mailServerSocket) {
+		this.originServerSocket = mailServerSocket;
+	}
+	
+	public MailRetriever getMailRetriever() {
+		return mailRetriever;
 	}
 
+	public void echoLineToOriginServer(String s) {
+		echoToOriginServer(s + "\r\n");
+	}
+	
+	public void echoToOriginServer(String s) {
+		try {
+			DataOutputStream out = new DataOutputStream(originServerSocket.getOutputStream());
+			out.writeBytes(s);
+		} catch (IOException e) {
+			logger.error("Could not write to output stream!. Reason: " + e.getMessage());
+		}
+	}
+	
+	public String readFromOriginServer() {
+		try {
+			BufferedReader in = new BufferedReader(new InputStreamReader(originServerSocket.getInputStream()));
+			return in.readLine();
+		} catch (IOException e) {
+			logger.error("Could not write to output stream!. Reason: " + e.getMessage());
+			throw new IllegalStateException("Could not read from server!");
+		}
+	}
 }
