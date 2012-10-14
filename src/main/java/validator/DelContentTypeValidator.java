@@ -1,14 +1,15 @@
 package validator;
 
+import java.util.Arrays;
+
+import model.Email;
+import model.User;
+
 import org.apache.log4j.Logger;
-import org.joda.time.LocalDate;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
+import org.mockito.internal.util.ArrayUtils;
 
 import util.CollectionUtil;
 import util.Config;
-import model.Email;
-import model.User;
 
 
 public class DelContentTypeValidator implements EmailValidator {
@@ -34,7 +35,7 @@ public class DelContentTypeValidator implements EmailValidator {
 		for(String extension: fileExtensions){
 			if(email.hasAttachmentWithExtension(extension)){
 				logger.info("Restricting message deletion because mail has attachments with " +
-						"the following extension: " +  extension);
+						"the following extension: " +  Arrays.toString(fileExtensions));
 				return false;
 			}
 		}
