@@ -1,0 +1,265 @@
++OK 14597 octets
+Return-path: <joseignaciosg9@gmail.com>
+Envelope-to: karpo@josegalindo.com.ar
+Delivery-date: Mon, 08 Oct 2012 20:45:06 -0600
+Received: from [209.85.223.171] (port=37978 helo=mail-ie0-f171.google.com)
+.by host117.hostmonster.com with esmtps (TLSv1:RC4-SHA:128)
+.(Exim 4.76)
+.(envelope-from <joseignaciosg9@gmail.com>)
+.id 1TLPog-0001OF-57
+.for karpo@josegalindo.com.ar; Mon, 08 Oct 2012 20:45:06 -0600
+Received: by mail-ie0-f171.google.com with SMTP id s9so1462718iec.2
+        for <karpo@josegalindo.com.ar>; Mon, 08 Oct 2012 19:45:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20120113;
+        h=mime-version:in-reply-to:references:date:message-id:subject:from:to
+         :content-type;
+        bh=rK7mCVHtGuQ+zJPEAseriMZXjWnlg485Q9xx8GfAFLs=;
+        b=zd0zcZtMI0dtbKji9hveqCMLdRFx7XGxpcfcUEdteUAqJqWCP8ZGduqXJiRRElt3q3
+         MvXk90Tns2bVlcaMT0EB6fYF3cnt2Y/n8NhSGoYW82uirh11s3TqOCTYAh+FqO++3ZOP
+         xSNkteC6LG76Vk3Y8cC3r13nFr2PVGcAYvoyA1XXB7cYbhf4Q2Uu6AesdncPEtjoNbBR
+         ox+CCgbvy/u7V48Bsr86AVPNsBtTzGap3MreozdaT7yU2syI3dC85zWKNNeBQrqopfzV
+         5KXLguBeUTR6ZWckWyw/6pb1BxlRTGFwtQ976FqeMd/ZLUOT3+rIaQXwJcG9zr0eXrAg
+         T+sA==
+MIME-Version: 1.0
+Received: by 10.50.190.161 with SMTP id gr1mr298481igc.74.1349750704970; Mon,
+ 08 Oct 2012 19:45:04 -0700 (PDT)
+Received: by 10.231.197.233 with HTTP; Mon, 8 Oct 2012 19:45:04 -0700 (PDT)
+In-Reply-To: <CA+yd-DgLdcO=1452hmg3xpc_fH8FTPb+QxLq6d98oaBLOB-WWw@mail.gmail.com>
+References: <CA+yd-DgLdcO=1452hmg3xpc_fH8FTPb+QxLq6d98oaBLOB-WWw@mail.gmail.com>
+Date: Mon, 8 Oct 2012 23:45:04 -0300
+Message-ID: <CA+yd-DgeH0GzABJZM1rfGQ9OZQAfWNXp4tJeamJVtB+SxrAMAg@mail.gmail.com>
+Subject: Fwd: nada
+From: =?ISO-8859-1?Q?Jos=E9_ignacio_Santiago_Galindo?= <joseignaciosg9@gmail.com>
+To: karpo@josegalindo.com.ar
+Content-Type: multipart/alternative; boundary=f46d0447a2674e1c6c04cb97532f
+
+--f46d0447a2674e1c6c04cb97532f
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+---------- Forwarded message ----------
+From: Jos=E9 ignacio Santiago Galindo <joseignaciosg9@gmail.com>
+Date: 2012/10/8
+Subject: nada
+To: karpo@josegalindo.com.ar
+
+
+
+
+-- nadasdasd
+*
+Jos=E9 Ignacio Santiago Galindo
+
+Desarrollo de Fondos
+*
+Oficina: (011) 5811-4296  | Montevideo 442, C1019A, CABA, Buenos Aires,
+Argentina
+
+
+<http://www.techo.org/>  <http://www.facebook.com/UTPMPA>
+<https://twitter.com/#!/UnTecho_Arg>
+ <https://plus.google.com/u/0/b/107548780184278756211/107548780184278756211=
+/posts>
+
+*
+ *
+**
+
+
+
+
+--=20
+*
+Jos=E9 Ignacio Santiago Galindo
+
+Desarrollo de Fondos
+*
+Oficina: (011) 5811-4296  | Montevideo 442, C1019A, CABA, Buenos Aires,
+Argentina
+
+
+<http://www.techo.org/>  <http://www.facebook.com/UTPMPA>
+<https://twitter.com/#!/UnTecho_Arg>
+ <https://plus.google.com/u/0/b/107548780184278756211/107548780184278756211=
+/posts>
+
+*
+*
+**
+
+--f46d0447a2674e1c6c04cb97532f
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+<br><br><div class=3D"gmail_quote">---------- Forwarded message ----------<=
+br>From: <b class=3D"gmail_sendername">Jos=E9 ignacio Santiago Galindo</b> =
+<span dir=3D"ltr">&lt;<a href=3D"mailto:joseignaciosg9@gmail.com">joseignac=
+iosg9@gmail.com</a>&gt;</span><br>
+Date: 2012/10/8<br>Subject: nada<br>To: <a href=3D"mailto:karpo@josegalindo=
+..com.ar">karpo@josegalindo.com.ar</a><br><br><br><br clear=3D"all"><div><br=
+></div>-- nadasdasd<br><span><span style=3D"font-size:13px;border-collapse:=
+collapse"><div style=3D"border-collapse:collapse">
+<span style=3D"border-collapse:collapse"><div><div><span style=3D"line-heig=
+ht:19px"><b><span style=3D"font-weight:normal;line-height:normal;border-col=
+lapse:collapse"><div style=3D"display:inline!important">
+<font face=3D"arial, helvetica, sans-serif"><b><span style=3D"font-size:sma=
+ll"><span style=3D"font-weight:normal;font-size:13px"><div style=3D"font-fa=
+mily:arial,sans-serif"><font face=3D"arial, helvetica, sans-serif" color=3D=
+"#222222"><b><u>Jos=E9 Ignacio Santiago Galindo</u></b></font></div>
+
+<div style=3D"color:rgb(136,136,136)"><br></div><font size=3D"1" style=3D"c=
+olor:rgb(136,136,136)"><span style=3D"font-size:small">Desarrollo de Fondos=
+</span></font></span></span></b></font></div></span></b></span></div></div>=
+</span></div>
+
+</span></span><span style=3D"border-collapse:collapse;color:rgb(34,34,34);f=
+ont-family:arial,sans-serif;font-size:13px"><span><font color=3D"#888888"><=
+div style=3D"color:rgb(34,34,34)"><span style=3D"color:rgb(102,102,102);fon=
+t-family:arial,helvetica,sans-serif;font-size:x-small">Oficina:=A0<a value=
+=3D"+541158114296" style=3D"color:rgb(17,85,204)">(011) 5811-4296</a>=A0<sp=
+an dir=3D"ltr" style=3D"background-image:none!important;border:0px none rgb=
+(0,0,0)!important;border-collapse:separate!important;clear:none!important;d=
+irection:ltr!important;display:inline!important;float:none!important;letter=
+-spacing:0px!important;list-style-type:disc!important;list-style-position:o=
+utside!important;overflow:hidden!important;padding:0px!important;table-layo=
+ut:auto!important;text-align:left!important;white-space:nowrap!important;wo=
+rd-spacing:normal!important;color:rgb(73,83,90)!important;font-family:Tahom=
+a,Arial,Helvetica,sans-serif!important;font-size:11px!important;font-weight=
+:bold!important;min-height:14px!important;line-height:14px!important;margin=
+:0px!important;vertical-align:baseline!important;width:auto!important;backg=
+round-repeat:no-repeat no-repeat!important">=A0</span></span><font color=3D=
+"#666666" face=3D"arial, sans-serif" size=3D"1">|=A0</font><font face=3D"ar=
+ial, helvetica, sans-serif" style=3D"color:rgb(102,102,102)"><font color=3D=
+"#666666"><span style=3D"font-size:x-small">Montevideo 442,=A0</span></font=
+></font><span style=3D"color:rgb(102,102,102);border-collapse:collapse;font=
+-family:arial,helvetica,sans-serif;font-size:x-small">C1019A, CABA,=A0</spa=
+n><span style=3D"font-size:x-small;color:rgb(102,102,102);font-family:arial=
+,helvetica,sans-serif">Buenos Aires, Argentina=A0</span></div>
+
+</font></span><div style=3D"color:rgb(80,0,80)"><div><div><div><font color=
+=3D"#888888"><font color=3D"#888888"><div><span style=3D"border-collapse:co=
+llapse"><div style=3D"border-collapse:collapse"><font color=3D"#666666" fac=
+e=3D"arial, sans-serif"><img src=3D"http://www.untechoparamipais.org/wp-con=
+tent/uploads/2012/06/TECHO_barra.png"><br>
+
+</font></div><div style=3D"border-collapse:collapse"><span style=3D"text-al=
+ign:left"><br></span></div><div style=3D"border-collapse:collapse"><span st=
+yle=3D"text-align:left"><a href=3D"http://www.techo.org/" style=3D"color:rg=
+b(17,85,204)" target=3D"_blank"><img src=3D"http://www.untechoparamipais.or=
+g/wp-content/uploads/2012/06/TECHOorg.png"></a>=A0</span><a href=3D"http://=
+www.facebook.com/UTPMPA" style=3D"color:rgb(102,102,102);text-align:left" t=
+arget=3D"_blank"><img src=3D"http://www.untechoparamipais.org/wp-content/up=
+loads/2012/06/redes_fb.png"></a><span style=3D"text-align:left">=A0</span><=
+a href=3D"https://twitter.com/#!/UnTecho_Arg" style=3D"color:rgb(17,85,204)=
+;text-align:left" target=3D"_blank"><img src=3D"http://www.untechoparamipai=
+s.org/wp-content/uploads/2012/06/redes_tw.png"></a><span style=3D"text-alig=
+n:left">=A0</span><a href=3D"https://plus.google.com/u/0/b/1075487801842787=
+56211/107548780184278756211/posts" style=3D"color:rgb(17,85,204);text-align=
+:left" target=3D"_blank"><img src=3D"http://www.untechoparamipais.org/wp-co=
+ntent/uploads/2012/06/redes_G.png"></a></div>
+
+<div><br></div></span></div></font></font></div></div></div></div></span><s=
+pan style=3D"font-size:13px;border-collapse:collapse"><div style=3D"border-=
+collapse:collapse"><span style=3D"border-collapse:collapse"><div style=3D"c=
+olor:rgb(34,34,34);font-family:arial,sans-serif">
+
+<span style=3D"font-family:&#39;Lucida Grande&#39;,Tahoma,Arial,Verdana,san=
+s-serif;line-height:19px"><b><span style=3D"font-family:arial,sans-serif;fo=
+nt-weight:normal;line-height:normal;border-collapse:collapse"><div style=3D=
+"display:inline!important">
+
+<font face=3D"arial, helvetica, sans-serif"><b><span style=3D"font-size:sma=
+ll"><span style=3D"font-family:arial,sans-serif;font-weight:normal;font-siz=
+e:13px"><font size=3D"1" color=3D"#333333" style=3D"font-family:arial,helve=
+tica,sans-serif"><span style=3D"font-size:small"></span></font></span></spa=
+n></b></font></div>
+
+</span></b></span></div><div style=3D"color:rgb(80,0,80);font-family:arial,=
+sans-serif"><span style=3D"font-family:&#39;Lucida Grande&#39;,Tahoma,Arial=
+,Verdana,sans-serif;line-height:19px"><b><span style=3D"font-size:18pt"><sp=
+an style=3D"font-family:arial,sans-serif;font-weight:normal;line-height:nor=
+mal;font-size:13px;border-collapse:collapse"></span></span></b></span></div=
+>
+
+</span></div></span><br>
+</div><br><br clear=3D"all"><div><br></div>-- <br><span><span style=3D"font=
+-size:13px;border-collapse:collapse"><div style=3D"border-collapse:collapse=
+"><span style=3D"border-collapse:collapse"><div><div><span style=3D"line-he=
+ight:19px"><b><span style=3D"font-weight:normal;line-height:normal;border-c=
+ollapse:collapse"><div style=3D"display:inline!important">
+<font face=3D"arial, helvetica, sans-serif"><b><span style=3D"font-size:sma=
+ll"><span style=3D"font-weight:normal;font-size:13px"><div style=3D"font-fa=
+mily:arial,sans-serif"><font face=3D"arial, helvetica, sans-serif" color=3D=
+"#222222"><b><u>Jos=E9 Ignacio Santiago Galindo</u></b></font></div>
+<div style=3D"color:rgb(136,136,136)"><br></div><font size=3D"1" style=3D"c=
+olor:rgb(136,136,136)"><span style=3D"font-size:small">Desarrollo de Fondos=
+</span></font></span></span></b></font></div></span></b></span></div></div>=
+</span></div>
+</span></span><span style=3D"border-collapse:collapse;color:rgb(34,34,34);f=
+ont-family:arial,sans-serif;font-size:13px"><span><font color=3D"#888888"><=
+div style=3D"color:rgb(34,34,34)"><span style=3D"color:rgb(102,102,102);fon=
+t-family:arial,helvetica,sans-serif;font-size:x-small">Oficina:=A0<a value=
+=3D"+541158114296" style=3D"color:rgb(17,85,204)">(011) 5811-4296</a>=A0<sp=
+an dir=3D"ltr" style=3D"background-image:none!important;border:0px none rgb=
+(0,0,0)!important;border-collapse:separate!important;clear:none!important;d=
+irection:ltr!important;display:inline!important;float:none!important;letter=
+-spacing:0px!important;list-style-type:disc!important;list-style-position:o=
+utside!important;overflow:hidden!important;padding:0px!important;table-layo=
+ut:auto!important;text-align:left!important;white-space:nowrap!important;wo=
+rd-spacing:normal!important;color:rgb(73,83,90)!important;font-family:Tahom=
+a,Arial,Helvetica,sans-serif!important;font-size:11px!important;font-weight=
+:bold!important;min-height:14px!important;line-height:14px!important;margin=
+:0px!important;vertical-align:baseline!important;width:auto!important;backg=
+round-repeat:no-repeat no-repeat!important">=A0</span></span><font color=3D=
+"#666666" face=3D"arial, sans-serif" size=3D"1">|=A0</font><font face=3D"ar=
+ial, helvetica, sans-serif" style=3D"color:rgb(102,102,102)"><font color=3D=
+"#666666"><span style=3D"font-size:x-small">Montevideo 442,=A0</span></font=
+></font><span style=3D"color:rgb(102,102,102);border-collapse:collapse;font=
+-family:arial,helvetica,sans-serif;font-size:x-small">C1019A, CABA,=A0</spa=
+n><span style=3D"font-size:x-small;color:rgb(102,102,102);font-family:arial=
+,helvetica,sans-serif">Buenos Aires, Argentina=A0</span></div>
+</font></span><div style=3D"color:rgb(80,0,80)"><div><div><div><font color=
+=3D"#888888"><font color=3D"#888888"><div><span style=3D"border-collapse:co=
+llapse"><div style=3D"border-collapse:collapse"><font color=3D"#666666" fac=
+e=3D"arial, sans-serif"><img src=3D"http://www.untechoparamipais.org/wp-con=
+tent/uploads/2012/06/TECHO_barra.png"><br>
+</font></div><div style=3D"border-collapse:collapse"><span style=3D"text-al=
+ign:left"><br></span></div><div style=3D"border-collapse:collapse"><span st=
+yle=3D"text-align:left"><a href=3D"http://www.techo.org/" style=3D"color:rg=
+b(17,85,204)" target=3D"_blank"><img src=3D"http://www.untechoparamipais.or=
+g/wp-content/uploads/2012/06/TECHOorg.png"></a>=A0</span><a href=3D"http://=
+www.facebook.com/UTPMPA" style=3D"color:rgb(102,102,102);text-align:left" t=
+arget=3D"_blank"><img src=3D"http://www.untechoparamipais.org/wp-content/up=
+loads/2012/06/redes_fb.png"></a><span style=3D"text-align:left">=A0</span><=
+a href=3D"https://twitter.com/#!/UnTecho_Arg" style=3D"color:rgb(17,85,204)=
+;text-align:left" target=3D"_blank"><img src=3D"http://www.untechoparamipai=
+s.org/wp-content/uploads/2012/06/redes_tw.png"></a><span style=3D"text-alig=
+n:left">=A0</span><a href=3D"https://plus.google.com/u/0/b/1075487801842787=
+56211/107548780184278756211/posts" style=3D"color:rgb(17,85,204);text-align=
+:left" target=3D"_blank"><img src=3D"http://www.untechoparamipais.org/wp-co=
+ntent/uploads/2012/06/redes_G.png"></a></div>
+<div><br></div></span></div></font></font></div></div></div></div></span><s=
+pan style=3D"font-size:13px;border-collapse:collapse"><div style=3D"border-=
+collapse:collapse"><span style=3D"border-collapse:collapse"><div style=3D"c=
+olor:rgb(34,34,34);font-family:arial,sans-serif;background-color:rgb(255,25=
+5,255)">
+<span style=3D"font-family:&#39;Lucida Grande&#39;,Tahoma,Arial,Verdana,san=
+s-serif;line-height:19px"><b><span style=3D"font-family:arial,sans-serif;fo=
+nt-weight:normal;line-height:normal;border-collapse:collapse"><div style=3D=
+"display:inline!important">
+<font face=3D"arial, helvetica, sans-serif"><b><span style=3D"font-size:sma=
+ll"><span style=3D"font-family:arial,sans-serif;font-weight:normal;font-siz=
+e:13px"><font size=3D"1" color=3D"#333333" style=3D"font-family:arial,helve=
+tica,sans-serif"><span style=3D"font-size:small"></span></font></span></spa=
+n></b></font></div>
+</span></b></span></div><div style=3D"font-family:arial,sans-serif;backgrou=
+nd-color:rgb(255,255,255);color:rgb(80,0,80)"><span style=3D"font-family:&#=
+39;Lucida Grande&#39;,Tahoma,Arial,Verdana,sans-serif;line-height:19px"><b>=
+<span style=3D"font-size:18pt"><span style=3D"font-family:arial,sans-serif;=
+font-weight:normal;line-height:normal;font-size:13px;border-collapse:collap=
+se"></span></span></b></span></div>
+</span></div></span><br>
+
+--f46d0447a2674e1c6c04cb97532f--
+.
