@@ -13,9 +13,7 @@ public class MailHeader {
 	private static Logger logger = Logger.getLogger(MailHeader.class);
 	
 	private Map<String, String> headers;
-	
-	private String lastKey;
-	
+		
 	public MailHeader(File mail) {
 		headers = new HashMap<String, String>();
 		try {
@@ -80,7 +78,6 @@ public class MailHeader {
 		String[] parts = s.split("=");
 		if (parts.length == 2) {
 			String key = parts[0].trim();
-			lastKey = key;
 			String value = parts[1].trim();
 			if (value.startsWith("\"")) {
 				value = value.substring(1);
