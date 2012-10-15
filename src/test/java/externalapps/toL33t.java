@@ -9,10 +9,9 @@ import java.util.Scanner;
 public class toL33t {
 
     public static void main(String[] args) throws IOException {	
-	//TODO pisar archivo
-	File transformedPart = File.createTempFile("transformedpart", "proxy");
+	File transformedPart = File.createTempFile("transfrmedpart", "proxy");
 	BufferedWriter out = new BufferedWriter(new FileWriter(transformedPart));
-	File mail = new File(args[1]);
+	File mail = new File(args[0]);
 	Scanner partScanner = new Scanner(mail);
 	while (partScanner.hasNextLine()) {
 	    String line = partScanner.nextLine();
@@ -23,15 +22,16 @@ public class toL33t {
 	    out.write(line + "\r\n");
 	}
 	out.close();
+	partScanner.close();
 	
-	partScanner = new Scanner(transformedPart);
+	Scanner partScanner2 = new Scanner(transformedPart);
 	FileWriter out2 = new FileWriter(mail);
-	while (partScanner.hasNextLine()) {
-	    String line = partScanner.nextLine();
+	while (partScanner2.hasNextLine()) {
+	    String line = partScanner2.nextLine();
 	    out2.write(line + "\r\n");
 	}
 	out2.close();
-	partScanner.close();
+	partScanner2.close();
     }
     
 }

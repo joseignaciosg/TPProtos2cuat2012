@@ -16,7 +16,7 @@ public class LeetTransformer extends Transformer {
 		List<String> commands = new LinkedList<String>();
 		commands.add("java");
 		commands.add("-jar");
-		commands.add("app/toL33t.jar");
+		commands.add("apps/toL33t.jar");
 		commands.add(part.getAbsolutePath());
 		try {
 			ProcessUtil.executeApp(commands);
