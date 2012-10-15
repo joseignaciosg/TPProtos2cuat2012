@@ -6,7 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
-public class toL33t {
+public class ToL33t {
 
     public static void main(String[] args) throws IOException {	
 	File transformedPart = File.createTempFile("transfrmedpart", "proxy");
