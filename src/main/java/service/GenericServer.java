@@ -3,6 +3,8 @@ package service;
 import java.lang.reflect.InvocationTargetException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.apache.log4j.Logger;
 
@@ -13,10 +15,12 @@ public class GenericServer implements Runnable {
 	
 	private int port;
 	private Class<? extends AbstractSockectService> serverClass;
+	private ExecutorService threadPool;
 
 	public GenericServer(int port, Class<? extends AbstractSockectService> serverClass) {
 		this.port = port;
 		this.serverClass = serverClass;
+		threadPool = Executors.newCachedThreadPool();
 	}
 	
 	@Override
@@ -28,7 +32,7 @@ public class GenericServer implements Runnable {
 				AbstractSockectService server = createInstance(serverClass);
 				server.setSocket(connectionSocket);
 				logger.info("Conection accepted. Attending Server: " + serverClass);
-				new Thread(server).start();
+				threadPool.submit(server);
 			}
 			logger.info("TCP Server ended, closing connection.");
 			welcomeSocket.close();

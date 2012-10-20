@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import model.util.CollectionUtil;
@@ -62,7 +63,6 @@ public class StatsService {
 			uh.incrementTransferedBytes(bytes);
 		}
 	}
-	
 	public void incrementUserReadMail(String user){
 		UserHistogram uh = statsByUserMap.get(user);
 		if(uh != null){
