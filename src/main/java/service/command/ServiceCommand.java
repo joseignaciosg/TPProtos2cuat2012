@@ -22,7 +22,7 @@ public abstract class ServiceCommand {
 		this.owner = owner;
 	}
 	
-	public abstract void execute(String[] params);
+	public abstract void execute(String[] params) throws Exception;
 	
 	public AbstractSockectService getOwner() {
 		return owner;

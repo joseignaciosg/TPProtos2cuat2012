@@ -1,6 +1,5 @@
 package service.command.impl.stats;
 
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class UserHistogram {
 	

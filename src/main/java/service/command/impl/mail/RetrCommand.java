@@ -10,7 +10,6 @@ import model.parser.mime.MailMimeParser;
 
 import org.apache.log4j.Logger;
 
-
 import service.AbstractSockectService;
 import service.MailSocketService;
 import service.command.ServiceCommand;
@@ -24,20 +23,13 @@ public class RetrCommand extends ServiceCommand {
 	}
 
 	@Override
-	public void execute(String[] params) {
+	public void execute(String[] params) throws Exception {
 		boolean showToClient = true;
 		if (params.length == 3) {
 			showToClient = Boolean.valueOf(params[3]);
 		}
-		File mailTmpFile;
-		FileWriter mailFileWriter;
-		try {
-			mailTmpFile = File.createTempFile("mail" + params[0], ".mail");
-			mailFileWriter = new FileWriter(mailTmpFile);
-		} catch (IOException e) {
-			logger.error("Error while trying to create the temporary mail file");
-			throw new IllegalStateException();
-		}
+		File mailTmpFile = File.createTempFile("mail" + params[0], ".mail");
+		FileWriter mailFileWriter = new FileWriter(mailTmpFile);
 		MailSocketService mailService = (MailSocketService) owner;
 		mailService.echoLineToOriginServer(getOriginalLine());
 		BufferedReader responseBuffer = mailService.readFromOriginServer();
@@ -48,38 +40,21 @@ public class RetrCommand extends ServiceCommand {
 			if (firstLine == null) {
 				firstLine = line;
 			}
-			try {
-				mailFileWriter.append(line);
-			} catch (IOException e) {
-				try {
-					mailFileWriter.close();
-				} catch (IOException e1) {
-				}
-				throw new IllegalStateException("Error writing line - " + e.getMessage());
-			}
+			mailFileWriter.append(line);
 			if (showToClient) {
 				mailService.echoLine(line);
 			}
 		} while (!line.equals("."));
-		try {
-			mailFileWriter.close();
-		} catch (IOException e) {
-			throw new IllegalStateException("Error while closing temporary mail file - " + e.getMessage());
-		}		
+		mailFileWriter.close();
 		MailMimeParser parser = new MailMimeParser();
 		int sizeInBytes = Integer.valueOf(firstLine.split(" ")[1]);
-		Mail mail;
-		try {
-			mail = parser.parse(mailTmpFile, sizeInBytes);
-		} catch (IOException e1) {
-			throw new IllegalStateException("Could not parse mail: " + mailTmpFile.getPath());
-		}
+		Mail mail = parser.parse(mailTmpFile, sizeInBytes);
 		if (!showToClient) {
 			getBundle().put("DELE_" + params[0], mail);
 		}
 	}
 
-	public String readLine(BufferedReader responseBuffer) {
+	private String readLine(BufferedReader responseBuffer) {
 		try {
 			return responseBuffer.readLine();
 		} catch (IOException e) {

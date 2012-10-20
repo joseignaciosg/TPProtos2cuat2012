@@ -59,7 +59,12 @@ public class ServiceCommandRecognizer {
 		System.arraycopy(params, 1, parts, 0, params.length - 1);
 		ServiceCommand command = createInstance(clazz);
 		command.setOriginalParams(params);
-		command.execute(parts);
+		try {
+			command.execute(parts);
+		} catch (Exception e) {
+			logger.error("Error excepcuting command: " + command);
+			throw new IllegalStateException(e);
+		}
 	}
 	
 	private ServiceCommand createInstance(Class<? extends ServiceCommand> clazz) {
