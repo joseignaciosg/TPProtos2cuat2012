@@ -2,16 +2,16 @@ package model;
 
 public enum StatusCodes {
 	OK_CONFIGURER_READY(0, "Configurer ready"),
-	OK_COMMANDS_LISTED(1, "Commands listed"),
-	OK_LOGGED_OUT(2, "Logged out successfully"), 
-	OK_FILE_UPDATED(3, "File successfully updated"),
-	OK_PASSWORD_ACCEPTED(4, "Password accepted"),
-	OK_GOOD_BYE(5, "Good bye!"),
-	OK_FILE_PRINTED(6, "File printed"),
-	OK_STATISTICS_READY(7, "Statistics service ready"),
-	OK_SERVER_STATS_DISPLAYED(8, "Server stats displayed"),
-	OK_USER_STATS_DISPLAYED(9, "User stats displayed"),
-	OK_ALL_USER_STATS_DISPLAYED(10, "All users stats displayed"),
+	OK_COMMANDS_LISTED(0, "Commands listed"),
+	OK_LOGGED_OUT(0, "Logged out successfully"), 
+	OK_FILE_UPDATED(0, "File successfully updated"),
+	OK_PASSWORD_ACCEPTED(0, "Password accepted"),
+	OK_GOOD_BYE(0, "Good bye!"),
+	OK_FILE_PRINTED(0, "File printed"),
+	OK_STATISTICS_READY(0, "Statistics service ready"),
+	OK_SERVER_STATS_DISPLAYED(0, "Server stats displayed"),
+	OK_USER_STATS_DISPLAYED(0, "User stats displayed"),
+	OK_ALL_USER_STATS_DISPLAYED(0, "All users stats displayed"),
 	
 	ERR_UNRECOGNIZED_COMMAND(100, "Unrecognized command"),
 	ERR_INVALID_PARAMETERS_ARGUMENTS(101, "Invalid parameters: missing arguments"),
@@ -22,20 +22,20 @@ public enum StatusCodes {
 	ERR_INVALID_PASSWORD(111, "Invalid password"),
 	ERR_INTERNAL_SERVER_ERROR(666, "Internal server error!");
 	 
-	   private int code;
-	   private String message;
-	 
-	   StatusCodes(int code, String message){
-	      this.code = code;
-	      this.message = message;
-	   }
+   private int code;
+   private String message;
+ 
+   StatusCodes(int code, String message) {
+      this.code = code;
+      this.message = message;
+   }
 
-	   public int getCode(){
-		   return code;
-	   }
-	 
-	   public String getMessage(){
-	      return message;
-	   }
+   public int getCode() {
+	   return code;
+   }
+ 
+   public String getMessage() {
+      return message;
+   }
 	   
 }
