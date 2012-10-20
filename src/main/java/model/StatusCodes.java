@@ -22,8 +22,8 @@ public enum StatusCodes {
 	ERR_INVALID_PASSWORD(111, "Invalid password"),
 	ERR_INTERNAL_SERVER_ERROR(666, "Internal server error!");
 	 
-   private int code;
-   private String message;
+   public final int code;
+   public final String message;
  
    StatusCodes(int code, String message) {
       this.code = code;

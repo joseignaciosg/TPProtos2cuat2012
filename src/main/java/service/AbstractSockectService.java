@@ -70,12 +70,8 @@ public abstract class AbstractSockectService implements Runnable {
 		}
 	}
 	
-	public void echoLine(StatusCodes statusCode){
-		if(statusCode.getCode() < 100){
-			echoLine("+OK " + statusCode.getCode() + " [" + statusCode.getMessage() + "]");
-		}else{
-			echoLine("-ERR " + statusCode.getCode() + " [" + statusCode.getMessage() + "]");
-		}
+	public void echoLine(StatusCodes statusCode) {
+		echoLine(statusCode, "");
 	}
 	
 	public void echoLine(StatusCodes statusCode, String data) {
