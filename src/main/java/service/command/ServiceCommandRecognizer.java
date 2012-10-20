@@ -5,6 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import model.StatusCodes;
+
 import org.apache.log4j.Logger;
 
 import service.AbstractSockectService;
@@ -42,13 +44,13 @@ public class ServiceCommandRecognizer {
 	
 	public void exec(String[] params) {
 		if (params.length == 0) {
-			owner.echoLine(100, "Unrecognized Command");
+			owner.echoLine(StatusCodes.ERR_UNRECOGNIZED_COMMAND);
 			return;
 		}
 		Class<? extends ServiceCommand> clazz = commands.get(params[0].toLowerCase());		
 		clazz = (clazz == null) ? defaultCommand : clazz;
 		if (clazz == null) {
-			owner.echoLine(100, "Unrecognized Command");
+			owner.echoLine(StatusCodes.ERR_UNRECOGNIZED_COMMAND);
 			logger.trace("Unrecognized command");
 			return;
 		}

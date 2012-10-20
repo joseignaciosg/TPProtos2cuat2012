@@ -5,12 +5,14 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import service.AbstractSockectService;
+import service.command.impl.stats.StatsService;
 import util.CollectionUtil;
 
 
 public abstract class ServiceCommand {
 	
 	protected static final Logger logger = Logger.getLogger(ServiceCommand.class);
+	protected static final StatsService statsService = StatsService.getInstace();
 
 	protected AbstractSockectService owner;
 	protected String[] originalParams;

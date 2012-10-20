@@ -26,7 +26,7 @@ public class AuthCommand extends ServiceCommand {
 			return;
 		}
 		if ("PLAIN".equals(params[0].toUpperCase())) {
-			String resp = echoAndgetResponse(getOriginalLine());		// +
+			String resp = echoAndgetResponse(getOriginalLine());
 			owner.echoLine(resp);
 			String base64Credentials = readLineFromClient();
 			resp = echoAndgetResponse(base64Credentials);
@@ -37,7 +37,7 @@ public class AuthCommand extends ServiceCommand {
 			User user = createUser(base64Credentials);
 			getBundle().put("auth_user", user);
 		} else {
-			System.out.println("Unknown login type.");
+			logger.error("Unknown login type.");
 		}
 	}
 	

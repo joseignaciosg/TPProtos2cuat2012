@@ -1,15 +1,15 @@
-package service.state.impl.monitor;
+package service.state.impl.stats;
 
 import service.AbstractSockectService;
 import service.command.impl.ExitCommand;
-import service.command.impl.monitor.MonitorAuthCommand;
+import service.command.impl.stats.StatsAuthCommand;
 import service.state.State;
 
 public class AuthorityState extends State {
 
 	public AuthorityState(AbstractSockectService owner) {
 		super(owner);
-		commandRecognizer.register("AUTH", MonitorAuthCommand.class);
+		commandRecognizer.register("AUTH", StatsAuthCommand.class);
 		commandRecognizer.register("EXIT", ExitCommand.class);
 	}
 

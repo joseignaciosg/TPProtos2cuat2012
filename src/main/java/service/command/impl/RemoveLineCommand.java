@@ -4,6 +4,8 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
+import model.StatusCodes;
+
 import service.AbstractSockectService;
 import service.command.ServiceCommand;
 import util.Config;
@@ -18,20 +20,20 @@ public class RemoveLineCommand extends ServiceCommand {
 	@Override
 	public void execute(String[] params) {
 		if (params.length < 2) {
-			owner.echoLine(101, "Invalid Parameters: missing arguments");
+			owner.echoLine(StatusCodes.ERR_INVALID_PARAMETERS_ARGUMENTS);
 			return;
 		}
 		int lineNumberToRemove;
 		try {
 			lineNumberToRemove = Integer.valueOf(params[0]);
 		} catch (NumberFormatException e) {
-			owner.echoLine(101, "Invalid parameters: " + params[0] + " is not a number");
+			owner.echoLine(StatusCodes.ERR_INVALID_PARAMETERS_NUMBER,  "input: " + params[0]);
 			return;
 		}
 		String resPath = Config.getInstance().get("specific_conf_dir") + params[1];
 		String fullPath = IOUtil.fullPath(resPath);
 		if (fullPath == null) {
-			owner.echoLine(102, "Invalid parameters: File not found");
+			owner.echoLine(StatusCodes.ERR_INVALID_PARAMETERS_FILE);
 			return;
 		}
 		StringBuilder text = getTextWithoutLine(resPath, lineNumberToRemove);
@@ -39,7 +41,7 @@ public class RemoveLineCommand extends ServiceCommand {
 			PrintWriter out = new PrintWriter(fullPath);
 			out.print(text.toString());
 			out.close();
-			owner.echoLine(0, "File updated");
+			owner.echoLine(StatusCodes.OK_FILE_UPDATED);
 		} catch (FileNotFoundException e) {
 			// should never happen...
 			e.printStackTrace();

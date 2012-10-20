@@ -2,6 +2,8 @@ package service.command.impl;
 
 import java.util.Map;
 
+import model.StatusCodes;
+
 import service.AbstractSockectService;
 import service.command.ServiceCommand;
 import util.CollectionUtil;
@@ -20,14 +22,14 @@ public abstract class AuthCommand extends ServiceCommand {
 		if (CollectionUtil.empty(params) || !passwd.equals(params[0])) {
 			int attempts = incrementLoginAttempts();
 			if (attempts == MAX_INVALID_ATTEMPTS) {
-				getOwner().echoLine(103, "Too many tries! BYE!");
+				getOwner().echoLine(StatusCodes.ERR_TOO_MANY_ATTEMPTS);
 				getOwner().setEndOfTransmission(true);
 			} else {
-				getOwner().echoLine(200, "Incorrect Password - " + attempts);
+				getOwner().echoLine(StatusCodes.ERR_INVALID_PASSWORD, "Attempts: " + attempts);
 			}
 			return;
 		}
-		getOwner().echoLine(0, "Password accepted");
+		getOwner().echoLine(StatusCodes.OK_PASSWORD_ACCEPTED);
 		onLogin();
 	}
 

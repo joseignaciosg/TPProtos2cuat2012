@@ -1,5 +1,6 @@
 package service;
 
+import model.StatusCodes;
 import service.state.impl.configurer.AuthorityState;
 
 public class ConfigurerService extends AbstractSockectService {
@@ -10,7 +11,7 @@ public class ConfigurerService extends AbstractSockectService {
 	
 	@Override
 	protected void onConnectionEstabished() throws Exception {
-		echoLine(0, "Configurer ready");
+		echoLine(StatusCodes.OK_CONFIGURER_READY);
 	}
 	
 	@Override

@@ -1,16 +1,17 @@
 package service;
 
-import service.state.impl.monitor.AuthorityState;
+import model.StatusCodes;
+import service.state.impl.stats.AuthorityState;
 
-public class MonitorSocketService extends AbstractSockectService {
+public class StatsSocketService extends AbstractSockectService {
 
-	public MonitorSocketService() {
+	public StatsSocketService() {
 		stateMachine.setState(new AuthorityState(this));
 	}
 	
 	@Override
 	protected void onConnectionEstabished() throws Exception {
-		echoLine(0, "Monitor ready");
+		echoLine(StatusCodes.OK_STATISTICS_READY);
 	}
 	
 	@Override

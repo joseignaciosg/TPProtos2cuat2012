@@ -6,8 +6,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
+import model.StatusCodes;
+
 import org.apache.log4j.Logger;
 
+import service.command.impl.stats.StatsService;
 import service.state.ServiceStateMachine;
 
 public abstract class AbstractSockectService implements Runnable {
@@ -17,6 +20,7 @@ public abstract class AbstractSockectService implements Runnable {
 	protected Socket socket;
 	protected boolean endOfTransmission;
 	protected ServiceStateMachine stateMachine;
+	protected StatsService statsService = StatsService.getInstace();
 
 	public AbstractSockectService() {
 		stateMachine = new ServiceStateMachine(this);
@@ -66,11 +70,19 @@ public abstract class AbstractSockectService implements Runnable {
 		}
 	}
 	
-	public void echoLine(int code, String message) {
-		if (code == 0) {
-			echoLine("+OK " + code + " [" + message + "]");
-		} else {
-			echoLine("-ERR " + code + " [" + message + "]");
+	public void echoLine(StatusCodes statusCode){
+		if(statusCode.getCode() < 100){
+			echoLine("+OK " + statusCode.getCode() + " [" + statusCode.getMessage() + "]");
+		}else{
+			echoLine("-ERR " + statusCode.getCode() + " [" + statusCode.getMessage() + "]");
+		}
+	}
+	
+	public void echoLine(StatusCodes statusCode, String data) {
+		if(statusCode.getCode() < 100){
+			echoLine("+OK " + statusCode.getCode() + " [" + statusCode.getMessage() + " (" + data + ") ]");
+		}else{
+			echoLine("-ERR " + statusCode.getCode() + " [" + statusCode.getMessage() + " (" + data + ") ]");
 		}
 	}
 	
@@ -107,4 +119,6 @@ public abstract class AbstractSockectService implements Runnable {
 	public Socket getSocket() {
 		return socket;
 	}
+
+
 }

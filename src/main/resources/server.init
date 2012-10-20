@@ -4,8 +4,8 @@ service.MailSocketService, 8080
 # Start a Mocked Email Server
 mock.MockedSocketEmailService, 8082
 
-# Start a Monitor Socket Server
-service.MonitorSocketService, 8083
+# Start a Statistics Socket Server
+service.StatsSocketService, 8083
 
 # Start a Configurer Socket Server
 service.ConfigurerService, 8084

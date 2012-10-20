@@ -12,14 +12,14 @@ import org.apache.log4j.Logger;
 import util.Config;
 import util.IOUtil;
 
-public class MonitorTask extends TimerTask {
+public class StatsTimedTask extends TimerTask {
 
 	private static Logger logger = Logger.getLogger(TimerTask.class);
 	
 	private String taskName;
 	private DataOutputStream outputStream;
 
-	public MonitorTask(String objectName, DataOutputStream outputStream) {
+	public StatsTimedTask(String objectName, DataOutputStream outputStream) {
 		this.taskName = objectName;
 		this.outputStream = outputStream;
 	}

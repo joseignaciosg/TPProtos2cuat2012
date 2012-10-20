@@ -3,6 +3,8 @@ package service.command.impl;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import model.StatusCodes;
+
 import service.AbstractSockectService;
 import service.command.ServiceCommand;
 import util.CollectionUtil;
@@ -19,7 +21,7 @@ public class AddCommand extends ServiceCommand {
 	@Override
 	public void execute(String[] params) {
 		if (params.length < 2) {
-			owner.echoLine(101, "Invalid Parameters: missing arguments");
+			owner.echoLine(StatusCodes.ERR_INVALID_PARAMETERS_ARGUMENTS);
 			return;
 		}
 		String line = CollectionUtil.join(params, 1);
@@ -28,11 +30,11 @@ public class AddCommand extends ServiceCommand {
 			FileWriter fw = new FileWriter(IOUtil.fullPath(resPath), true);
 			fw.write(line.trim() + "\r\n");
 			fw.close();
-			owner.echoLine(0, "File " + params[0] + " updated");
+			owner.echoLine(StatusCodes.OK_FILE_UPDATED, params[0]);
 		} catch (IOException e) {
-			owner.echoLine(102, "Invalid Parameters: file does not exists");
+			owner.echoLine(StatusCodes.ERR_INVALID_PARAMETERS_FILE);
 		} catch (NullPointerException e) {
-			owner.echoLine(102, "Invalid Parameters: file does not exists");
+			owner.echoLine(StatusCodes.ERR_INVALID_PARAMETERS_FILE);
 		}
 	}
 	

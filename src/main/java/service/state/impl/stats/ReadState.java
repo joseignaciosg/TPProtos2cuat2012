@@ -1,32 +1,39 @@
-package service.state.impl.monitor;
+package service.state.impl.stats;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Timer;
 
+import model.StatusCodes;
 import service.AbstractSockectService;
+import service.command.impl.ListCommand;
 import service.command.impl.configurer.LogOutCommand;
+import service.command.impl.stats.HistogramCommand;
+import service.command.impl.stats.ShowCommand;
 import service.state.State;
 import util.Config;
-import worker.MonitorTask;
 
 public class ReadState extends State {
 	
-	private static Config monitorConfig = Config.getInstance().getConfig("monitor_conf");
+	private static Config statsConfig = Config.getInstance().getConfig("stats_conf");
 	
 	private Timer taskTimer;
 	
 	public ReadState(AbstractSockectService owner) {
 		super(owner);
 		commandRecognizer.register("EXIT", LogOutCommand.class);
-		taskTimer = new Timer();
-		long timerDelay = monitorConfig.getInt("refresh_rate_ms");
+		commandRecognizer.register("HIST", HistogramCommand.class);
+		commandRecognizer.register("LIST", ListCommand.class);
+		commandRecognizer.register("SHOW", ShowCommand.class);
+		commandRecognizer.register("SHOW_ALL", ShowCommand.class);
+//		taskTimer = new Timer();
+//		long timerDelay = statsConfig.getInt("refresh_rate_ms");
 		try {
 			DataOutputStream out = new DataOutputStream(owner.getSocket().getOutputStream());
-			taskTimer.schedule(new MonitorTask("monitorTask", out), 0, timerDelay);
+//			taskTimer.schedule(new StatsTimedTask("monitorTask", out), 0, timerDelay);
 		} catch (IOException e) {
 			logger.error("Could not start Monitor Task!");
-			owner.echoLine(666, "Internal Error!");
+			owner.echoLine(StatusCodes.ERR_INTERNAL_SERVER_ERROR);
 			owner.setEndOfTransmission(true);
 		}
 	}
@@ -39,7 +46,7 @@ public class ReadState extends State {
 	@Override
 	public void exit() {
 		super.exit();
-		taskTimer.cancel();
+//		taskTimer.cancel();
 	}
 
 }
