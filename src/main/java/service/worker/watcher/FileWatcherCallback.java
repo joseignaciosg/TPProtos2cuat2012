@@ -1,4 +1,4 @@
-package worker.watcher;
+package service.worker.watcher;
 
 import java.nio.file.Path;
 

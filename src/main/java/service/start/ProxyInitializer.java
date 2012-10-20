@@ -5,9 +5,9 @@ import java.nio.file.StandardWatchEventKinds;
 
 import org.apache.log4j.Logger;
 
+import service.worker.watcher.ConfigWatcherCallback;
+import service.worker.watcher.DirectoryWatcher;
 import util.Config;
-import worker.watcher.ConfigWatcherCallback;
-import worker.watcher.DirectoryWatcher;
 
 public class ProxyInitializer {
 

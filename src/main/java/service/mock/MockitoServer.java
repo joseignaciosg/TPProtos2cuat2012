@@ -1,4 +1,4 @@
-package mock;
+package service.mock;
 
 import static org.mockito.Matchers.matches;
 import static org.mockito.Mockito.mock;

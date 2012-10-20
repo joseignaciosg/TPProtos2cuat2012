@@ -1,4 +1,4 @@
-package mock;
+package service.mock;
 
 import java.io.DataOutputStream;
 

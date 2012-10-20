@@ -1,4 +1,4 @@
-package worker;
+package service.worker;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
