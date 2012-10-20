@@ -10,9 +10,9 @@ import model.util.IOUtil;
 import service.AbstractSockectService;
 import service.command.ServiceCommand;
 
-public class PrintFileCommand extends ServiceCommand {
+public class GetFileCommand extends ServiceCommand {
 
-	public PrintFileCommand(AbstractSockectService owner) {
+	public GetFileCommand(AbstractSockectService owner) {
 		super(owner);
 	}
 

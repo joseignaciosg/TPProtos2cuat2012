@@ -11,9 +11,9 @@ import model.util.IOUtil;
 import service.AbstractSockectService;
 import service.command.ServiceCommand;
 
-public class RemoveLineCommand extends ServiceCommand {
+public class DeleteLineCommand extends ServiceCommand {
 
-	public RemoveLineCommand(AbstractSockectService owner) {
+	public DeleteLineCommand(AbstractSockectService owner) {
 		super(owner);
 	}
 

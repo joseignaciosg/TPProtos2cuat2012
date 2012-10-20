@@ -12,9 +12,9 @@ import service.AbstractSockectService;
 import service.command.ServiceCommand;
 
 
-public class AddCommand extends ServiceCommand {
+public class PutCommand extends ServiceCommand {
 	
-	public AddCommand(AbstractSockectService owner) {
+	public PutCommand(AbstractSockectService owner) {
 		super(owner);
 	}
 	
