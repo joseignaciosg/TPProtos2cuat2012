@@ -17,10 +17,11 @@ public abstract class AbstractSockectService implements Runnable {
 
 	private static final Logger logger = Logger.getLogger(AbstractSockectService.class);
 	
+	protected static StatsService statsService = StatsService.getInstace();
+	
 	protected Socket socket;
 	protected boolean endOfTransmission;
 	protected ServiceStateMachine stateMachine;
-	protected StatsService statsService = StatsService.getInstace();
 
 	public AbstractSockectService() {
 		stateMachine = new ServiceStateMachine(this);
@@ -62,12 +63,8 @@ public abstract class AbstractSockectService implements Runnable {
 	protected abstract void exec(String command) throws Exception;
 	
 	protected void onConnectionClosed() throws Exception {
-		try {
-			stateMachine.exit();		
-			socket.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		stateMachine.exit();
+		socket.close();
 	}
 	
 	public void echoLine(StatusCodes statusCode) {
@@ -115,6 +112,5 @@ public abstract class AbstractSockectService implements Runnable {
 	public Socket getSocket() {
 		return socket;
 	}
-
 
 }
