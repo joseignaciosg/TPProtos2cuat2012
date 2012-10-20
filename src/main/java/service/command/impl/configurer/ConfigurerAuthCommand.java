@@ -1,9 +1,9 @@
 package service.command.impl.configurer;
 
+import model.util.Config;
 import service.AbstractSockectService;
 import service.command.impl.AuthCommand;
 import service.state.impl.configurer.ReadState;
-import util.Config;
 
 
 public class ConfigurerAuthCommand extends AuthCommand {

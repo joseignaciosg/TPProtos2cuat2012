@@ -6,10 +6,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import model.Mail;
+import model.parser.mime.MailMimeParser;
 
 import org.apache.log4j.Logger;
 
-import parser.mime.MailMimeParser;
 
 import service.AbstractSockectService;
 import service.MailSocketService;

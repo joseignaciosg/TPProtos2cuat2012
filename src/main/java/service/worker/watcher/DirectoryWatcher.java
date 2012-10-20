@@ -23,8 +23,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import util.Config;
-import util.IOUtil;
+import model.util.Config;
+import model.util.IOUtil;
+
 
 public class DirectoryWatcher implements Runnable {
 

@@ -2,9 +2,10 @@ package service.worker.watcher;
 
 import java.nio.file.Path;
 
+import model.util.Config;
+
 import org.apache.log4j.Logger;
 
-import util.Config;
 
 public class ConfigWatcherCallback implements FileWatcherCallback {
 

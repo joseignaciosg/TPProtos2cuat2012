@@ -5,10 +5,11 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import model.util.Config;
+import model.util.ConfigWriter;
+
 import org.apache.log4j.Logger;
 
-import util.Config;
-import util.ConfigWriter;
 
 public class _ConfigurerSocketServer extends AbstractSockectService {
 

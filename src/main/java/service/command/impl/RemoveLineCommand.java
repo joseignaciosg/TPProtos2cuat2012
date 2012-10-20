@@ -5,11 +5,11 @@ import java.io.PrintWriter;
 import java.util.Scanner;
 
 import model.StatusCodes;
+import model.util.Config;
+import model.util.IOUtil;
 
 import service.AbstractSockectService;
 import service.command.ServiceCommand;
-import util.Config;
-import util.IOUtil;
 
 public class RemoveLineCommand extends ServiceCommand {
 

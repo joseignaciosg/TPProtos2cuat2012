@@ -2,12 +2,13 @@ package service.start;
 
 import java.util.Scanner;
 
+import model.util.IOUtil;
+import model.util.StringUtil;
+
 import org.apache.log4j.Logger;
 
 import service.AbstractSockectService;
 import service.GenericServer;
-import util.IOUtil;
-import util.StringUtil;
 
 public class ServerInitializer {
 

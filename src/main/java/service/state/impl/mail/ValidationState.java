@@ -2,9 +2,10 @@ package service.state.impl.mail;
 
 import java.net.Socket;
 
+import model.validator.IpValidator;
+
 import service.AbstractSockectService;
 import service.state.State;
-import validator.IpValidator;
 
 public class ValidationState extends State {
 

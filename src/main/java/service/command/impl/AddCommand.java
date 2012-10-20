@@ -4,12 +4,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import model.StatusCodes;
+import model.util.CollectionUtil;
+import model.util.Config;
+import model.util.IOUtil;
 
 import service.AbstractSockectService;
 import service.command.ServiceCommand;
-import util.CollectionUtil;
-import util.Config;
-import util.IOUtil;
 
 
 public class AddCommand extends ServiceCommand {

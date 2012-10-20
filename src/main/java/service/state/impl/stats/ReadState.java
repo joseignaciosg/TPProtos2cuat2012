@@ -5,13 +5,13 @@ import java.io.IOException;
 import java.util.Timer;
 
 import model.StatusCodes;
+import model.util.Config;
 import service.AbstractSockectService;
 import service.command.impl.ListCommand;
 import service.command.impl.configurer.LogOutCommand;
 import service.command.impl.stats.HistogramCommand;
 import service.command.impl.stats.ShowCommand;
 import service.state.State;
-import util.Config;
 
 public class ReadState extends State {
 	

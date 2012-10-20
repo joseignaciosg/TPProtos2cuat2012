@@ -7,10 +7,11 @@ import java.util.Date;
 import java.util.Scanner;
 import java.util.TimerTask;
 
+import model.util.Config;
+import model.util.IOUtil;
+
 import org.apache.log4j.Logger;
 
-import util.Config;
-import util.IOUtil;
 
 public class StatsTimedTask extends TimerTask {
 

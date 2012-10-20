@@ -3,11 +3,12 @@ package service.start;
 import java.io.IOException;
 import java.nio.file.StandardWatchEventKinds;
 
+import model.util.Config;
+
 import org.apache.log4j.Logger;
 
 import service.worker.watcher.ConfigWatcherCallback;
 import service.worker.watcher.DirectoryWatcher;
-import util.Config;
 
 public class ProxyInitializer {
 

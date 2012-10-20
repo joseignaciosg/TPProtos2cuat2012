@@ -2,11 +2,12 @@ package service.command;
 
 import java.util.Map;
 
+import model.util.CollectionUtil;
+
 import org.apache.log4j.Logger;
 
 import service.AbstractSockectService;
 import service.command.impl.stats.StatsService;
-import util.CollectionUtil;
 
 
 public abstract class ServiceCommand {

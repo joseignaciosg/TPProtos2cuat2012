@@ -1,9 +1,9 @@
 package service.command.impl.stats;
 
+import model.util.Config;
 import service.AbstractSockectService;
 import service.command.impl.AuthCommand;
 import service.state.impl.stats.ReadState;
-import util.Config;
 
 public class StatsAuthCommand extends AuthCommand {
 	

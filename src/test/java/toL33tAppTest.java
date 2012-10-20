@@ -7,9 +7,10 @@ import java.util.Scanner;
 
 import junit.framework.Assert;
 
+import model.util.ProcessUtil;
+
 import org.junit.Test;
 
-import util.ProcessUtil;
 
 public class toL33tAppTest {
 

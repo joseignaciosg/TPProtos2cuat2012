@@ -2,11 +2,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
 
+import model.parser.LeetTransformer;
+import model.util.IOUtil;
+
 import org.junit.Before;
 import org.junit.Test;
 
-import parser.LeetTransformer;
-import util.IOUtil;
 
 public class TransformerTest {
 

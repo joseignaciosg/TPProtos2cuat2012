@@ -3,10 +3,10 @@ package service.command.impl;
 import java.util.Map;
 
 import model.StatusCodes;
+import model.util.CollectionUtil;
 
 import service.AbstractSockectService;
 import service.command.ServiceCommand;
-import util.CollectionUtil;
 
 public abstract class AuthCommand extends ServiceCommand {
 

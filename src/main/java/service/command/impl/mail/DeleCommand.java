@@ -6,19 +6,19 @@ import java.util.List;
 
 import model.Mail;
 import model.User;
+import model.validator.DelContentTypeValidator;
+import model.validator.DelHeaderPatternValidator;
+import model.validator.DelMaxDateValidator;
+import model.validator.DelSenderValidator;
+import model.validator.DelSizeValidator;
+import model.validator.DelStructureValidator;
+import model.validator.EmailValidator;
 
 import org.apache.log4j.Logger;
 
 import service.AbstractSockectService;
 import service.MailSocketService;
 import service.command.ServiceCommand;
-import validator.DelContentTypeValidator;
-import validator.DelHeaderPatternValidator;
-import validator.DelMaxDateValidator;
-import validator.DelSenderValidator;
-import validator.DelSizeValidator;
-import validator.DelStructureValidator;
-import validator.EmailValidator;
 
 public class DeleCommand extends ServiceCommand {
 

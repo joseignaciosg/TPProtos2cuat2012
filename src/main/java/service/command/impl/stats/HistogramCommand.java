@@ -1,9 +1,9 @@
 package service.command.impl.stats;
 
 import model.StatusCodes;
+import model.util.CollectionUtil;
 import service.AbstractSockectService;
 import service.command.ServiceCommand;
-import util.CollectionUtil;
 
 public class HistogramCommand extends ServiceCommand {
 

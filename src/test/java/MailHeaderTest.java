@@ -3,12 +3,12 @@ import java.io.IOException;
 
 import junit.framework.Assert;
 import model.Mail;
+import model.parser.mime.MailMimeParser;
+import model.parser.mime.MimeHeader;
+import model.util.IOUtil;
 
 import org.junit.Before;
 
-import parser.mime.MailMimeParser;
-import parser.mime.MimeHeader;
-import util.IOUtil;
 
 public class MailHeaderTest {
 

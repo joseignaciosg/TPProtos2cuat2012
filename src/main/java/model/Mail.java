@@ -5,9 +5,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import model.parser.mime.MimeHeader;
+
 import org.joda.time.LocalDate;
 
-import parser.mime.MimeHeader;
 
 public class Mail {
 

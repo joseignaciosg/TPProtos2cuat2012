@@ -6,9 +6,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
+import model.parser.impl.MailRetriever;
+
 import org.apache.log4j.Logger;
 
-import parser.impl.MailRetriever;
 import service.state.impl.mail.ValidationState;
 
 public class MailSocketService extends AbstractSockectService {

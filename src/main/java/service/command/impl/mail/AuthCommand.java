@@ -3,6 +3,7 @@ package service.command.impl.mail;
 import java.io.IOException;
 
 import model.User;
+import model.util.CollectionUtil;
 
 import org.apache.commons.net.util.Base64;
 import org.apache.log4j.Logger;
@@ -10,7 +11,6 @@ import org.apache.log4j.Logger;
 import service.AbstractSockectService;
 import service.MailSocketService;
 import service.command.ServiceCommand;
-import util.CollectionUtil;
 public class AuthCommand extends ServiceCommand {
 
 	private static final Logger logger = Logger.getLogger(AuthCommand.class);
