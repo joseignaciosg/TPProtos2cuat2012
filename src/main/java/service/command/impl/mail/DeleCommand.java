@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import model.Email;
+import model.Mail;
 import model.User;
 
 import org.apache.log4j.Logger;
@@ -24,7 +24,7 @@ public class DeleCommand extends ServiceCommand {
 
 	protected static final Logger logger = Logger.getLogger(DeleCommand.class);
 
-	List<EmailValidator> validators;
+	private List<EmailValidator> validators;
 
 	public DeleCommand(AbstractSockectService owner) {
 		super(owner);
@@ -39,9 +39,9 @@ public class DeleCommand extends ServiceCommand {
 
 	@Override
 	public void execute(String[] params) {
-		String[] retrParams = { "RETR", params[0], "false" };
+		String[] retrParams = {"RETR", params[0], "false"};
 		owner.getStateMachine().exec(retrParams);
-		Email email = (Email) getBundle().get("DELE_" + params[0]);
+		Mail email = (Mail) getBundle().get("DELE_" + params[0]);
 		for (EmailValidator v : validators) {
 			if (!v.validate((User) getBundle().get("AUTH_USER"), email)) {
 				// Error

@@ -2,38 +2,36 @@ import java.io.File;
 import java.io.IOException;
 
 import junit.framework.Assert;
+import model.Mail;
 
 import org.junit.Before;
 
-import parser.MailHeader;
+import parser.mime.MailMimeParser;
+import parser.mime.MimeHeader;
 import util.IOUtil;
 
 public class MailHeaderTest {
 
-	private File tmpMailFile;
-	private MailHeader reader;
+	private Mail mail;
 
 	@Before
 	public void init() throws IOException {
-		String path = IOUtil.fullPath("test_mail.txt");
-		if (path != null) {
-			tmpMailFile = new File(path);
-		}
-		reader = new MailHeader(tmpMailFile);
+		File file = new File(IOUtil.fullPath("example/mail_7937octets.txt"));
+		MailMimeParser mimeParser = new MailMimeParser();
+		mail = mimeParser.parse(file, 140);
 	}
 
 	// @Test
 	public void getHeadersTest() throws IOException {
-		System.out.println(reader.getHeader());
+		
 	}
 
 	// @Test
 	public void getHeaderTest() throws IOException {
-		String from = reader.getHeader("From");
+		MimeHeader from = mail.getHeader("From");
 		System.out.println(from);
 		Assert.assertTrue(from.equals(" John Doe <example@example.com>"));
-
-		String notexistent = reader.getHeader("notexistent");
+		MimeHeader notexistent = mail.getHeader("notexistent");
 		Assert.assertTrue(notexistent == null);
 	}
 

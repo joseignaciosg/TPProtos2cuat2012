@@ -6,9 +6,12 @@ import java.io.IOException;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
+import parser.mime.MailMimeParser;
+import parser.mime.MimeHeaderParser;
+
 public abstract class Transformer {
 
-	MailHeader header;
+	MimeHeaderParser header;
 
 	protected File mail;
 	protected File transformedMail;
@@ -17,13 +20,15 @@ public abstract class Transformer {
 	public Transformer() {
 	}
 
-	public File apply(File mail) throws IOException {
-		header = new MailHeader(mail);
+	public File apply(File mailFile) throws IOException {
+		MailMimeParser mailParser = new MailMimeParser();
+		this.mail = mailFile;
+		/*
+		mail = mailParser.parse(mailFile);
 		transformedMail = File.createTempFile("transformedmail", "proxy");
 		FileWriter out = new FileWriter(transformedMail, true);
-		this.mail = mail;
 		Scanner scanner = new Scanner(mail);
-		final String boundary = header.getBoundary();
+		final String boundary = header.getBoundaryKey();
 		boolean inheader = true;
 		while (scanner.hasNextLine()) {
 			if (inheader) {
@@ -45,6 +50,7 @@ public abstract class Transformer {
 		out.write(boundaryline + "--");
 		out.close();
 		scanner.close();
+		*/
 		return transformedMail;
 
 	}

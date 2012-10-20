@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import model.Email;
+import model.Mail;
 import model.User;
 
 import org.apache.log4j.Logger;
@@ -20,7 +20,7 @@ public class DelHeaderPatternValidator implements EmailValidator {
 			"notdelete_header_pattern");
 
 	@Override
-	public boolean validate(User user, Email email) {
+	public boolean validate(User user, Mail email) {
 		
 		if(user == null || email == null){
 			logger.info("User and Email cant be null");
@@ -38,7 +38,7 @@ public class DelHeaderPatternValidator implements EmailValidator {
 			headerPatternMap.put(lineSplit[0], lineSplit[1]);
 		}
 		for (Entry<String, String> entry: headerPatternMap.entrySet()) {
-			if (email.headerMatches(entry.getKey(), entry.getValue())) {
+			if (email.containsHeader(entry.getKey(), entry.getValue())) {
 				logger.info("Restricting message deletion because mail has the following header " + entry);
 				return false;
 			}

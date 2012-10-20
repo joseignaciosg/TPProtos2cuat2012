@@ -5,15 +5,18 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import model.Email;
+import model.Mail;
 
 import org.apache.log4j.Logger;
+
+import parser.mime.MailMimeParser;
 
 import service.AbstractSockectService;
 import service.MailSocketService;
 import service.command.ServiceCommand;
 
 public class RetrCommand extends ServiceCommand {
+	
 	protected static final Logger logger = Logger.getLogger(DeleCommand.class);
 
 	public RetrCommand(AbstractSockectService owner) {
@@ -26,11 +29,11 @@ public class RetrCommand extends ServiceCommand {
 		if (params.length == 3) {
 			showToClient = Boolean.valueOf(params[3]);
 		}
-		File mail;
+		File mailTmpFile;
 		FileWriter mailFileWriter;
 		try {
-			mail = File.createTempFile("mail" + params[0], ".mail");
-			mailFileWriter = new FileWriter(mail);
+			mailTmpFile = File.createTempFile("mail" + params[0], ".mail");
+			mailFileWriter = new FileWriter(mailTmpFile);
 		} catch (IOException e) {
 			logger.error("Error while trying to create the temporary mail file");
 			throw new IllegalStateException();
@@ -58,14 +61,21 @@ public class RetrCommand extends ServiceCommand {
 				mailService.echoLine(line);
 			}
 		} while (!line.equals("."));
-		Email email = new Email(firstLine, mail);
-		if (!showToClient) {
-			getBundle().put("DELE_" + params[0], email);
-		}
 		try {
 			mailFileWriter.close();
 		} catch (IOException e) {
 			throw new IllegalStateException("Error while closing temporary mail file - " + e.getMessage());
+		}		
+		MailMimeParser parser = new MailMimeParser();
+		int sizeInBytes = Integer.valueOf(firstLine.split(" ")[1]);
+		Mail mail;
+		try {
+			mail = parser.parse(mailTmpFile, sizeInBytes);
+		} catch (IOException e1) {
+			throw new IllegalStateException("Could not parse mail: " + mailTmpFile.getPath());
+		}
+		if (!showToClient) {
+			getBundle().put("DELE_" + params[0], mail);
 		}
 	}
 
@@ -73,8 +83,7 @@ public class RetrCommand extends ServiceCommand {
 		try {
 			return responseBuffer.readLine();
 		} catch (IOException e) {
-			throw new IllegalStateException("Error reading line - "
-					+ e.getMessage());
+			throw new IllegalStateException("Error reading line - " + e.getMessage());
 		}
 	}
 }

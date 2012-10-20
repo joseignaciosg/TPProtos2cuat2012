@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import parser.mime.MimeHeaderParser;
 import util.ConfigReader;
 import util.ConfigSimpleReader;
 
@@ -15,11 +16,12 @@ public class FileMailTransformer implements MailTransformer {
 	private static final Logger logger = Logger.getLogger(FileMailTransformer.class);
 
 	private File mail;
-	private MailHeader mailHeader;
+	private MimeHeaderParser mailHeader;
 
 	public FileMailTransformer(File mail) {
 		this.mail = mail;
-		this.mailHeader = new MailHeader(mail);
+		this.mailHeader = new MimeHeaderParser();
+		// this.mailHeader.parse(mail);
 	}
 
 	@Override
@@ -33,7 +35,6 @@ public class FileMailTransformer implements MailTransformer {
 
 	private void executeTransformation(final String option) throws IOException {
 		List<Transformer> transformers = new ArrayList<Transformer>();
-		logger.debug("Printing headers: " + mailHeader.getHeader());
 		if ("l33t".equals(option)) {
 			transformers.add(new LeetTransformer());
 		} else if ("rotateimages".equals(option)) {

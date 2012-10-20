@@ -1,10 +1,10 @@
 package validator;
 
-import model.Email;
+import model.Mail;
 import model.User;
 
 public interface EmailValidator {
 	
-	public boolean validate(User user, Email email);
+	public boolean validate(User user, Mail email);
 
 }

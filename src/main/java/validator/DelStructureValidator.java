@@ -4,7 +4,7 @@ import org.apache.log4j.Logger;
 
 import util.CollectionUtil;
 import util.Config;
-import model.Email;
+import model.Mail;
 import model.User;
 
 public class DelStructureValidator implements EmailValidator {
@@ -13,7 +13,7 @@ public class DelStructureValidator implements EmailValidator {
 	private static Config deleteStructureConfig = Config.getInstance().getConfig("notdelete_structure");
 
 	@Override
-	public boolean validate(User user, Email email) {
+	public boolean validate(User user, Mail email) {
 		if (user == null || email == null) {
 			logger.info("User and Email cant be null");
 			throw new IllegalStateException();

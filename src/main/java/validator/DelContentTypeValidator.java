@@ -2,7 +2,7 @@ package validator;
 
 import java.util.Arrays;
 
-import model.Email;
+import model.Mail;
 import model.User;
 
 import org.apache.log4j.Logger;
@@ -18,7 +18,7 @@ public class DelContentTypeValidator implements EmailValidator {
 			"notdelete_content_type");
 
 	@Override
-	public boolean validate(User user, Email email) {
+	public boolean validate(User user, Mail email) {
 		
 		if(user == null || email == null){
 			logger.info("User and Email cant be null");

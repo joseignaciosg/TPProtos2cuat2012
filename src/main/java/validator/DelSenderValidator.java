@@ -1,6 +1,6 @@
 package validator;
 
-import model.Email;
+import model.Mail;
 import model.User;
 
 import org.apache.log4j.Logger;
@@ -15,7 +15,7 @@ public class DelSenderValidator implements EmailValidator {
 			"notdelete_sender");
 
 	@Override
-	public boolean validate(User user, Email email) {
+	public boolean validate(User user, Mail email) {
 		
 		if(user == null || email == null){
 			logger.info("User and Email cant be null");

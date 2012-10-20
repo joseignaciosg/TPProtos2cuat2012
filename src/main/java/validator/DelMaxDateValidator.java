@@ -1,6 +1,6 @@
 package validator;
 
-import model.Email;
+import model.Mail;
 import model.User;
 
 import org.apache.log4j.Logger;
@@ -17,7 +17,7 @@ public class DelMaxDateValidator implements EmailValidator {
 			"notdelete_max_age");
 
 	@Override
-	public boolean validate(User user, Email email) {
+	public boolean validate(User user, Mail email) {
 		
 		if(user == null || email == null){
 			logger.info("User and Email cant be null");
