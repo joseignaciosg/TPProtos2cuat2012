@@ -76,7 +76,7 @@ public class Config {
 		if (specificConfigs.containsKey(file)) {
 			Config old = specificConfigs.get(file);
 			old.properties = getSpecific(file).properties;
-			logger.info("Updating content on memory for " + file);
+			logger.info("Updating contents on memory for configuration file: " + file);
 		}
 	}
 	

@@ -7,7 +7,6 @@ import model.StatusCodes;
 import model.util.CollectionUtil;
 import model.util.Config;
 import model.util.IOUtil;
-
 import service.AbstractSockectService;
 import service.command.ServiceCommand;
 
@@ -28,9 +27,10 @@ public class PutCommand extends ServiceCommand {
 		String resPath = Config.getInstance().get("specific_conf_dir") + params[0];
 		try {
 			FileWriter fw = new FileWriter(IOUtil.fullPath(resPath), true);
-			fw.write(line.trim() + "\r\n");
+			fw.write("\r\n" + line.trim());
 			fw.close();
 			owner.echoLine(StatusCodes.OK_FILE_UPDATED, params[0]);
+			Config.getInstance().update(params[0]);
 		} catch (IOException e) {
 			owner.echoLine(StatusCodes.ERR_INVALID_PARAMETERS_FILE);
 		} catch (NullPointerException e) {
