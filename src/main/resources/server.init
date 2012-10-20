@@ -2,7 +2,7 @@
 service.MailSocketService, 8080
 
 # Start a Mocked Email Server
-mock.MockedSocketEmailService, 8082
+service.mock.MockedSocketEmailService, 8082
 
 # Start a Statistics Socket Server
 service.StatsSocketService, 8083
