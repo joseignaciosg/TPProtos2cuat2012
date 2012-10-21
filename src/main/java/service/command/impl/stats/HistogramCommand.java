@@ -17,9 +17,8 @@ public class HistogramCommand extends ServiceCommand {
 			owner.echoLine(StatusCodes.ERR_INVALID_PARAMETERS_ARGUMENTS);
 			return;
 		}
-		
 		UserHistogram uh = statsService.getStatsByUser(params[0]);
-		if(uh == null){
+		if (uh == null) {
 			owner.echoLine(StatusCodes.ERR_INVALID_PARAMETERS_USER);
 			return;
 		}

@@ -7,8 +7,6 @@ import service.state.impl.configurer.AuthorityState;
 
 public class LogOutCommand extends ServiceCommand {
 
-	
-	
 	public LogOutCommand(AbstractSockectService owner) {
 		super(owner);
 	}

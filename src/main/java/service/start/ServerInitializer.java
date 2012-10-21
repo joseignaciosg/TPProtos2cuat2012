@@ -38,6 +38,7 @@ public class ServerInitializer {
 		scanner.close();
 	}
 	
+	@SuppressWarnings("unchecked")
 	private boolean initialize(int port, String className) {
 		try {
 			Class<? extends AbstractSockectService> clazz;

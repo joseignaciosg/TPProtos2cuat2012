@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 
 import model.StatusCodes;
+import model.util.StringUtil;
 
 import org.apache.log4j.Logger;
 
@@ -68,14 +69,22 @@ public abstract class AbstractSockectService implements Runnable {
 	}
 	
 	public void echoLine(StatusCodes statusCode) {
-		echoLine(statusCode, "");
+		echoLine(statusCode, null);
 	}
 	
 	public void echoLine(StatusCodes statusCode, String data) {
-		if(statusCode.getCode() < 100){
-			echoLine("+OK " + statusCode.getCode() + " [" + statusCode.getMessage() + " (" + data + ") ]");
-		}else{
-			echoLine("-ERR " + statusCode.getCode() + " [" + statusCode.getMessage() + " (" + data + ") ]");
+		String msg = statusCode.message;
+		if (!StringUtil.empty(data)) {
+			msg += " (" + data + ")";
+		}
+		echoLine(statusCode.code, msg);
+	}
+	
+	public void echoLine(int statusCode, String data) {
+		if (statusCode < 100) {
+			echoLine("+OK " + statusCode + " [ "  + data  + " ]");
+		} else {
+			echoLine("-ERR " + statusCode + " [ "  + data  + " ]");
 		}
 	}
 	
