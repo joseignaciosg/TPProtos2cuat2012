@@ -2,6 +2,7 @@ package service.state.impl.mail;
 
 import java.net.Socket;
 
+import model.StatusCodes;
 import model.validator.IpValidator;
 
 import service.AbstractSockectService;
@@ -20,9 +21,9 @@ public class ValidationState extends State {
 		String clientIp = serviceSocket.getInetAddress().getHostAddress();
 		logger.info("Checking access for new connection: " + serviceSocket.getInetAddress().getHostAddress());
 		boolean isClientIpBanned = ipValidator.isBanned(clientIp);
-		if(isClientIpBanned == true){
+		if (isClientIpBanned == true) {
 			logger.info("Client ip: " +  clientIp + " is banned, closing connection...");
-			owner.echoLine("-ERR " + "Connection closed by server. Cause: IP " + clientIp + " has been banned");
+			owner.echoLine(StatusCodes.ERR_BANNED_IP, clientIp);
 			owner.setEndOfTransmission(true);
 			return;
 		}
