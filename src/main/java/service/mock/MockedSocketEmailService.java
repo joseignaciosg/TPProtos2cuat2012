@@ -3,7 +3,6 @@ package service.mock;
 import java.io.DataOutputStream;
 
 import service.AbstractSockectService;
-import service.Server;
 
 
 public class MockedSocketEmailService extends AbstractSockectService {
