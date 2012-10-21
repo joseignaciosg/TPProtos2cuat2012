@@ -12,8 +12,10 @@ public enum StatusCodes {
 	OK_SERVER_STATS_DISPLAYED(0, "Server stats displayed"),
 	OK_USER_STATS_DISPLAYED(0, "User stats displayed"),
 	OK_ALL_USER_STATS_DISPLAYED(0, "All users stats displayed"),
+	OK_SUCCESS(0, "Executed Succesfuly"),
 	
 	ERR_UNRECOGNIZED_COMMAND(100, "Unrecognized command"),
+	ERR_INVALID_PARAMETERS(105, "Invalid parameters"),
 	ERR_INVALID_PARAMETERS_ARGUMENTS(101, "Invalid parameters: missing arguments"),
 	ERR_INVALID_PARAMETERS_FILE(102, "Invalid parameters: file does not exists"),
 	ERR_INVALID_PARAMETERS_USER(103, "Invalid parameters: unrecognized user"),
