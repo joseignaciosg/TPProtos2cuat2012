@@ -40,7 +40,6 @@ public abstract class AbstractSockectService implements Runnable {
 			while (!endOfTransmission) {
 				BufferedReader inFromClient = read();
 				String clientSentence = inFromClient.readLine(); 
-				System.out.println(getClass().getSimpleName() + " -- Command: " + clientSentence);
 				if (clientSentence != null) {
 					exec(clientSentence);
 				} else {
@@ -89,6 +88,7 @@ public abstract class AbstractSockectService implements Runnable {
 	}
 	
 	public void echoLine(String s) {
+		logger.trace("Echo to client: " + s);
 		echo(s + "\r\n");
 	}
 	

@@ -28,13 +28,13 @@ public abstract class State {
 	}
 	
 	public void enter() {
-		logger.trace("Entering state: " + getClass());
+		logger.debug("Entering state: " + getClass());
 	}
 	
 	public abstract void exec(String[] params);
 
 	public void exit() {
-		logger.trace("Exiting state: " + getClass());
+		logger.debug("Exiting state: " + getClass());
 	}
 
 	public Map<String, Object> getBundle() {

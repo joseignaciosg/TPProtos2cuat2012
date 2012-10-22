@@ -51,10 +51,10 @@ public class ServiceCommandRecognizer {
 		clazz = (clazz == null) ? defaultCommand : clazz;
 		if (clazz == null) {
 			owner.echoLine(StatusCodes.ERR_UNRECOGNIZED_COMMAND);
-			logger.trace("Unrecognized command");
+			logger.info("Unrecognized command");
 			return;
 		}
-		logger.trace("Command recognized, executing class: " + clazz);
+		logger.debug("Command recognized, executing class: " + clazz);
 		String[] parts = new String[params.length - 1];
 		System.arraycopy(params, 1, parts, 0, params.length - 1);
 		ServiceCommand command = createInstance(clazz);

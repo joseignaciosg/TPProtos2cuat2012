@@ -9,7 +9,6 @@ import model.parser.mime.MimeHeader;
 
 import org.joda.time.LocalDate;
 
-
 public class Mail {
 
 	private long sizeInBytes;
