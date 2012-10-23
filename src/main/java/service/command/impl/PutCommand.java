@@ -3,13 +3,11 @@ package service.command.impl;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import model.configuration.Config;
 import model.util.CollectionUtil;
-import model.util.Config;
-import model.util.IOUtil;
 import service.AbstractSockectService;
 import service.StatusCodes;
 import service.command.ServiceCommand;
-
 
 public class PutCommand extends ServiceCommand {
 	
@@ -24,9 +22,9 @@ public class PutCommand extends ServiceCommand {
 			return;
 		}
 		String line = CollectionUtil.join(params, 1);
-		String resPath = Config.getInstance().get("specific_conf_dir") + params[0];
+		String fullPath = Config.getInstance().getFullPath(params[0]);
 		try {
-			FileWriter fw = new FileWriter(IOUtil.fullPath(resPath), true);
+			FileWriter fw = new FileWriter(fullPath, true);
 			fw.write("\r\n" + line.trim());
 			fw.close();
 			owner.echoLine(StatusCodes.OK_FILE_UPDATED, params[0]);

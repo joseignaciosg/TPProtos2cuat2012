@@ -2,18 +2,18 @@ package model.validator;
 
 import java.util.Scanner;
 
-import model.util.Config;
-import model.util.IOUtil;
+import model.configuration.Config;
+import model.configuration.SimpleListConfiguration;
 
 import org.apache.commons.net.util.SubnetUtils;
+
 
 
 public class IpValidator {
 
 	public boolean isBanned(String userIp) {
-		String fileName = Config.getInstance().get("specific_conf_dir")
-				+ "banned_ip.conf";
-		Scanner scannerIps = IOUtil.createScanner(fileName);
+		SimpleListConfiguration bannedList = Config.getInstance().getSimpleListConfig("banned_ip");
+		Scanner scannerIps = bannedList.createScanner();
 		boolean isClientIpBanned = false;
 		while (scannerIps.hasNextLine() && !isClientIpBanned) {
 			String ip = scannerIps.nextLine();

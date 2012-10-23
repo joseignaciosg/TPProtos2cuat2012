@@ -6,10 +6,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
+import model.configuration.Config;
 import model.mail.MailRetriever;
 import model.mail.MailTransformer;
 import model.mail.transformerimpl.FileMailTransformer;
-import model.util.Config;
 
 import org.apache.log4j.Logger;
 
@@ -91,7 +91,7 @@ public class MailSocketService extends AbstractSockectService {
 	}
 	
 	public String setOriginServer(String host) throws IOException {
-		int port = Config.getInstance().getInt("pop3_port");
+		int port = Config.getInstance().getGeneralConfig().getInt("pop3_port");
 		setOriginServerSocket(new Socket(host, port));
 		String line = readFromOriginServer().readLine();
 		logger.debug("Mail server new connection status: " + line);

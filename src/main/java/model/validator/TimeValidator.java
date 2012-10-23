@@ -1,17 +1,19 @@
 package model.validator;
 
-import model.util.Config;
+
+import model.configuration.Config;
+import model.configuration.KeyValueConfiguration;
 
 import org.apache.log4j.Logger;
 import org.joda.time.Interval;
 import org.joda.time.LocalTime;
 
 
+
 public class TimeValidator {
 
     private static Logger logger = Logger.getLogger(TimeValidator.class);
-    private static Config accessTimeConfig = Config.getInstance().getConfig(
-	    "access_time");
+    private static KeyValueConfiguration accessTimeConfig = Config.getInstance().getKeyValueConfig("access_time");
 
     public boolean canAccess(final String user) {
 	String timeRestriction = accessTimeConfig.get(user);

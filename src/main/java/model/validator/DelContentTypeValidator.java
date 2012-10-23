@@ -3,17 +3,18 @@ package model.validator;
 import java.util.Arrays;
 
 import model.User;
+import model.configuration.Config;
+import model.configuration.KeyValueConfiguration;
 import model.mail.Mail;
 import model.util.CollectionUtil;
-import model.util.Config;
 
 import org.apache.log4j.Logger;
+
 
 public class DelContentTypeValidator implements EmailValidator {
 
 	private static Logger logger = Logger.getLogger(DelContentTypeValidator.class);
-	private static Config deleteContentTypeConfig = Config.getInstance().getConfig(
-			"notdelete_content_type");
+	private static KeyValueConfiguration deleteContentTypeConfig = Config.getInstance().getKeyValueConfig("notdelete_content_type");
 
 	@Override
 	public boolean validate(User user, Mail email) {

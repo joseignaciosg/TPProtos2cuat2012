@@ -1,8 +1,9 @@
 package model.validator;
 
 import model.User;
+import model.configuration.Config;
+import model.configuration.KeyValueConfiguration;
 import model.mail.Mail;
-import model.util.Config;
 
 import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
@@ -13,8 +14,7 @@ import org.joda.time.format.DateTimeFormatter;
 public class DelMaxDateValidator implements EmailValidator {
 
 	private static Logger logger = Logger.getLogger(DelMaxDateValidator.class);
-	private static Config deleteDateConfig = Config.getInstance().getConfig(
-			"notdelete_max_age");
+	private static KeyValueConfiguration deleteDateConfig = Config.getInstance().getKeyValueConfig("notdelete_max_age");
 
 	@Override
 	public boolean validate(User user, Mail email) {

@@ -3,13 +3,15 @@ package model.mail.transformerimpl;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
+import model.configuration.Config;
+import model.configuration.SimpleListConfiguration;
 import model.mail.Mail;
 import model.mail.MailTransformer;
-import model.util.ConfigReader;
-import model.util.ConfigSimpleReader;
 
 import org.apache.log4j.Logger;
+
 
 
 public class FileMailTransformer implements MailTransformer {
@@ -18,9 +20,10 @@ public class FileMailTransformer implements MailTransformer {
 	
 	@Override
 	public void transform(Mail mail) throws IOException {
-		ConfigReader configReader = new ConfigSimpleReader("transformation");
-		String option;
-		while ((option = configReader.readLine()) != null) {
+		SimpleListConfiguration config = Config.getInstance().getSimpleListConfig("transformation");
+		Scanner scanner = config.createScanner();
+		while (scanner.hasNextLine()) {
+			String option = scanner.nextLine();
 			executeTransformation(mail, option);
 		}
 	}

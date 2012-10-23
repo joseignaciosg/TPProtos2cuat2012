@@ -5,19 +5,19 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import model.User;
+import model.configuration.Config;
+import model.configuration.KeyValueConfiguration;
 import model.mail.Mail;
 import model.util.CollectionUtil;
-import model.util.Config;
 
 import org.apache.log4j.Logger;
 
 
+
 public class DelHeaderPatternValidator implements EmailValidator {
 
-
 	private static Logger logger = Logger.getLogger(DelContentTypeValidator.class);
-	private static Config deleteHeaderPatternConfig = Config.getInstance().getConfig(
-			"notdelete_header_pattern");
+	private static KeyValueConfiguration deleteHeaderPatternConfig = Config.getInstance().getKeyValueConfig("notdelete_header_pattern");
 
 	@Override
 	public boolean validate(User user, Mail email) {

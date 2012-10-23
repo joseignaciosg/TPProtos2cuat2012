@@ -6,16 +6,17 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
-import model.util.Config;
+import model.configuration.Config;
+import model.configuration.KeyValueConfiguration;
 import model.util.ConfigWriter;
 
 import org.apache.log4j.Logger;
 
 
+
 public class _ConfigurerSocketServer extends AbstractSockectService {
 
 	private static Logger logger = Logger.getLogger(_ConfigurerSocketServer.class);
-	private static Config configurerConfig = Config.getInstance().getConfig("configurer_conf");
 
 	private DataOutputStream outToClient;
 
@@ -84,7 +85,8 @@ public class _ConfigurerSocketServer extends AbstractSockectService {
 	}
 
 	private boolean validatePassword(final String command) {
-		if (configurerConfig.get("password").equals(command)) {
+		KeyValueConfiguration configurerConf = Config.getInstance().getKeyValueConfig("configurer_conf");
+		if (configurerConf.get("password").equals(command)) {
 			return true;
 		}
 		return false;

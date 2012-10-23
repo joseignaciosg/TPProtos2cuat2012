@@ -1,17 +1,18 @@
 package model.validator;
 
 import model.User;
+import model.configuration.Config;
+import model.configuration.KeyValueConfiguration;
 import model.mail.Mail;
-import model.util.Config;
 
 import org.apache.log4j.Logger;
+
 
 
 public class DelSizeValidator implements EmailValidator {
 
 	private static Logger logger = Logger.getLogger(DelSizeValidator.class);
-	private static Config deleteSizeConfig = Config.getInstance().getConfig(
-			"notdelete_size");
+	private static KeyValueConfiguration deleteSizeConfig = Config.getInstance().getKeyValueConfig("notdelete_size");
 
 	@Override
 	public boolean validate(User user, Mail email) {

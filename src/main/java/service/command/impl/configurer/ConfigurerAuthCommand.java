@@ -1,6 +1,6 @@
 package service.command.impl.configurer;
 
-import model.util.Config;
+import model.configuration.Config;
 import service.AbstractSockectService;
 import service.command.impl.AuthCommand;
 import service.state.impl.configurer.ReadState;
@@ -10,7 +10,8 @@ public class ConfigurerAuthCommand extends AuthCommand {
 
 	public ConfigurerAuthCommand(AbstractSockectService owner) {
 		super(owner);
-		getBundle().put("password", Config.getInstance().getConfig("configurer_conf").get("password"));
+		String passwd = Config.getInstance().getKeyValueConfig("configurer").get("password");
+		getBundle().put("password", passwd);
 	}
 
 	@Override

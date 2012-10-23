@@ -4,8 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
-import model.util.Config;
-import model.util.IOUtil;
+import model.configuration.Config;
 
 import service.AbstractSockectService;
 import service.StatusCodes;
@@ -30,13 +29,12 @@ public class DeleteLineCommand extends ServiceCommand {
 			owner.echoLine(StatusCodes.ERR_INVALID_PARAMETERS_NUMBER,  "input: " + params[0]);
 			return;
 		}
-		String resPath = Config.getInstance().get("specific_conf_dir") + params[1];
-		String fullPath = IOUtil.fullPath(resPath);
+		String fullPath = Config.getInstance().getFullPath(params[1]);
 		if (fullPath == null) {
 			owner.echoLine(StatusCodes.ERR_INVALID_PARAMETERS_FILE);
 			return;
 		}
-		StringBuilder text = getTextWithoutLine(resPath, lineNumberToRemove);
+		StringBuilder text = getTextWithoutLine(fullPath, lineNumberToRemove);
 		try {
 			PrintWriter out = new PrintWriter(fullPath);
 			out.print(text.toString());
@@ -48,9 +46,9 @@ public class DeleteLineCommand extends ServiceCommand {
 		}
 	}
 	
-	public StringBuilder getTextWithoutLine(String resPath, int lineNumber) {
+	public StringBuilder getTextWithoutLine(String fullPath, int lineNumber) {
 		StringBuilder modifiedFile = new StringBuilder();
-		Scanner scanner = IOUtil.createScanner(resPath);
+		Scanner scanner = new Scanner(fullPath);
 		int currLine = 1;
 		while (scanner.hasNextLine()) {
 			String line = scanner.nextLine();

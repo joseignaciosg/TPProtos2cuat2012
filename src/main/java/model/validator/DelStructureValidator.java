@@ -1,16 +1,18 @@
 package model.validator;
 
 import model.User;
+import model.configuration.Config;
+import model.configuration.KeyValueConfiguration;
 import model.mail.Mail;
 import model.util.CollectionUtil;
-import model.util.Config;
 
 import org.apache.log4j.Logger;
+
 
 public class DelStructureValidator implements EmailValidator {
 
 	private static Logger logger = Logger.getLogger(DelStructureValidator.class);
-	private static Config deleteStructureConfig = Config.getInstance().getConfig("notdelete_structure");
+	private static KeyValueConfiguration deleteStructureConfig = Config.getInstance().getKeyValueConfig("notdelete_structure");
 
 	@Override
 	public boolean validate(User user, Mail email) {

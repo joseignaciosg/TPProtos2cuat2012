@@ -4,7 +4,10 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import model.configuration.Config;
+
 import org.apache.log4j.Logger;
+
 
 public class ConfigWriter {
 
@@ -23,8 +26,7 @@ public class ConfigWriter {
 	}
 	
 	public void flush() {
-		String file = Config.getInstance().get("specific_conf_dir") + fileName;
-		String path = IOUtil.getResource(file).getPath();
+		String path = Config.getInstance().getFullPath(fileName);
 		logger.trace("Guardo archivo de configuracion para " + fileName);
 		try {
 			BufferedWriter out = new BufferedWriter(new FileWriter(path));

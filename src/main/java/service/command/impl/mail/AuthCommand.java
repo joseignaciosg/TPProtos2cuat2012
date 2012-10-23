@@ -3,8 +3,9 @@ package service.command.impl.mail;
 import java.io.IOException;
 
 import model.User;
+import model.configuration.Config;
+import model.configuration.KeyValueConfiguration;
 import model.util.CollectionUtil;
-import model.util.Config;
 
 import org.apache.commons.net.util.Base64;
 import org.apache.log4j.Logger;
@@ -92,7 +93,7 @@ public class AuthCommand extends ServiceCommand {
 	}
 	
 	private String getMailServer(User user) {
-		Config originServerConfig = Config.getInstance().getConfig("origin_server");
+		KeyValueConfiguration originServerConfig = Config.getInstance().getKeyValueConfig("origin_server");
 		String host = user.getMailhost();
 		String server = originServerConfig.get(host);
 		return server == null ? originServerConfig.get("default") : server;
