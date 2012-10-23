@@ -13,15 +13,17 @@ public class User {
 	public String getMail() {
 		return mail;
 	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
 	
 	public String getPassword() {
 		return password;
 	}
 	
 	public String getMailhost() {
-		String host = mail.split("@")[1];
-		int firstDot = host.indexOf("");
-		return host.substring(0, firstDot);
+		return mail.split("@")[1];
 	}
 	
 }

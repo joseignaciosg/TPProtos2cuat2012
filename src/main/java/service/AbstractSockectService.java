@@ -24,13 +24,10 @@ public abstract class AbstractSockectService implements Runnable {
 	protected boolean endOfTransmission;
 	protected ServiceStateMachine stateMachine;
 
-	public AbstractSockectService() {
+	public AbstractSockectService(Socket socket) {
+		this.socket = socket;
 		stateMachine = new ServiceStateMachine(this);
 		endOfTransmission = false;
-	}
-	
-	public void setSocket(Socket socket) {
-		this.socket = socket;
 	}
 	
 	@Override

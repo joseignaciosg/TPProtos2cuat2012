@@ -29,8 +29,7 @@ public class GenericServer implements Runnable {
 			ServerSocket welcomeSocket = new ServerSocket(port);
 			while (!Thread.interrupted()) {
 				final Socket connectionSocket = welcomeSocket.accept();
-				AbstractSockectService server = createInstance(serverClass);
-				server.setSocket(connectionSocket);
+				AbstractSockectService server = createInstance(serverClass, connectionSocket);
 				logger.info("Conection accepted. Attending Server: " + serverClass);
 				threadPool.submit(server);
 			}
@@ -41,9 +40,9 @@ public class GenericServer implements Runnable {
 		}	
 	}
 
-	private AbstractSockectService createInstance(Class<? extends AbstractSockectService> serverClass) 
+	private AbstractSockectService createInstance(Class<? extends AbstractSockectService> serverClass, Socket connectionSocket) 
 			throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, SecurityException {
-		return (AbstractSockectService) serverClass.getConstructors()[0].newInstance();
+		return (AbstractSockectService) serverClass.getConstructors()[0].newInstance(connectionSocket);
 	}
 
 }

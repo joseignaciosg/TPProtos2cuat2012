@@ -11,7 +11,7 @@ import model.util.Config;
 
 import org.apache.log4j.Logger;
 
-import service.state.impl.mail.ValidationState;
+import service.state.impl.mail.AuthState;
 
 public class MailSocketService extends AbstractSockectService {
 
@@ -20,26 +20,20 @@ public class MailSocketService extends AbstractSockectService {
 	private Socket originServerSocket;
 	private MailRetriever mailRetriever;
 	
-	public MailSocketService() {
-		stateMachine.setState(new ValidationState(this));
+	public MailSocketService(Socket socket) {
+		super(socket);
+		stateMachine.setState(new AuthState(this));
 	}
 
 	@Override
 	protected void onConnectionEstabished() throws Exception {
-		stateMachine.exec(null);
-		if (!endOfTransmission) {
-			int port = Config.getInstance().getInt("pop3_port");
-			String addres = "mail.josegalindo.com.ar";
-			// String addres = "localhost";
-			setOriginServerSocket(new Socket(addres, port));
-			String line = readFromOriginServer().readLine();
-			echoLine(line);
-		}
+		super.onConnectionEstabished();
+		echoLine("+OK Mail Proxy Ready.");
 	}
-
+	
 	@Override
 	protected void exec(String command) throws Exception {
-		logger.trace("recieved: " + command);
+		logger.trace("Recieved: " + command);
 		stateMachine.exec(command.split(" "));
 	}
 	
@@ -85,5 +79,13 @@ public class MailSocketService extends AbstractSockectService {
 			logger.error("Could not write to output stream!. Reason: " + e.getMessage());
 			throw new IllegalStateException("Could not read from server!");
 		}
+	}
+	
+	public String setOriginServer(String host) throws IOException {
+		int port = Config.getInstance().getInt("pop3_port");
+		setOriginServerSocket(new Socket(host, port));
+		String line = readFromOriginServer().readLine();
+		logger.debug("Mail server new connection status: " + line);
+		return line;
 	}
 }

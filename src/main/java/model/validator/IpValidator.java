@@ -6,16 +6,13 @@ import model.util.Config;
 import model.util.IOUtil;
 
 import org.apache.commons.net.util.SubnetUtils;
-import org.apache.log4j.Logger;
 
 
 public class IpValidator {
 
-	private static Logger logger = Logger.getLogger(IpValidator.class);
-
 	public boolean isBanned(String userIp) {
 		String fileName = Config.getInstance().get("specific_conf_dir")
-				+ "access_ip.conf";
+				+ "banned_ip.conf";
 		Scanner scannerIps = IOUtil.createScanner(fileName);
 		boolean isClientIpBanned = false;
 		while (scannerIps.hasNextLine() && !isClientIpBanned) {

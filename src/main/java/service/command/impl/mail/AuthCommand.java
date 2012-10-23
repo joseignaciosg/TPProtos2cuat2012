@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import model.User;
 import model.util.CollectionUtil;
+import model.util.Config;
 
 import org.apache.commons.net.util.Base64;
 import org.apache.log4j.Logger;
@@ -11,6 +12,7 @@ import org.apache.log4j.Logger;
 import service.AbstractSockectService;
 import service.MailSocketService;
 import service.command.ServiceCommand;
+import service.state.impl.mail.ParseMailState;
 
 public class AuthCommand extends ServiceCommand {
 
@@ -22,39 +24,50 @@ public class AuthCommand extends ServiceCommand {
 
 	@Override
 	public void execute(String[] params) throws Exception {
-		String resp = echoToOriginServerAndReadLine(getOriginalLine());
-		User user;
+		MailSocketService mailServer = (MailSocketService) owner;
 		if (CollectionUtil.empty(params)) {
-			owner.echoLine(resp);
+			mailServer.echoLine("+");
+			mailServer.echoLine(".");
 			return;
 		} else if ("PLAIN".equals(params[0].toUpperCase())) {
-			owner.echoLine(resp);
-			String base64Credentials = owner.read().readLine();
+			mailServer.echoLine("+");
+			String base64Credentials = mailServer.read().readLine();
+			User tmpUser = createUser(base64Credentials);
+			String host = getMailServer(tmpUser);
+			mailServer.setOriginServer(host);
+			// login against REAL origin server
+			String resp = echoToOriginServerAndReadLine(getOriginalLine());
+			if (!"+".equals(resp.trim())) {
+				return;
+			}
 			resp = echoToOriginServerAndReadLine(base64Credentials);
-			owner.echoLine(resp);
-			if (!resp.startsWith("+OK")) {
+			mailServer.echoLine(resp);
+			if (!resp.toUpperCase().startsWith("+OK")) {
 				return;
 			}
-			user = createUser(base64Credentials);
-			getBundle().put("auth_user", user);
+			getBundle().put("auth_user", tmpUser);
 		} else if ("LOGIN".equals(params[0].toUpperCase())) {
-			owner.echoLine(resp);
-			String username = owner.read().readLine();
-			resp = echoToOriginServerAndReadLine(username);
-			owner.echoLine(resp);
-			String password = owner.read().readLine();
-			resp = echoToOriginServerAndReadLine(password);
-			owner.echo(resp);
-			if (!resp.startsWith("+OK")) {
+			mailServer.echoLine("+ VXNlcm5hbWU6"); 	// Username:
+			String base64Username = mailServer.read().readLine();
+			mailServer.echoLine("+ UGFzc3dvcmQ6"); 	// Password:
+			String base64Password = mailServer.read().readLine();
+			User tmpUser = createUser(base64Username, base64Password);
+			mailServer.setOriginServer(getMailServer(tmpUser));
+			// login against REAL origin server
+			echoToOriginServerAndReadLine(getOriginalLine());
+			echoToOriginServerAndReadLine(base64Username);
+			String result = echoToOriginServerAndReadLine(base64Password);
+			mailServer.echoLine(result);
+			if (!result.toUpperCase().startsWith("+OK")) {
 				return;
 			}
-			user = createUser(username, password);
+			getBundle().put("auth_user", tmpUser);
 		} else {
 			logger.error("Unknown login type.");
 			owner.echoLine("-ERR");
 			return;
 		}
-		getBundle().put("auth_user", user);
+		owner.getStateMachine().setState(new ParseMailState(owner));
 	}
 
 	private String echoToOriginServerAndReadLine(String line) throws IOException {
@@ -76,5 +89,12 @@ public class AuthCommand extends ServiceCommand {
 		String username = decodedUsername.split("\0")[0];
 		String passwd = decodedPasswd.split("\0")[0];
 		return new User(username, passwd);
+	}
+	
+	private String getMailServer(User user) {
+		Config originServerConfig = Config.getInstance().getConfig("origin_server");
+		String host = user.getMailhost();
+		String server = originServerConfig.get(host);
+		return server == null ? originServerConfig.get("default") : server;
 	}
 }

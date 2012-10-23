@@ -1,6 +1,7 @@
 package service.mock;
 
 import java.io.DataOutputStream;
+import java.net.Socket;
 
 import service.AbstractSockectService;
 
@@ -9,7 +10,8 @@ public class MockedSocketEmailService extends AbstractSockectService {
 	
 	private Server server;
 	
-	public MockedSocketEmailService() {
+	public MockedSocketEmailService(Socket socket) {
+		super(socket);
 		server = new MockitoServer();
 	}
 		

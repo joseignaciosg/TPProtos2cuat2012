@@ -1,7 +1,6 @@
 package service.state.impl.mail;
 
 import service.AbstractSockectService;
-import service.command.impl.mail.AuthCommand;
 import service.command.impl.mail.DefaultCommand;
 import service.command.impl.mail.DeleCommand;
 import service.command.impl.mail.EchoUntilPointCommand;
@@ -13,7 +12,6 @@ public class ParseMailState extends State {
 
 	public ParseMailState(AbstractSockectService owner) {
 		super(owner);
-		commandRecognizer.register("AUTH", AuthCommand.class);
 		commandRecognizer.register("CAPA", EchoUntilPointCommand.class);
 		commandRecognizer.register("LIST", EchoUntilPointCommand.class);
 		commandRecognizer.register("UIDL", EchoUntilPointCommand.class);
