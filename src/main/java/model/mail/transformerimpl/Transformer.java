@@ -1,4 +1,4 @@
-package model.parser;
+package model.mail.transformerimpl;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -6,24 +6,20 @@ import java.io.IOException;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
-import model.parser.mime.MailMimeParser;
-import model.parser.mime.MimeHeaderParser;
+import model.mail.Mail;
 
 
 public abstract class Transformer {
 
-	MimeHeaderParser header;
-
-	protected File mail;
+	protected File contents;
 	protected File transformedMail;
 	protected String boundaryline;
 
 	public Transformer() {
 	}
 
-	public File apply(File mailFile) throws IOException {
-		MailMimeParser mailParser = new MailMimeParser();
-		this.mail = mailFile;
+	public void apply(Mail mail) throws IOException {
+		this.contents = mail.getContents();
 		/*
 		mail = mailParser.parse(mailFile);
 		transformedMail = File.createTempFile("transformedmail", "proxy");
@@ -52,8 +48,6 @@ public abstract class Transformer {
 		out.close();
 		scanner.close();
 		*/
-		return transformedMail;
-
 	}
 
 	private File readPart(Scanner scanner, final String boundary)

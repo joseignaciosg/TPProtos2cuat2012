@@ -1,7 +1,7 @@
 package model.validator;
 
-import model.Mail;
 import model.User;
+import model.mail.Mail;
 
 public interface EmailValidator {
 	

@@ -6,7 +6,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
-import model.parser.impl.MailRetriever;
+import model.mail.MailRetriever;
+import model.mail.MailTransformer;
+import model.mail.transformerimpl.FileMailTransformer;
 import model.util.Config;
 
 import org.apache.log4j.Logger;
@@ -19,10 +21,13 @@ public class MailSocketService extends AbstractSockectService {
 	
 	private Socket originServerSocket;
 	private MailRetriever mailRetriever;
+	private MailTransformer mailTranformer;
 	
 	public MailSocketService(Socket socket) {
 		super(socket);
 		stateMachine.setState(new AuthState(this));
+		mailRetriever = new MailRetriever();
+		mailTranformer = new FileMailTransformer();
 	}
 
 	@Override
@@ -56,6 +61,10 @@ public class MailSocketService extends AbstractSockectService {
 	
 	public MailRetriever getMailRetriever() {
 		return mailRetriever;
+	}
+	
+	public MailTransformer getMailTranformer() {
+		return mailTranformer;
 	}
 
 	public void echoLineToOriginServer(String s) {

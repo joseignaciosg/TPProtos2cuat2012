@@ -2,14 +2,12 @@ package model.validator;
 
 import java.util.Arrays;
 
-import model.Mail;
 import model.User;
+import model.mail.Mail;
 import model.util.CollectionUtil;
 import model.util.Config;
 
 import org.apache.log4j.Logger;
-
-
 
 public class DelContentTypeValidator implements EmailValidator {
 

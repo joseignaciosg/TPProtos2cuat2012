@@ -2,7 +2,7 @@ import java.io.File;
 import java.io.IOException;
 
 import junit.framework.Assert;
-import model.Mail;
+import model.mail.Mail;
 import model.parser.mime.MailMimeParser;
 import model.parser.mime.MimeHeader;
 import model.util.IOUtil;

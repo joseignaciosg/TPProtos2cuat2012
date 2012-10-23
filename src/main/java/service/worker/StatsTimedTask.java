@@ -29,4 +29,8 @@ public class StatsTimedTask extends TimerTask {
 		}
 	}
 	
+	public String getTaskName() {
+		return taskName;
+	}
+	
 }

@@ -3,7 +3,7 @@ package model.parser.mime;
 import java.io.IOException;
 import java.util.Scanner;
 
-import model.Mail;
+import model.mail.Mail;
 
 import org.apache.log4j.Logger;
 

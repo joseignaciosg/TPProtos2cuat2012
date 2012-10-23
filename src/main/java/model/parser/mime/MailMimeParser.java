@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
 
-import model.Mail;
+import model.mail.Mail;
 
 import org.apache.log4j.Logger;
 
@@ -23,7 +23,7 @@ public class MailMimeParser {
 	}
 	
 	public Mail parse(File mimeFile, long sizeInBytes) throws IOException {
-		Mail mail = new Mail();
+		Mail mail = new Mail(mimeFile);
 		mail.setSizeInBytes(sizeInBytes);
 		Scanner scanner = new Scanner(mimeFile);
 		headerParser.parse(scanner, mail);

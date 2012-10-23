@@ -1,11 +1,11 @@
-package model.parser;
+package model.mail.transformerimpl;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import model.parser.mime.MimeHeaderParser;
+import model.mail.Mail;
+import model.mail.MailTransformer;
 import model.util.ConfigReader;
 import model.util.ConfigSimpleReader;
 
@@ -15,26 +15,17 @@ import org.apache.log4j.Logger;
 public class FileMailTransformer implements MailTransformer {
 
 	private static final Logger logger = Logger.getLogger(FileMailTransformer.class);
-
-	private File mail;
-	private MimeHeaderParser mailHeader;
-
-	public FileMailTransformer(File mail) {
-		this.mail = mail;
-		this.mailHeader = new MimeHeaderParser();
-		// this.mailHeader.parse(mail);
-	}
-
+	
 	@Override
-	public void transform() throws IOException {
+	public void transform(Mail mail) throws IOException {
 		ConfigReader configReader = new ConfigSimpleReader("transformation");
 		String option;
 		while ((option = configReader.readLine()) != null) {
-			this.executeTransformation(option);
+			executeTransformation(mail, option);
 		}
 	}
 
-	private void executeTransformation(final String option) throws IOException {
+	private void executeTransformation(Mail mail, String option) throws IOException {
 		List<Transformer> transformers = new ArrayList<Transformer>();
 		if ("l33t".equals(option)) {
 			transformers.add(new LeetTransformer());
@@ -44,7 +35,7 @@ public class FileMailTransformer implements MailTransformer {
 			// TODO: temrinar hide sender!
 		}
 		for (Transformer t : transformers) {
-			mail = t.apply(mail);
+			t.apply(mail);
 		}
 
 	}

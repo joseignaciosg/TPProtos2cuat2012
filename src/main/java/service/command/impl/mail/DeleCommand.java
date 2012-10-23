@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import model.Mail;
 import model.User;
+import model.mail.Mail;
 import model.validator.DelContentTypeValidator;
 import model.validator.DelHeaderPatternValidator;
 import model.validator.DelMaxDateValidator;

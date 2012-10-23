@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import model.Mail;
 import model.User;
+import model.mail.Mail;
 import model.util.CollectionUtil;
 import model.util.Config;
 

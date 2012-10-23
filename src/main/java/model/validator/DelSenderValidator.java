@@ -1,7 +1,7 @@
 package model.validator;
 
-import model.Mail;
 import model.User;
+import model.mail.Mail;
 import model.util.CollectionUtil;
 import model.util.Config;
 

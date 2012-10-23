@@ -1,4 +1,4 @@
-package model.parser;
+package model.mail.transformerimpl;
 
 import java.io.File;
 import java.io.IOException;

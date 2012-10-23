@@ -3,9 +3,8 @@ package service.command.impl.mail;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 
-import model.Mail;
+import model.mail.Mail;
 import model.parser.mime.MailMimeParser;
 
 import org.apache.log4j.Logger;
@@ -24,6 +23,7 @@ public class RetrCommand extends ServiceCommand {
 
 	@Override
 	public void execute(String[] params) throws Exception {
+		// TODO: esta clase tiene que usar el MailRetriever del MailService!
 		boolean showToClient = true;
 		if (params.length == 3) {
 			showToClient = Boolean.valueOf(params[3]);
@@ -36,7 +36,7 @@ public class RetrCommand extends ServiceCommand {
 		String firstLine = null;
 		String line;
 		do {
-			line = readLine(responseBuffer);
+			line = responseBuffer.readLine();
 			if (firstLine == null) {
 				firstLine = line;
 			}
@@ -51,14 +51,6 @@ public class RetrCommand extends ServiceCommand {
 		Mail mail = parser.parse(mailTmpFile, sizeInBytes);
 		if (!showToClient) {
 			getBundle().put("DELE_" + params[0], mail);
-		}
-	}
-
-	private String readLine(BufferedReader responseBuffer) {
-		try {
-			return responseBuffer.readLine();
-		} catch (IOException e) {
-			throw new IllegalStateException("Error reading line - " + e.getMessage());
 		}
 	}
 }

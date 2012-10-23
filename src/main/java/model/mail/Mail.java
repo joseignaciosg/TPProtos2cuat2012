@@ -1,5 +1,6 @@
-package model;
+package model.mail;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,10 +15,12 @@ public class Mail {
 	private long sizeInBytes;
 	private Map<String, MimeHeader> headers;
 	private List<String> attachmentsExtension;
-
-	public Mail() {
+	private File contents;
+	
+	public Mail(File contents) {
 		headers = new HashMap<String, MimeHeader>();
 		attachmentsExtension = new LinkedList<String>();
+		this.contents = contents;
 	}
 
 	public long getSizeInBytes() {
@@ -73,4 +76,7 @@ public class Mail {
 		return header.getValue().equals(value);
 	}
 
+	public File getContents() {
+		return contents;
+	}
 }
