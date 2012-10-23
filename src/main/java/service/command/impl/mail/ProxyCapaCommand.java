@@ -13,6 +13,7 @@ public class ProxyCapaCommand extends ServiceCommand {
 	public void execute(String[] params) throws Exception {
 		owner.echoLine("+OK");
 		owner.echoLine("AUTH");
+		owner.echoLine("USER");
 		owner.echoLine(".");
 	}
 }
