@@ -5,11 +5,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import model.StatusCodes;
 
 import org.apache.log4j.Logger;
 
 import service.AbstractSockectService;
+import service.StatusCodes;
 
 
 public class ServiceCommandRecognizer {

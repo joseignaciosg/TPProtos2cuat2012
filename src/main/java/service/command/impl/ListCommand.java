@@ -3,9 +3,9 @@ package service.command.impl;
 import java.util.Collections;
 import java.util.List;
 
-import model.StatusCodes;
 
 import service.AbstractSockectService;
+import service.StatusCodes;
 import service.command.ServiceCommand;
 
 public class ListCommand extends ServiceCommand {

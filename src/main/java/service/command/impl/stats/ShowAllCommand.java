@@ -1,7 +1,7 @@
 package service.command.impl.stats;
 
-import model.StatusCodes;
 import service.AbstractSockectService;
+import service.StatusCodes;
 import service.command.ServiceCommand;
 
 public class ShowAllCommand extends ServiceCommand {

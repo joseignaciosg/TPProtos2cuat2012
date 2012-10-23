@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
-import model.StatusCodes;
 import model.util.StringUtil;
 
 import org.apache.log4j.Logger;

@@ -2,12 +2,12 @@ package service.command.impl;
 
 import java.util.Scanner;
 
-import model.StatusCodes;
 import model.util.CollectionUtil;
 import model.util.Config;
 import model.util.IOUtil;
 
 import service.AbstractSockectService;
+import service.StatusCodes;
 import service.command.ServiceCommand;
 
 public class GetFileCommand extends ServiceCommand {

@@ -3,10 +3,10 @@ package service.command.impl.stats;
 import java.io.DataOutputStream;
 import java.util.Timer;
 
-import model.StatusCodes;
 import model.util.CollectionUtil;
 import model.util.Config;
 import service.AbstractSockectService;
+import service.StatusCodes;
 import service.command.ServiceCommand;
 import service.worker.StatsTimedTask;
 

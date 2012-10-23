@@ -1,4 +1,4 @@
-package model;
+package service;
 
 public enum StatusCodes {
 	OK_CONFIGURER_READY(0, "Configurer ready"),

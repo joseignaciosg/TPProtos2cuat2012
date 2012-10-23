@@ -2,9 +2,9 @@ package service.state.impl.mail;
 
 import java.net.Socket;
 
-import model.StatusCodes;
 import model.validator.IpValidator;
 import service.AbstractSockectService;
+import service.StatusCodes;
 import service.command.impl.mail.AuthCommand;
 import service.command.impl.mail.DefaultCommand;
 import service.command.impl.mail.ProxyCapaCommand;

@@ -4,11 +4,11 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
-import model.StatusCodes;
 import model.util.Config;
 import model.util.IOUtil;
 
 import service.AbstractSockectService;
+import service.StatusCodes;
 import service.command.ServiceCommand;
 
 public class DeleteLineCommand extends ServiceCommand {

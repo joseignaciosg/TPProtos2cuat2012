@@ -2,7 +2,6 @@ package service;
 
 import java.net.Socket;
 
-import model.StatusCodes;
 import service.state.impl.stats.AuthorityState;
 
 public class StatsSocketService extends AbstractSockectService {
