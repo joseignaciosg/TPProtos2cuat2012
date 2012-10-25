@@ -44,7 +44,8 @@ public abstract class AbstractSockectService implements Runnable {
 				}
 			}
 		} catch (Exception e) {
-			logger.error("Closing Connection. Exception cought on AbstractSocketService: + " + e.getMessage());
+			logger.error("Exception on run(). Closing Connection.");
+			e.printStackTrace();
 		}
 		try {
 			onConnectionClosed();

@@ -50,8 +50,12 @@ public class MailSocketService extends AbstractSockectService {
 		super.onConnectionClosed();
 	}
 	
-	public void setOriginServerSocket(Socket mailServerSocket) {
-		this.originServerSocket = mailServerSocket;
+	public void setOriginServerSocket(Socket originServerSocket) {
+		this.originServerSocket = originServerSocket;
+	}
+	
+	public boolean hasOriginServerSocket() {
+		return originServerSocket != null;
 	}
 	
 	public Socket getOriginServerSocket() {

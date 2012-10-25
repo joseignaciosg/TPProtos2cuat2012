@@ -13,16 +13,16 @@ public class QuitCommand extends ServiceCommand {
 	}
 
 	@Override
-	public void execute(String[] params) {
+	public void execute(String[] params) throws Exception {
 		owner.setEndOfTransmission(true);
 		MailSocketService mailService = ((MailSocketService) owner);
-		mailService.echoLineToOriginServer(getOriginalLine());
-		try {
-			String response = mailService.readFromOriginServer().readLine();
-			mailService.echoLine(response);
-		} catch (IOException e) {
-			System.out.println("No se pudo terminar la coenccion con el servidor.");
+		if (mailService.hasOriginServerSocket()) {
+			// Solo se tiene una coneccion con un origin server si el usuario esta autenticado!
+			mailService.echoLineToOriginServer(getOriginalLine());
+			return;
 		}
+		String response = mailService.readFromOriginServer().readLine();
+		mailService.echoLine(response);
 	}
 
 }
