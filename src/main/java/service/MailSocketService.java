@@ -9,6 +9,7 @@ import java.net.Socket;
 import model.configuration.Config;
 import model.mail.MailRetriever;
 import model.mail.MailTransformer;
+import model.parser.mime.MailMimeParser;
 
 import org.apache.log4j.Logger;
 
@@ -21,12 +22,14 @@ public class MailSocketService extends AbstractSockectService {
 	private Socket originServerSocket;
 	private MailRetriever mailRetriever;
 	private MailTransformer mailTranformer;
+	private MailMimeParser mailMimeParser;
 	
 	public MailSocketService(Socket socket) {
 		super(socket);
 		stateMachine.setState(new AuthState(this));
 		mailRetriever = new MailRetriever();
 		mailTranformer = new MailTransformer();
+		mailMimeParser = new MailMimeParser();
 	}
 
 	@Override
@@ -70,6 +73,10 @@ public class MailSocketService extends AbstractSockectService {
 		return mailTranformer;
 	}
 
+	public MailMimeParser getMailMimeParser() {
+		return mailMimeParser;
+	}
+	
 	public void echoLineToOriginServer(String s) {
 		logger.trace("Echo to origin server: " + s);
 		echoToOriginServer(s + "\r\n");

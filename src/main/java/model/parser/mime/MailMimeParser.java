@@ -28,7 +28,7 @@ public class MailMimeParser {
 	
 	public Mail parse(File mimeFile, long sizeInBytes, MailTransformer transformer) throws IOException {
 		Mail mail = new Mail(mimeFile);
-		File transformedFile = File.createTempFile(mimeFile.getName()+"trans", "trans");
+		File transformedFile = File.createTempFile(mimeFile.getName(), "_transformed");
 		mail.setSizeInBytes(sizeInBytes);
 		Scanner scanner = new Scanner(mimeFile);
 		FileWriter transWriter = new FileWriter(transformedFile);
