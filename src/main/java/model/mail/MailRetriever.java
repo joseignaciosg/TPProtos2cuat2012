@@ -14,7 +14,7 @@ public class MailRetriever {
 		String line;
 		do {
 			line = inputBuffer.readLine();
-			mailFileWriter.append(line);
+			mailFileWriter.append(line + "\r\n");
 			if (outputBuffer != null) {
 				outputBuffer.writeBytes(line + "\r\n");
 			}
