@@ -5,6 +5,6 @@ import model.mail.Mail;
 
 public interface EmailValidator {
 	
-	public boolean validate(User user, Mail email);
+	public void validate(User user, Mail email) throws MailValidationException;
 
 }

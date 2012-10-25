@@ -15,7 +15,7 @@ public class DelStructureValidator implements EmailValidator {
 	private static KeyValueConfiguration deleteStructureConfig = Config.getInstance().getKeyValueConfig("notdelete_structure");
 
 	@Override
-	public boolean validate(User user, Mail email) {
+	public void validate(User user, Mail email) throws MailValidationException {
 		if (user == null || email == null) {
 			logger.info("User and Email cant be null");
 			throw new IllegalStateException();
@@ -23,15 +23,14 @@ public class DelStructureValidator implements EmailValidator {
 		String[] desiredStructure = CollectionUtil.splitAndTrim(deleteStructureConfig.get(user.getMail()), ",");
 		if (desiredStructure == null || desiredStructure.length == 0) {
 			// No restrictions for this user
-			return true;
+			return;
 		}
 		for (String field: desiredStructure) {
 			if ("dissabledAttachments".equals(field) && email.hasAttachments()) {
-				logger.info("Restricting message deletion because mail has attachments");
-				return false;
+				String message = "Restricting message deletion because mail has attachments";
+				throw new MailValidationException(message);
 			}
 		}
-		return true;
 	}
 	
 }

@@ -1,6 +1,5 @@
 package service.command.impl.mail;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +12,7 @@ import model.validator.DelSenderValidator;
 import model.validator.DelSizeValidator;
 import model.validator.DelStructureValidator;
 import model.validator.EmailValidator;
+import model.validator.MailValidationException;
 
 import org.apache.log4j.Logger;
 
@@ -38,26 +38,32 @@ public class DeleCommand extends ServiceCommand {
 	}
 
 	@Override
-	public void execute(String[] params) {
-		String[] retrParams = {"RETR", params[0], "false"};
-		owner.getStateMachine().exec(retrParams);
-		Mail email = (Mail) getBundle().get("DELE_" + params[0]);
-		for (EmailValidator v : validators) {
-			if (!v.validate((User) getBundle().get("AUTH_USER"), email)) {
-				// Error
-				getBundle().remove("DELE_" + params[0]);
+	public void execute(String[] params) throws Exception {
+		Mail email = getMail(params[0]);
+		User current = (User) getBundle().get("AUTH_USER");
+		for (EmailValidator validator : validators) {
+			try {
+				validator.validate(current, email);
+			} catch (MailValidationException e) {
+				logger.info(e.getMessage());
+				removeMailFromBundle("DELE_" + params[0]);
+				owner.echoLine("-ERR " + e.getMessage() + ".");
 				return;
 			}
 		}
-		getBundle().remove(params[0]);
+		removeMailFromBundle(params[0]);
 		MailSocketService mailService = (MailSocketService) owner;
 		mailService.echoLineToOriginServer(getOriginalLine());
-		try {
-			mailService.echoLine(mailService.readFromOriginServer().readLine());
-		} catch (IOException e) {
-			logger.error("Error while echoing line to client");
-			throw new IllegalStateException();
-		}
+		mailService.echoLine(mailService.readFromOriginServer().readLine());
+	}
+	
+	private Mail getMail(String mail) {
+		String[] retrParams = {"RETR", mail, "false"};
+		owner.getStateMachine().exec(retrParams);
+		return (Mail) getBundle().get("DELE_" + mail);
 	}
 
+	private void removeMailFromBundle(String mail) {
+		getBundle().remove("DELE_" + mail);
+	}
 }
