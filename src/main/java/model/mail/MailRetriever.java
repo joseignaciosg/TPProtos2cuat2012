@@ -9,6 +9,9 @@ import java.io.IOException;
 
 public class MailRetriever {
 	
+    	/*
+    	 * if outputBuffer is null, do not output
+    	 * */
 	public File retrieve(String name, BufferedReader inputBuffer, DataOutputStream outputBuffer) throws IOException {
 		File mailTmpFile = File.createTempFile("mail" + name, ".mail");
 		FileWriter mailFileWriter = new FileWriter(mailTmpFile);

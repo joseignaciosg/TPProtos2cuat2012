@@ -1,31 +1,29 @@
 package model.mail.transformerimpl;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.regex.Pattern;
 
-import model.util.ProcessUtil;
+import model.parser.mime.MimeHeader;
 
 
 public class LeetTransformer extends Transformer {
 
-	@Override
-	public File transform(File part, String partheaders) throws IOException {
-		if (Pattern.matches(".*text/plain.*", partheaders)
-				|| Pattern.matches(".*.txt.*", partheaders)) {
-			List<String> commands = new LinkedList<String>();
-			commands.add("java");
-			commands.add("-jar");
-			commands.add("apps/toL33t.jar");
-			commands.add(part.getAbsolutePath());
-			try {
-				ProcessUtil.executeApp(commands);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		return part;
+    @Override
+    public StringBuilder transform(StringBuilder part, List<MimeHeader> partheaders)
+	    throws IOException {
+	StringBuilder ret = new StringBuilder();
+	String[] lines = part.toString().split("\r\n");
+	if(partheaders.contains(new MimeHeader("Content-Type:text/plain"))){
+	    for (int i=0; i<lines.length; i++){
+		String line = lines[i];
+		line = line.replaceAll("a", "4");
+		line = line.replaceAll("e", "3");
+		line = line.replaceAll("i", "1");
+		line = line.replaceAll("o", "0");
+		ret.append(line + "\r\n");
+	    }
 	}
+	return ret;
+    }
+
 }

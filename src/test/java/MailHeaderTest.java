@@ -8,6 +8,7 @@ import model.parser.mime.MimeHeader;
 import model.util.IOUtil;
 
 import org.junit.Before;
+import org.junit.Test;
 
 
 public class MailHeaderTest {
@@ -18,7 +19,7 @@ public class MailHeaderTest {
 	public void init() throws IOException {
 		File file = new File(IOUtil.fullPath("example/mail_7937octets.txt"));
 		MailMimeParser mimeParser = new MailMimeParser();
-		mail = mimeParser.parse(file, 140);
+//		mail = mimeParser.parse(file, 140);
 	}
 
 	// @Test
@@ -26,7 +27,7 @@ public class MailHeaderTest {
 		
 	}
 
-	// @Test
+	 @Test
 	public void getHeaderTest() throws IOException {
 		MimeHeader from = mail.getHeader("From");
 		System.out.println(from);

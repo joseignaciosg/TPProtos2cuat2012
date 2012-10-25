@@ -9,7 +9,6 @@ import java.net.Socket;
 import model.configuration.Config;
 import model.mail.MailRetriever;
 import model.mail.MailTransformer;
-import model.mail.transformerimpl.FileMailTransformer;
 
 import org.apache.log4j.Logger;
 
@@ -27,7 +26,7 @@ public class MailSocketService extends AbstractSockectService {
 		super(socket);
 		stateMachine.setState(new AuthState(this));
 		mailRetriever = new MailRetriever();
-		mailTranformer = new FileMailTransformer();
+		mailTranformer = new MailTransformer();
 	}
 
 	@Override

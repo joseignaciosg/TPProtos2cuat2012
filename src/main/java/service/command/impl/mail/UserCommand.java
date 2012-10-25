@@ -27,7 +27,7 @@ public class UserCommand extends ServiceCommand {
 		String passwordCmd = owner.read().readLine();
 		resp = echoToOriginServerAndReadLine(passwordCmd);
 		owner.echoLine(resp);
-		if (!"+OK".equals(resp)) {
+		if (!resp.toUpperCase().startsWith("+OK")) {
 			return;
 		}
 		user.setPassword(passwordCmd.split(" ")[1]);

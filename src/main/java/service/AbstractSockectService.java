@@ -93,8 +93,17 @@ public abstract class AbstractSockectService implements Runnable {
 			DataOutputStream out = new DataOutputStream(socket.getOutputStream());
 			out.writeBytes(s);
 		} catch (IOException e) {
-			logger.error("Could not write to output stream!. Reason: " + e.getMessage());
+		    logger.error("Could not write to output stream!. Reason: " + e.getMessage());
 		}
+	}
+	
+	public DataOutputStream getOutPutStream(){
+	    try {
+		return new DataOutputStream(socket.getOutputStream());
+	    } catch (IOException e) {
+		logger.error("Could not write to output stream!. Reason: " + e.getMessage());
+	    }
+	    return null;
 	}
 	
 	public BufferedReader read() {
