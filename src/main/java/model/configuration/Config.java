@@ -72,12 +72,10 @@ public class Config {
 		KeyValueConfiguration keyValue = cachedKeyValueConfig.get(fileName);
 		if (keyValue != null) {
 			keyValue.update();
-			return;
 		}
 		SimpleListConfiguration simple = cachedSimpleListConfig.get(fileName);
 		if (simple != null) {
 			simple.update();
-			return;
 		}
 	}
 

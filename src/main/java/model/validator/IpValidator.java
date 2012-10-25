@@ -1,22 +1,19 @@
 package model.validator;
 
-import java.util.Scanner;
+import java.util.Collection;
 
 import model.configuration.Config;
 import model.configuration.SimpleListConfiguration;
 
 import org.apache.commons.net.util.SubnetUtils;
 
-
-
 public class IpValidator {
 
 	public boolean isBanned(String userIp) {
-		SimpleListConfiguration bannedList = Config.getInstance().getSimpleListConfig("banned_ip");
-		Scanner scannerIps = bannedList.createScanner();
+		SimpleListConfiguration bannedListConfig = Config.getInstance().getSimpleListConfig("banned_ip");
+		Collection<String> bannedList = bannedListConfig.getValues();
 		boolean isClientIpBanned = false;
-		while (scannerIps.hasNextLine() && !isClientIpBanned) {
-			String ip = scannerIps.nextLine();
+		for (String ip : bannedList) {
 			String[] inetAddressParts = ip.split("/");
 			if (inetAddressParts.length < 2) { // No subnet mask declaration
 				isClientIpBanned = userIp.equals(inetAddressParts[0]);
@@ -26,8 +23,10 @@ public class IpValidator {
 				SubnetUtils subnetIp = new SubnetUtils(ip);
 				isClientIpBanned = subnetIp.getInfo().isInRange(userIp);
 			}
+			if (isClientIpBanned) {
+				return true;
+			}
 		}
-		scannerIps.close();
 		return isClientIpBanned;
 	}
 }
