@@ -62,7 +62,7 @@ public class ServiceCommandRecognizer {
 		try {
 			command.execute(parts);
 		} catch (Exception e) {
-			logger.error("Error excepcuting command: " + command);
+			logger.error("Error executing command: " + command);
 			throw new IllegalStateException(e);
 		}
 	}

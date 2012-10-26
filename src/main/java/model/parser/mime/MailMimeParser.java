@@ -27,11 +27,10 @@ public class MailMimeParser {
 	}
 	
 	public Mail parse(File mimeFile, long sizeInBytes, MailTransformer transformer) throws IOException {
-		Mail mail = new Mail(mimeFile);
-		File transformedFile = File.createTempFile(mimeFile.getName()+"trans", "trans");
+		Mail mail = new Mail(mimeFile); //TODO esta bien esto?
+		mail.setTransformedContents(File.createTempFile(mimeFile.getName()+"trans", "trans"));
 		mail.setSizeInBytes(sizeInBytes);
 		Scanner scanner = new Scanner(mimeFile);
-		FileWriter transWriter = new FileWriter(transformedFile);
 		headerParser.parse(scanner, mail);
 		parsePart(scanner, mail.getBoundaryKey(), mail, transformer);
 		scanner.close();
@@ -40,33 +39,38 @@ public class MailMimeParser {
 
 	private void parsePart(Scanner scanner, String boundary, Mail mail,MailTransformer transformer ) throws IOException{
 		boolean cont = false;
-	    	StringBuilder content = new StringBuilder();
-	    	String line = null;
+	    	String line = scanner.nextLine();
 	    	List<MimeHeader> headers;
 	    	while (scanner.hasNextLine()) {
+	    	    StringBuilder content = new StringBuilder();
 	    	    	if(cont){
 	    	    	    	line  = scanner.nextLine();
 	    	    	    	cont = false;
 	    	    	}
 			if ( line.equals("--" + boundary)) {
+			    	mail.appendTransformedLine("--" + boundary);
 			    	// start of a segment
-				logger.info("PART START : " + boundary);
+				logger.info("PART START : boundary" + boundary);
 				//parse header
 				headers = parsePartHeader(scanner, mail,transformer);
 				//parse content
 				while (scanner.hasNextLine()){
 				    String contLine = scanner.nextLine();
-				    if(contLine.equals("--" + boundary)){
+				    if(contLine.equals("")){
+				    	mail.appendTransformedLine("");
 					cont = true;
 					break;
 				    }else if(line.equals("--" + boundary + "--")){
+				    	mail.appendTransformedLine("--" + boundary + "--");
 					return;
 				    }	
 				    content.append(contLine);
 				}
 				content = transformer.transform(content, headers);
-				//TODO write to auxiliar File mail
+				mail.appendTransformedContent(content);
 			} else if (line.equals("--" + boundary + "--")) {
+			    	mail.appendTransformedLine("--" + boundary + "--");
+			    	mail.endTransformedContent();
 				logger.info("PART END : " + boundary);
 				// end of mail file
 				return;
@@ -83,9 +87,11 @@ public class MailMimeParser {
 			String line = scanner.nextLine();
 			// according to rfc, an empty line marks the of sub-boundary headers 
 			if (line.equals("")) {
+			    	mail.appendTransformedLine("" );
 				break;
 			}
 			MimeHeader header = new MimeHeader(line);
+			mail.appendTransformedLine(line);
 			mail.addAttachmentsExtension(header.getValue());
 			if (header.getKey().equals("Content-Type")) {
 				contentType = header;

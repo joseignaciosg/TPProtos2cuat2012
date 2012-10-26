@@ -15,11 +15,12 @@ public class MimeHeaderParser {
 	}
 	
 	public void parse(Scanner scanner, Mail mail) throws IOException {
-		logger.debug("Reading headers:");
+		logger.debug("Reading mail headers:");
 		String lastReadLine = scanner.nextLine();
 		while (scanner.hasNextLine()) {
 			lastReadLine = createHeader(lastReadLine, scanner, mail);
 			if (lastReadLine.equals("")) {
+			    	mail.appendTransformedLine("");
 				break;
 			}
 		}
@@ -32,11 +33,14 @@ public class MimeHeaderParser {
 	private String createHeader(String lastReadLine, Scanner scanner, Mail mail) {
 		boolean endOfHeader;
 		String line = lastReadLine;
+		mail.appendTransformedLine(line);
 		do {
 			endOfHeader = true;
 			lastReadLine = scanner.nextLine();
-			if (lastReadLine.startsWith(" ") || lastReadLine.startsWith(".")) {
+			if (lastReadLine.startsWith(" ") || lastReadLine.startsWith("\t")
+				|| lastReadLine.startsWith(".")) {
 				line += lastReadLine.trim();
+				mail.appendTransformedLine(lastReadLine);
 				endOfHeader = false;
 			}
 		} while(!endOfHeader);

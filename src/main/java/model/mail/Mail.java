@@ -1,6 +1,8 @@
 package model.mail;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,7 +18,10 @@ public class Mail {
 	private Map<String, MimeHeader> headers;
 	private List<String> attachmentsExtension;
 	private File contents;
+	private File transformedContents;
+	private FileWriter transformedMailWriter;
 	
+
 	public Mail(File contents) {
 		headers = new HashMap<String, MimeHeader>();
 		attachmentsExtension = new LinkedList<String>();
@@ -78,5 +83,42 @@ public class Mail {
 
 	public File getContents() {
 		return contents;
+	}
+
+	public File getTransformedContents() {
+	    return transformedContents;
+	}
+	
+	public void setTransformedContents(File transformedContents) throws IOException {
+	    this.transformedContents = transformedContents;
+	    transformedMailWriter = new FileWriter(this.transformedContents);
+	}
+	
+	public void appendTransformedLine(String line) {
+	    try {
+		transformedMailWriter.append(line + "\r\n");
+	    } catch (IOException e) {
+		e.printStackTrace();
+	    }
+	}
+	
+	public void appendTransformedContent(StringBuilder content) {
+	    String[] lines = content.toString().split("\r\n");
+	    try {
+		for(String line : lines){
+		    transformedMailWriter.append(line + "\r\n");
+		}
+	    } catch (IOException e) {
+		e.printStackTrace();
+	    }
+	}
+	
+	public void endTransformedContent(){
+	    try {
+		this.appendTransformedLine(".");
+		this.transformedMailWriter.close();
+	    } catch (IOException e) {
+		e.printStackTrace();
+	    }
 	}
 }

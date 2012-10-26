@@ -98,7 +98,7 @@ public abstract class AbstractSockectService implements Runnable {
 		}
 	}
 	
-	public DataOutputStream getOutPutStream(){
+	public DataOutputStream getToClientOutPutStream(){
 	    try {
 		return new DataOutputStream(socket.getOutputStream());
 	    } catch (IOException e) {
