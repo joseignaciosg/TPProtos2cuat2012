@@ -35,8 +35,8 @@ public class MimeHeaderParser {
 		do {
 			endOfHeader = true;
 			lastReadLine = scanner.nextLine();
-			if (lastReadLine.startsWith(" ") || lastReadLine.startsWith(".")) {
-				line += lastReadLine.trim();
+			if (lastReadLine.startsWith("\t") || lastReadLine.startsWith(" ") || lastReadLine.startsWith(".")) {
+				line += " " + lastReadLine.trim();
 				endOfHeader = false;
 			}
 		} while(!endOfHeader);
