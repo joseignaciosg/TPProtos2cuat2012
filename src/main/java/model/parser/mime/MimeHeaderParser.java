@@ -43,9 +43,9 @@ public class MimeHeaderParser {
 		try {
 			MimeHeader header = new MimeHeader(line);
 			mail.addHeaders(header);
-			logger.info("Parsed header => " + header);
+			logger.debug("Parsed header => " + header);
 		} catch (IllegalArgumentException e) {
-			System.out.println("Inavlid header: " + line + ". Ignoring...");
+			logger.error("Inavlid header: " + line + ". Ignoring...");
 		}
 		return lastReadLine;
 	}
