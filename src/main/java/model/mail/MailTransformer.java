@@ -8,11 +8,8 @@ import java.util.Map;
 
 import model.configuration.Config;
 import model.configuration.SimpleListConfiguration;
-<<<<<<< HEAD
-import model.mail.transformerimpl.ImageTransformer;
-=======
 import model.mail.transformerimpl.HideSenderTransformer;
->>>>>>> ecb804b8d755c31c4c7022b18fd16f9604f27c41
+import model.mail.transformerimpl.ImageTransformer;
 import model.mail.transformerimpl.LeetTransformer;
 import model.mail.transformerimpl.Transformer;
 import model.parser.mime.MimeHeader;
@@ -56,10 +53,9 @@ public class MailTransformer {
 				transformers.add(new LeetTransformer());
 			} else if ("rotateimages".equals(option.toLowerCase())) {
 				transformers.add(new ImageTransformer());
-			} else if ("hidesender".equals(option.toLowerCase())) {
-				// TODO: temrinar hide sender!
 			}
+		}
 		return transformers;
-	}
 
+	}
 }
