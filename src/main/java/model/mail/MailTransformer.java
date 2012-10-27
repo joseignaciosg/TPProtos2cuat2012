@@ -9,6 +9,7 @@ import java.util.Map;
 import model.configuration.Config;
 import model.configuration.SimpleListConfiguration;
 import model.mail.transformerimpl.HideSenderTransformer;
+import model.mail.transformerimpl.ImageTransformer;
 import model.mail.transformerimpl.LeetTransformer;
 import model.mail.transformerimpl.Transformer;
 import model.parser.mime.MimeHeader;
@@ -51,10 +52,10 @@ public class MailTransformer {
 			if ("l33t".equals(option.toLowerCase())) {
 				transformers.add(new LeetTransformer());
 			} else if ("rotateimages".equals(option.toLowerCase())) {
-				// transformers.add(new ImageTransformer());
-			} 
+				transformers.add(new ImageTransformer());
+			}
 		}
 		return transformers;
-	}
 
+	}
 }

@@ -47,7 +47,7 @@ public class UserCommand extends ServiceCommand {
 		return service.readFromOriginServer().readLine();
 	}
 	
-	private boolean validateAccessToMailByTime(User user, MailSocketService mailServer) {
+	private boolean validateAccessToMailByTime(User user, MailSocketService mailServer) throws Exception {
 		String userMail = user.getMail();
 		logger.debug("Checking time access for user: " + userMail);
 		try {

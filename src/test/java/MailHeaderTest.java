@@ -27,7 +27,7 @@ public class MailHeaderTest {
 		
 	}
 
-	 @Test
+//	 @Test
 	public void getHeaderTest() throws IOException {
 		MimeHeader from = mail.getHeader("From");
 		System.out.println(from);

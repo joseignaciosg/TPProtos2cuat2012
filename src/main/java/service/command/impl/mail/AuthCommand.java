@@ -109,7 +109,7 @@ public class AuthCommand extends ServiceCommand {
 		return server == null ? originServerConfig.get("default") : server;
 	}
 	
-	private boolean validateAccessToMailByTime(User user, MailSocketService mailServer) {
+	private boolean validateAccessToMailByTime(User user, MailSocketService mailServer) throws Exception {
 		String userMail = user.getMail();
 		logger.debug("Checking time access for user: " + userMail);
 		try {

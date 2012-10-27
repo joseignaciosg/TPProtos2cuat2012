@@ -20,7 +20,7 @@ public class TimeValidator implements LoginValidator {
 		this.mailAddress = mailAddress;
 	}
 	
-	public void validate() throws LoginValidationException {
+	public void validate() throws Exception {
 		String timeRestriction = accessTimeConfig.get(mailAddress);
 		if (timeRestriction == null) {
 			return;

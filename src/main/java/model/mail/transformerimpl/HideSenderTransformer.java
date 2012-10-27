@@ -3,7 +3,6 @@ package model.mail.transformerimpl;
 import java.io.IOException;
 import java.util.Map;
 
-import model.mail.HeaderTransformer;
 import model.parser.mime.MimeHeader;
 
 public class HideSenderTransformer implements HeaderTransformer{
