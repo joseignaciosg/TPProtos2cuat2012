@@ -8,6 +8,7 @@ import java.util.Map;
 
 import model.configuration.Config;
 import model.configuration.SimpleListConfiguration;
+import model.mail.transformerimpl.ImageTransformer;
 import model.mail.transformerimpl.LeetTransformer;
 import model.mail.transformerimpl.Transformer;
 import model.parser.mime.MimeHeader;
@@ -33,11 +34,11 @@ public class MailTransformer {
 		List<Transformer> transformers = new ArrayList<Transformer>();
 		Collection<String> options = config.getValues();
 		for (String option : options) {
-			if ("l33t".equals(option)) {
+			if ("l33t".equals(option.toLowerCase())) {
 				transformers.add(new LeetTransformer());
-			} else if ("rotateimages".equals(option)) {
-				// transformers.add(new ImageTransformer());
-			} else if ("hidesender".equals(option)) {
+			} else if ("rotateimages".equals(option.toLowerCase())) {
+				transformers.add(new ImageTransformer());
+			} else if ("hidesender".equals(option.toLowerCase())) {
 				// TODO: temrinar hide sender!
 			}
 		}
