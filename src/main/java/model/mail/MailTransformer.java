@@ -24,7 +24,7 @@ public class MailTransformer {
 		StringBuilder retPart = part;
 		List<Transformer> transformers = getTransformerList();
 		for (Transformer transformer : transformers) {
-			retPart = transformer.transform(part, partHeaders);
+		    retPart = transformer.transform(part, partHeaders);
 		}
 		return retPart;
 	}

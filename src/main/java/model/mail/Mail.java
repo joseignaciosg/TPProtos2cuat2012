@@ -15,6 +15,7 @@ public class Mail {
 	private Map<String, MimeHeader> headers;
 	private List<String> attachmentsExtension;
 	private File contents;
+	private boolean multipartMail;
 
 	public Mail(File contents) {
 		headers = new HashMap<String, MimeHeader>();
@@ -56,7 +57,10 @@ public class Mail {
 
 	public String getBoundaryKey() {
 		MimeHeader header = headers.get("Content-Type");
-		return header == null ? null : header.getExtraValue("boundary");
+		if(!header.getValue().startsWith("text/plain")){
+		    return header == null ? null : header.getExtraValue("boundary");
+		}
+		return "text/plain"; //indicates that it is a text-plain mail 
 	}
 
 	public LocalDate getDate() {
@@ -78,5 +82,15 @@ public class Mail {
 	public File getContents() {
 		return contents;
 	}
+
+	public boolean isMultipartMail() {
+	    return multipartMail;
+	}
+
+	public void setMultipartMail(boolean multipartMail) {
+	    this.multipartMail = multipartMail;
+	}
+	
+	
 
 }

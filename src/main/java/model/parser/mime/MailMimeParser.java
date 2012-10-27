@@ -37,21 +37,39 @@ public class MailMimeParser {
 	private void parseMainBoundary(ParseParameters parseParams) throws IOException {
 		headerParser.parse(parseParams.sourceScanner, parseParams.mail, parseParams.destinaionWriter, parseParams.transformer);
 		String boundary = parseParams.mail.getBoundaryKey();
+		if(boundary != null && "text/plain".equals(boundary) ){
+		      parseParams.mail.setMultipartMail(false);
+		}else{
+		    parseParams.mail.setMultipartMail(true);
+		}
 		boolean endOfMail = false;
 		String line = parseParams.sourceScanner.nextLine();
-		do {
+		if (parseParams.mail.isMultipartMail()){
+		    do {
 			logger.debug("Start Boundary: " + boundary);
-			parseBoundary(parseParams, boundary, line);
+			parsePart(parseParams, boundary, line);
 			line = parseParams.sourceScanner.nextLine();
 			endOfMail = line.equals(".");
 			if (!endOfMail && !line.startsWith("--" + boundary)) {
-				throw new IllegalStateException("Unexpected line: " + line + ". Expected end of bondary.");				
+			    throw new IllegalStateException("Unexpected line: " + line + ". Expected end of bondary.");				
 			}
-		} while (!endOfMail);
+		    } while (!endOfMail);
+		}else{
+		    do {
+			logger.debug("Start Text Plain Mail Content: ");
+			Map<String, MimeHeader> headers = new HashMap<String, MimeHeader>();
+			MimeHeader header = new MimeHeader("Content-Type: text/plain");
+			headers.put(header.getKey(),header);
+			StringBuilder transLine = parseParams.transformer.transform(new StringBuilder(line),headers);
+			parseParams.destinaionWriter.append(transLine.toString() + "\r\n");
+			line = parseParams.sourceScanner.nextLine();
+			endOfMail = line.equals(".");
+		    } while (!endOfMail);
+		}
 		parseParams.destinaionWriter.append(line + "\r\n");
 	}
 
-	private void parseBoundary(ParseParameters parseParams, String boundaryKey, String lastLine) throws IOException {
+	private void parsePart(ParseParameters parseParams, String boundaryKey, String lastLine) throws IOException {
 		if (!lastLine.equals("--" + boundaryKey)) {
 			throw new IllegalStateException("Expected beggining of boundary");
 		}
@@ -61,8 +79,8 @@ public class MailMimeParser {
 		MimeHeader contentType = headers.get("Content-Type");
 		String subBoundary = contentType.getExtraValue("boundary");
 		if (subBoundary != null) {
-			logger.info("Sub boundary " + subBoundary + " found. Recursively parsing.");
-			parseBoundary(parseParams, subBoundary, sourceScanner.nextLine());
+			logger.info("Sub Part " + subBoundary + " found. Recursively parsing.");
+			parsePart(parseParams, subBoundary, sourceScanner.nextLine());
 			return;
 		}
 		StringBuilder text = new StringBuilder();
@@ -75,10 +93,9 @@ public class MailMimeParser {
 				text.append(line + "\r\n");
 			}
 		} while (!endOfBoundary);
-		// XXX: Append transformed body content
 		parseParams.destinaionWriter.append(parseParams.transformer.transform(text, headers));
 		if (line.equals("--" + boundaryKey)) {
-			parseBoundary(parseParams, boundaryKey, line);
+			parsePart(parseParams, boundaryKey, line);
 			return;
 		} else if (line.equals("--" + boundaryKey + "--")) {
 			parseParams.destinaionWriter.append(line + "\r\n"); // Dont forget end of boundary!
@@ -101,7 +118,7 @@ public class MailMimeParser {
 			MimeHeader header = new MimeHeader(line);
 			headers.put(header.getKey(), header);
 			parseParams.destinaionWriter.append(header.getOriginalLine() + "\r\n");
-			logger.debug("Parsed boundary header => " + header);
+			logger.debug("Parsed Part header => " + header);
 		}
 		return headers;
 	}
