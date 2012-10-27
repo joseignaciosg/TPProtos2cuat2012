@@ -31,6 +31,7 @@ public class UserCommand extends ServiceCommand {
 			return;
 		}
 		user.setPassword(passwordCmd.split(" ")[1]);
+		getBundle().put("AUTH_USER", user);
 		owner.getStateMachine().setState(new ParseMailState(owner));
 	}
 
