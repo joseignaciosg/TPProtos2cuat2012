@@ -38,31 +38,30 @@ public class MailMimeParser {
 		headerParser.parse(parseParams.sourceScanner, parseParams.mail, parseParams.transformer);
 		parseParams.transformer.transformHeaders(parseParams.mail.getHeaders());
 		headerParser.writeHeaders(parseParams.mail, parseParams.destinaionWriter);
-		Map<String, MimeHeader> headers = new HashMap<String, MimeHeader>();
 		String boundary = parseParams.mail.getBoundaryKey();
 		parseParams.mail.setMultipartMail("text/plain".equals(boundary));
 		boolean endOfMail = false;
 		String line = parseParams.sourceScanner.nextLine();
-		if (parseParams.mail.isMultipartMail()){
-		    do {
+		if (parseParams.mail.isMultipartMail()) {
+			do {
 				logger.debug("Start Boundary: " + boundary);
 				parsePart(parseParams, boundary, line);
 				line = parseParams.sourceScanner.nextLine();
 				endOfMail = line.equals(".");
 				if (!endOfMail && !line.startsWith("--" + boundary)) {
-				    throw new IllegalStateException("Unexpected line: " + line + ". Expected end of bondary.");				
+					throw new IllegalStateException("Unexpected line: " + line + ". Expected end of bondary.");
 				}
-		    } while (!endOfMail);
-		}else{
-		    do {
-			logger.debug("Start Text Plain Mail Content: ");
-			MimeHeader header = new MimeHeader("Content-Type: text/plain");
-			headers.put(header.getKey(),header);
-			StringBuilder transLine = parseParams.transformer.transform(new StringBuilder(line),headers);
-			parseParams.destinaionWriter.append(transLine.toString() + "\r\n");
-			line = parseParams.sourceScanner.nextLine();
-			endOfMail = line.equals(".");
-		    } while (!endOfMail);
+			} while (!endOfMail);
+		} else {
+			Map<String, MimeHeader> headers = new HashMap<String, MimeHeader>();
+			do {
+				MimeHeader header = new MimeHeader("Content-Type: text/plain");
+				headers.put(header.getKey(), header);
+				StringBuilder transLine = parseParams.transformer.transform(new StringBuilder(line), headers);
+				parseParams.destinaionWriter.append(transLine.toString() + "\r\n");
+				line = parseParams.sourceScanner.nextLine();
+				endOfMail = line.equals(".");
+			} while (!endOfMail);
 		}
 		parseParams.destinaionWriter.append(line + "\r\n");
 	}
@@ -96,7 +95,7 @@ public class MailMimeParser {
 			parsePart(parseParams, boundaryKey, line);
 			return;
 		} else if (line.equals("--" + boundaryKey + "--")) {
-			parseParams.destinaionWriter.append(line + "\r\n"); 
+			parseParams.destinaionWriter.append(line + "\r\n");
 			return;
 		} else {
 			throw new IllegalStateException("Unexpected line: " + line);
