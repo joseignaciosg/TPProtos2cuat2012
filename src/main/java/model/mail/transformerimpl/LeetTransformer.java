@@ -5,7 +5,7 @@ import java.util.Map;
 
 import model.parser.mime.MimeHeader;
 
-public class LeetTransformer extends Transformer {
+public class LeetTransformer implements Transformer {
 
 	@Override
 	public StringBuilder transform(StringBuilder text, Map<String, MimeHeader> partheaders) throws IOException {

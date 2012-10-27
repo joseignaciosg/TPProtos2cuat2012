@@ -49,9 +49,9 @@ public class RetrCommand extends ServiceCommand {
 		MailSocketService mailSocketService = (MailSocketService) owner;
 		DataOutputStream os = mailSocketService.getClientOutputStream();
 		Scanner s = new Scanner(mail.getContents());
-		logger.info("echiong mail to client...");
+		logger.info("echoing mail to client...");
 		while (s.hasNextLine()) {
-			os.writeBytes(s.nextLine());
+			owner.echoLine(s.nextLine());
 		}
 		os.close();
 		s.close();
