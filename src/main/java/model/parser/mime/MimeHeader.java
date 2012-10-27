@@ -3,6 +3,7 @@ package model.parser.mime;
 import java.util.LinkedList;
 import java.util.List;
 
+import model.util.CollectionUtil;
 import model.util.StringUtil;
 
 
@@ -74,7 +75,13 @@ public class MimeHeader {
 	
 	@Override
 	public String toString() {
-		return key + " : " + value + " | " + extraValues.toString();
+		if(!extraValues.isEmpty()){
+			StringBuilder sb = new StringBuilder();
+			sb.append(key + ": " + value + " ");
+			sb.append(CollectionUtil.join(extraValues, "; "));
+			return sb.toString();
+		}
+			return key + ": " + value;
 	}
 	
 	public String getOriginalLine() {

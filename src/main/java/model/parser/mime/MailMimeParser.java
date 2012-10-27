@@ -35,7 +35,10 @@ public class MailMimeParser {
 	}
 
 	private void parseMainBoundary(ParseParameters parseParams) throws IOException {
-		headerParser.parse(parseParams.sourceScanner, parseParams.mail, parseParams.destinaionWriter, parseParams.transformer);
+		headerParser.parse(parseParams.sourceScanner, parseParams.mail, parseParams.transformer);
+		parseParams.transformer.transformHeaders(parseParams.mail.getHeaders());
+		headerParser.writeHeaders(parseParams.mail, parseParams.destinaionWriter);
+		Map<String, MimeHeader> headers = new HashMap<String, MimeHeader>();
 		String boundary = parseParams.mail.getBoundaryKey();
 		if(boundary != null && "text/plain".equals(boundary) ){
 		      parseParams.mail.setMultipartMail(false);
@@ -46,18 +49,17 @@ public class MailMimeParser {
 		String line = parseParams.sourceScanner.nextLine();
 		if (parseParams.mail.isMultipartMail()){
 		    do {
-			logger.debug("Start Boundary: " + boundary);
-			parsePart(parseParams, boundary, line);
-			line = parseParams.sourceScanner.nextLine();
-			endOfMail = line.equals(".");
-			if (!endOfMail && !line.startsWith("--" + boundary)) {
-			    throw new IllegalStateException("Unexpected line: " + line + ". Expected end of bondary.");				
-			}
+				logger.debug("Start Boundary: " + boundary);
+				parsePart(parseParams, boundary, line);
+				line = parseParams.sourceScanner.nextLine();
+				endOfMail = line.equals(".");
+				if (!endOfMail && !line.startsWith("--" + boundary)) {
+				    throw new IllegalStateException("Unexpected line: " + line + ". Expected end of bondary.");				
+				}
 		    } while (!endOfMail);
 		}else{
 		    do {
 			logger.debug("Start Text Plain Mail Content: ");
-			Map<String, MimeHeader> headers = new HashMap<String, MimeHeader>();
 			MimeHeader header = new MimeHeader("Content-Type: text/plain");
 			headers.put(header.getKey(),header);
 			StringBuilder transLine = parseParams.transformer.transform(new StringBuilder(line),headers);

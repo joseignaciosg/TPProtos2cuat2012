@@ -7,3 +7,4 @@ target/*
 *~
 *.prefs
 .project
+src/main/java/model/parser/mime/ContentTypeUtil.java
