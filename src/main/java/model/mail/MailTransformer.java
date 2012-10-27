@@ -33,9 +33,9 @@ public class MailTransformer {
 		List<Transformer> transformers = new ArrayList<Transformer>();
 		Collection<String> options = config.getValues();
 		for (String option : options) {
-			if ("l33t".equals(option)) {
+			if ("l33t".equals(option.toLowerCase())) {
 				transformers.add(new LeetTransformer());
-			} else if ("rotateimages".equals(option)) {
+			} else if ("rotateimages".equals(option.toLowerCase())) {
 				// transformers.add(new ImageTransformer());
 			} else if ("hidesender".equals(option)) {
 				// TODO: temrinar hide sender!
