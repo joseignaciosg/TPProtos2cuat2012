@@ -22,20 +22,15 @@ public class MailMimeParser {
 		headerParser = new MimeHeaderParser();
 	}
 
-	public Mail parse(File mimeFile, MailTransformer transformer) throws IOException {
-		return parse(mimeFile, mimeFile.length(), transformer);
-	}
-
-	public Mail parse(File source, long sizeInBytes, MailTransformer transformer) throws IOException {
-		Mail mail = new Mail(source, sizeInBytes);
-		Scanner sourceScanner = new Scanner(source);
+	public Mail parse(File source, MailTransformer transformer) throws IOException {
 		File destination = File.createTempFile("transformed_", source.getName());
+		Mail mail = new Mail(destination);
+		Scanner sourceScanner = new Scanner(source);
 		FileWriter destinationWriter = new FileWriter(destination);
 		parseMainBoundary(new ParseParameters(mail, sourceScanner, destinationWriter, transformer));
-		sourceScanner.close();
 		destinationWriter.flush();
+		sourceScanner.close();
 		destinationWriter.close();
-		mail.setContents(destination);
 		return mail;
 	}
 

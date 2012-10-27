@@ -12,7 +12,6 @@ import org.joda.time.LocalDate;
 
 public class Mail {
 
-	private long sizeInBytes;
 	private Map<String, MimeHeader> headers;
 	private List<String> attachmentsExtension;
 	private File contents;
@@ -20,27 +19,17 @@ public class Mail {
 	public Mail(File contents) {
 		headers = new HashMap<String, MimeHeader>();
 		attachmentsExtension = new LinkedList<String>();
-		setContents(contents, contents.length());
-	}
-	
-	public Mail(File contents, long sizeinBytes) {
-		headers = new HashMap<String, MimeHeader>();
-		attachmentsExtension = new LinkedList<String>();
-		setContents(contents, sizeinBytes);
+		setContents(contents);
 	}
 
 	public long getSizeInBytes() {
-		return sizeInBytes;
+		return contents == null ? 0 : contents.length();
 	}
 	
 	public void setContents(File contents) {
-		setContents(contents, contents.length());
-	}
-	
-	public void setContents(File contents, long sizeinBytes) {
 		this.contents = contents;
 	}
-
+	
 	public void addAttachmentsExtension(String extension) {
 		attachmentsExtension.add(extension);
 	}

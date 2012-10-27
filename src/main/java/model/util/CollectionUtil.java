@@ -41,11 +41,10 @@ public class CollectionUtil {
 		return result;
 	}
 
-	public static String[] splitAndTrim(String string, String separator) {
-		String[] ans = string.trim().split(separator);
-		for (int i = 0; i < ans.length; i++) {
-			ans[i] = ans[i].trim();
+	public static String[] trimAll(String[] array) {
+		for (int i = 0; i < array.length; i++) {
+			array[i] = array[i].trim();
 		}
-		return ans;
+		return array;
 	}
 }

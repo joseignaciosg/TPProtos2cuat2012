@@ -14,7 +14,7 @@ public class MailRetriever {
 		String line;
 		do {
 			line = inputBuffer.readLine();
-			mailFileWriter.append(line +"\r\n");
+			mailFileWriter.append(line + "\r\n");
 		} while (!line.equals("."));
 		mailFileWriter.close();
 		return mailTmpFile;
