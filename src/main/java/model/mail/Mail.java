@@ -52,7 +52,7 @@ public class Mail {
 	}
 
 	public MimeHeader getHeader(String name) {
-		return headers.get("name");
+		return headers.get(name);
 	}
 
 	public String getBoundaryKey() {
@@ -89,6 +89,10 @@ public class Mail {
 
 	public void setMultipartMail(boolean multipartMail) {
 	    this.multipartMail = multipartMail;
+	}
+
+	public Map<String, MimeHeader> getHeaders() {
+		return headers;
 	}
 	
 	
