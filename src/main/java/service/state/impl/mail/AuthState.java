@@ -1,8 +1,7 @@
 package service.state.impl.mail;
 
-import java.net.Socket;
-
-import model.validator.IpValidator;
+import model.validator.LoginValidationException;
+import model.validator.loginvalidator.IpValidator;
 import service.AbstractSockectService;
 import service.StatusCodes;
 import service.command.impl.mail.AuthCommand;
@@ -33,17 +32,16 @@ public class AuthState extends State {
 	}
 
 	private boolean validateAccessToMail() {
-		IpValidator ipValidator = new IpValidator();
-		Socket serviceSocket = owner.getSocket();
-		String clientIp = serviceSocket.getInetAddress().getHostAddress();
+		String clientIp = owner.getSocket().getInetAddress().getHostAddress();
 		logger.debug("Checking access for IP: " + clientIp);
-		boolean clientIPBanned = ipValidator.isBanned(clientIp);
-		if (clientIPBanned) {
+		try {
+			new IpValidator(clientIp).validate();
+			return true;
+		} catch (LoginValidationException e) {
 			logger.info("IP " + clientIp + " is banned. Closing connection.");
 			owner.echoLine(StatusCodes.ERR_BANNED_IP, clientIp);
 			return false;
 		}
-		return true;
 	}
 
 	@Override

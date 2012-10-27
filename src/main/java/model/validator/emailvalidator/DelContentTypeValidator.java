@@ -1,4 +1,4 @@
-package model.validator;
+package model.validator.emailvalidator;
 
 import java.util.Arrays;
 
@@ -8,8 +8,10 @@ import model.configuration.KeyValueConfiguration;
 import model.mail.Mail;
 import model.parser.mime.ContentTypeUtil;
 import model.util.CollectionUtil;
+import model.validator.MailValidator;
+import model.validator.MailValidationException;
 
-public class DelContentTypeValidator implements EmailValidator {
+public class DelContentTypeValidator implements MailValidator {
 
 	private static KeyValueConfiguration deleteContentTypeConfig = Config.getInstance().getKeyValueConfig("notdelete_content_type");
 

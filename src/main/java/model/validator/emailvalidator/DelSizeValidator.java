@@ -1,11 +1,13 @@
-package model.validator;
+package model.validator.emailvalidator;
 
 import model.User;
 import model.configuration.Config;
 import model.configuration.KeyValueConfiguration;
 import model.mail.Mail;
+import model.validator.MailValidator;
+import model.validator.MailValidationException;
 
-public class DelSizeValidator implements EmailValidator {
+public class DelSizeValidator implements MailValidator {
 
 	private static KeyValueConfiguration deleteSizeConfig = Config.getInstance().getKeyValueConfig("notdelete_size");
 

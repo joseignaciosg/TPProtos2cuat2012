@@ -1,21 +1,29 @@
-package model.validator;
+package model.validator.loginvalidator;
 
 import model.configuration.Config;
 import model.configuration.KeyValueConfiguration;
+import model.validator.LoginValidationException;
+import model.validator.LoginValidator;
 
 import org.apache.log4j.Logger;
 import org.joda.time.Interval;
 import org.joda.time.LocalTime;
 
-public class TimeValidator {
+public class TimeValidator implements LoginValidator {
 
 	private static Logger logger = Logger.getLogger(TimeValidator.class);
 	private static KeyValueConfiguration accessTimeConfig = Config.getInstance().getKeyValueConfig("access_time");
 
-	public boolean canAccess(final String user) {
-		String timeRestriction = accessTimeConfig.get(user);
+	private String mailAddress;
+	
+	public TimeValidator(String mailAddress) {
+		this.mailAddress = mailAddress;
+	}
+	
+	public void validate() throws LoginValidationException {
+		String timeRestriction = accessTimeConfig.get(mailAddress);
 		if (timeRestriction == null) {
-			return true;
+			return;
 		}
 		try {
 			timeRestriction = timeRestriction.trim();
@@ -25,10 +33,11 @@ public class TimeValidator {
 			final LocalTime startTime = new LocalTime(Integer.valueOf(startTimeParts[0]), Integer.valueOf(startTimeParts[1]));
 			final LocalTime endTime = new LocalTime(Integer.valueOf(endTimeParts[0]), Integer.valueOf(endTimeParts[1]));
 			final Interval timeRestrictionInterval = new Interval(startTime.toDateTimeToday(), endTime.toDateTimeToday());
-			return timeRestrictionInterval.containsNow();
+			if (!timeRestrictionInterval.containsNow()) {
+				throw new LoginValidationException();
+			}
 		} catch (final Exception e) {
-			logger.error("Could not parse schedule for " + user + " - read: " + timeRestriction);
-			return false;
+			logger.error("Could not parse schedule for " + mailAddress + " - read: " + timeRestriction);
 		}
 	}
 }

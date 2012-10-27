@@ -1,12 +1,14 @@
-package model.validator;
+package model.validator.emailvalidator;
 
 import model.User;
 import model.configuration.Config;
 import model.configuration.KeyValueConfiguration;
 import model.mail.Mail;
 import model.util.CollectionUtil;
+import model.validator.MailValidator;
+import model.validator.MailValidationException;
 
-public class DelSenderValidator implements EmailValidator {
+public class DelSenderValidator implements MailValidator {
 
 	private static KeyValueConfiguration deleteSenderConfig = Config.getInstance().getKeyValueConfig("notdelete_sender");
 

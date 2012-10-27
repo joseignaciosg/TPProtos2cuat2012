@@ -1,4 +1,4 @@
-package model.validator;
+package model.validator.emailvalidator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,8 +11,10 @@ import model.configuration.Config;
 import model.configuration.KeyValueConfiguration;
 import model.mail.Mail;
 import model.util.CollectionUtil;
+import model.validator.MailValidator;
+import model.validator.MailValidationException;
 
-public class DelHeaderPatternValidator implements EmailValidator {
+public class DelHeaderPatternValidator implements MailValidator {
 
 	private static Logger logger = Logger.getLogger(DelHeaderPatternValidator.class);
 	private static KeyValueConfiguration deleteHeaderPatternConfig = Config.getInstance().getKeyValueConfig("notdelete_header_pattern");

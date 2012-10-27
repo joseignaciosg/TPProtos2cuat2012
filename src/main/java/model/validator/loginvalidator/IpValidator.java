@@ -1,15 +1,24 @@
-package model.validator;
+package model.validator.loginvalidator;
 
 import java.util.Collection;
 
 import model.configuration.Config;
 import model.configuration.SimpleListConfiguration;
+import model.validator.LoginValidationException;
+import model.validator.LoginValidator;
 
 import org.apache.commons.net.util.SubnetUtils;
 
-public class IpValidator {
+public class IpValidator implements LoginValidator {
 
-	public boolean isBanned(String userIp) {
+	private String userIp;
+	
+	public IpValidator(String userIp) {
+		this.userIp = userIp;
+	}
+	
+	@Override
+	public void validate() throws LoginValidationException {
 		SimpleListConfiguration bannedListConfig = Config.getInstance().getSimpleListConfig("banned_ip");
 		Collection<String> bannedList = bannedListConfig.getValues();
 		boolean isClientIpBanned = false;
@@ -20,13 +29,11 @@ public class IpValidator {
 			} else {
 				// access_ip.conf has an ip with subnet mask declaration
 				// (i.e. 200.232.44.0/16 )
-				SubnetUtils subnetIp = new SubnetUtils(ip);
-				isClientIpBanned = subnetIp.getInfo().isInRange(userIp);
+				isClientIpBanned = new SubnetUtils(ip).getInfo().isInRange(userIp);
 			}
 			if (isClientIpBanned) {
-				return true;
+				throw new LoginValidationException();
 			}
 		}
-		return isClientIpBanned;
 	}
 }

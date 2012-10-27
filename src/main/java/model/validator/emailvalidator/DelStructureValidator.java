@@ -1,12 +1,14 @@
-package model.validator;
+package model.validator.emailvalidator;
 
 import model.User;
 import model.configuration.Config;
 import model.configuration.KeyValueConfiguration;
 import model.mail.Mail;
 import model.util.CollectionUtil;
+import model.validator.MailValidator;
+import model.validator.MailValidationException;
 
-public class DelStructureValidator implements EmailValidator {
+public class DelStructureValidator implements MailValidator {
 
 	private static KeyValueConfiguration deleteStructureConfig = Config.getInstance().getKeyValueConfig("notdelete_structure");
 
