@@ -8,6 +8,7 @@ import java.util.Map;
 
 import model.configuration.Config;
 import model.configuration.SimpleListConfiguration;
+import model.mail.transformerimpl.HideSenderTransformer;
 import model.mail.transformerimpl.LeetTransformer;
 import model.mail.transformerimpl.Transformer;
 import model.parser.mime.MimeHeader;
@@ -16,8 +17,11 @@ public class MailTransformer {
 
 	private static final SimpleListConfiguration config = Config.getInstance().getSimpleListConfig("transformation");
 
-	public void transformHeaders(List<MimeHeader> mailHeaders) {
-
+	public void transformHeaders(Map<String, MimeHeader> mailHeaders) throws IOException {
+		List<HeaderTransformer> headerTransformers = getHeaderTransformerList(mailHeaders);
+		for (HeaderTransformer headerTransformer : headerTransformers) {
+		    headerTransformer.transform();
+		}
 	}
 
 	public StringBuilder transform(StringBuilder part, Map<String, MimeHeader> partHeaders) throws IOException {
@@ -28,6 +32,17 @@ public class MailTransformer {
 		}
 		return retPart;
 	}
+	
+	private List<HeaderTransformer> getHeaderTransformerList(Map<String, MimeHeader> mailHeaders){
+		List<HeaderTransformer> transformers = new ArrayList<HeaderTransformer>();
+		Collection<String> options = config.getValues();
+		for (String option : options) {
+			if ("hidesender".equals(option)) {
+				transformers.add(new HideSenderTransformer(mailHeaders));
+			}
+		}
+		return transformers;
+	}
 
 	private List<Transformer> getTransformerList() {
 		List<Transformer> transformers = new ArrayList<Transformer>();
@@ -37,9 +52,7 @@ public class MailTransformer {
 				transformers.add(new LeetTransformer());
 			} else if ("rotateimages".equals(option.toLowerCase())) {
 				// transformers.add(new ImageTransformer());
-			} else if ("hidesender".equals(option)) {
-				// TODO: temrinar hide sender!
-			}
+			} 
 		}
 		return transformers;
 	}
