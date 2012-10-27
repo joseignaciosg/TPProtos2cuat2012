@@ -11,10 +11,11 @@ public class DelSizeValidator implements EmailValidator {
 
 	@Override
 	public void validate(User user, Mail email) throws MailValidationException {
-		String maxSizeAccepted = deleteSizeConfig.get(user.getMail()).trim();
+		String maxSizeAccepted = deleteSizeConfig.get(user.getMail());
 		if (maxSizeAccepted == null) {
 			return;
 		}
+		maxSizeAccepted = maxSizeAccepted.trim();
 		if (Long.valueOf(maxSizeAccepted) > email.getSizeInBytes()) {
 			String message = "Restricting message deletion because it's size ("
 					+ maxSizeAccepted
