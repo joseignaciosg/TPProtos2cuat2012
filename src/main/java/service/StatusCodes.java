@@ -22,7 +22,8 @@ public enum StatusCodes {
 	ERR_INVALID_PARAMETERS_NUMBER(104, "Invalid parameters: not a number"),
 	ERR_TOO_MANY_ATTEMPTS(110, "Too many unsuccessful attempts. Bye!"),
 	ERR_INVALID_PASSWORD(111, "Invalid password"),
-	ERR_BANNED_IP(150, "The IP is marked as banned"),
+	ERR_BANNED_IP(150, "This IP is marked as banned"),
+	ERR_TIME_BANNED(151,"This user is time-banned right now"),
 	ERR_INTERNAL_SERVER_ERROR(666, "Internal server error!");
 	 
    public final int code;

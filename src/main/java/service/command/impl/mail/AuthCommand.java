@@ -6,12 +6,16 @@ import model.User;
 import model.configuration.Config;
 import model.configuration.KeyValueConfiguration;
 import model.util.CollectionUtil;
+import model.validator.LoginValidationException;
+import model.validator.loginvalidator.IpValidator;
+import model.validator.loginvalidator.TimeValidator;
 
 import org.apache.commons.net.util.Base64;
 import org.apache.log4j.Logger;
 
 import service.AbstractSockectService;
 import service.MailSocketService;
+import service.StatusCodes;
 import service.command.ServiceCommand;
 import service.state.impl.mail.ParseMailState;
 
@@ -34,6 +38,9 @@ public class AuthCommand extends ServiceCommand {
 			mailServer.echoLine("+");
 			String base64Credentials = mailServer.read().readLine();
 			User tmpUser = createUser(base64Credentials);
+			if(!validateAccessToMailByTime(tmpUser, mailServer)){
+				return;
+			}
 			String host = getMailServer(tmpUser);
 			mailServer.setOriginServer(host);
 			// login against REAL origin server
@@ -53,6 +60,9 @@ public class AuthCommand extends ServiceCommand {
 			mailServer.echoLine("+ UGFzc3dvcmQ6"); 	// Password:
 			String base64Password = mailServer.read().readLine();
 			User tmpUser = createUser(base64Username, base64Password);
+			if(!validateAccessToMailByTime(tmpUser, mailServer)){
+				return;
+			}
 			mailServer.setOriginServer(getMailServer(tmpUser));
 			// login against REAL origin server
 			echoToOriginServerAndReadLine(getOriginalLine());
@@ -97,5 +107,18 @@ public class AuthCommand extends ServiceCommand {
 		String host = user.getMailhost();
 		String server = originServerConfig.get(host);
 		return server == null ? originServerConfig.get("default") : server;
+	}
+	
+	private boolean validateAccessToMailByTime(User user, MailSocketService mailServer) {
+		String userMail = user.getMail();
+		logger.debug("Checking time access for user: " + userMail);
+		try {
+			new TimeValidator(userMail).validate();
+			return true;
+		} catch (LoginValidationException e) {
+			logger.info("User " + userMail + " is banned. Closing connection.");
+			mailServer.echoLine(StatusCodes.ERR_TIME_BANNED, userMail);
+			return false;
+		}
 	}
 }
