@@ -25,22 +25,14 @@ public class AuthState extends State {
 	@Override
 	public void enter() {
 		super.enter();
-		if (!validateAccessToMail()) {
-			owner.setEndOfTransmission(true);
-			return;
-		}
-	}
-
-	private boolean validateAccessToMail() {
 		String clientIp = owner.getSocket().getInetAddress().getHostAddress();
 		logger.debug("Checking access for IP: " + clientIp);
 		try {
 			new IpValidator(clientIp).validate();
-			return true;
 		} catch (LoginValidationException e) {
-			logger.info("IP " + clientIp + " is banned. Closing connection.");
 			owner.echoLine(StatusCodes.ERR_BANNED_IP, clientIp);
-			return false;
+			logger.info("IP " + clientIp + " is banned. Closing connection.");
+			owner.setEndOfTransmission(true);
 		}
 	}
 

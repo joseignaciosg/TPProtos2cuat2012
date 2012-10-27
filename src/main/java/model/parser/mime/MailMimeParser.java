@@ -37,11 +37,7 @@ public class MailMimeParser {
 	private void parseMainBoundary(ParseParameters parseParams) throws IOException {
 		headerParser.parse(parseParams.sourceScanner, parseParams.mail, parseParams.destinaionWriter, parseParams.transformer);
 		String boundary = parseParams.mail.getBoundaryKey();
-		if(boundary != null && "text/plain".equals(boundary) ){
-		      parseParams.mail.setMultipartMail(false);
-		}else{
-		    parseParams.mail.setMultipartMail(true);
-		}
+		parseParams.mail.setMultipartMail("text/plain".equals(boundary));
 		boolean endOfMail = false;
 		String line = parseParams.sourceScanner.nextLine();
 		if (parseParams.mail.isMultipartMail()){
@@ -98,7 +94,7 @@ public class MailMimeParser {
 			parsePart(parseParams, boundaryKey, line);
 			return;
 		} else if (line.equals("--" + boundaryKey + "--")) {
-			parseParams.destinaionWriter.append(line + "\r\n"); // Dont forget end of boundary!
+			parseParams.destinaionWriter.append(line + "\r\n"); 
 			return;
 		} else {
 			throw new IllegalStateException("Unexpected line: " + line);
@@ -110,7 +106,7 @@ public class MailMimeParser {
 		Scanner sourceScanner = parseParams.sourceScanner;
 		while (sourceScanner.hasNextLine()) {
 			String line = sourceScanner.nextLine();
-			// according to rfc, an empty line marks the of sub-boundary headers
+			// Empty line marks the end of sub-boundary headers
 			if (line.equals("")) {
 				parseParams.destinaionWriter.append(line + "\r\n");
 				break;
@@ -122,13 +118,13 @@ public class MailMimeParser {
 		}
 		return headers;
 	}
-	
+
 	private static class ParseParameters {
 		Mail mail;
 		Scanner sourceScanner;
 		FileWriter destinaionWriter;
 		MailTransformer transformer;
-		
+
 		public ParseParameters(Mail mail, Scanner sourceScanner, FileWriter destinaionWriter, MailTransformer trasformer) {
 			this.mail = mail;
 			this.sourceScanner = sourceScanner;
