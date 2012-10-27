@@ -8,11 +8,14 @@ import model.util.StringUtil;
 
 public class MimeHeader {
 
+	private String originalLine;
 	private String key, value;
 	private List<String> extraValues;
 	
 	public MimeHeader(String s) {
 		validateLine(s);
+		this.originalLine = s;
+		s = s.replaceAll("\r\n", "");
 		int splitIndex = s.indexOf(":");
 		key = s.substring(0, splitIndex);
 		int endIndex = s.indexOf(";");
@@ -72,5 +75,9 @@ public class MimeHeader {
 	@Override
 	public String toString() {
 		return key + " : " + value + " | " + extraValues.toString();
+	}
+	
+	public String getOriginalLine() {
+		return originalLine;
 	}
 }

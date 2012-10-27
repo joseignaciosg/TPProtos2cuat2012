@@ -3,7 +3,7 @@ package model.mail.transformerimpl;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
@@ -95,7 +95,6 @@ public abstract class Transformer {
 		partScanner.close();
 	}
 
-	public abstract StringBuilder transform(StringBuilder part, List<MimeHeader>  partheaders)
-			throws IOException;
+	public abstract StringBuilder transform(StringBuilder part, Map<String, MimeHeader>  partheaders) throws IOException;
 
 }

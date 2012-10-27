@@ -1,26 +1,25 @@
 package model.parser.mime;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
 import model.mail.Mail;
+import model.mail.MailTransformer;
 
 import org.apache.log4j.Logger;
 
 public class MimeHeaderParser {
 
 	private static Logger logger = Logger.getLogger(MimeHeaderParser.class);
-	
-	public MimeHeaderParser() {
-	}
-	
-	public void parse(Scanner scanner, Mail mail) throws IOException {
+
+	public void parse(Scanner scanner, Mail mail, FileWriter writer, MailTransformer transformer) throws IOException {
 		logger.debug("Reading mail headers:");
 		String lastReadLine = scanner.nextLine();
 		while (scanner.hasNextLine()) {
-			lastReadLine = createHeader(lastReadLine, scanner, mail);
+			lastReadLine = createHeader(lastReadLine, scanner, mail, writer, transformer);
 			if (lastReadLine.equals("")) {
-			    	mail.appendTransformedLine("");
+				writer.append(lastReadLine + "\r\n");
 				break;
 			}
 		}
@@ -29,27 +28,25 @@ public class MimeHeaderParser {
 			throw new IllegalStateException("boundary header could not be parsed");
 		}
 	}
-	
-	private String createHeader(String lastReadLine, Scanner scanner, Mail mail) {
+
+	private String createHeader(String lastReadLine, Scanner scanner, Mail mail, FileWriter writer, MailTransformer tranformer) throws IOException {
 		boolean endOfHeader;
 		String line = lastReadLine;
-		mail.appendTransformedLine(line);
 		do {
 			endOfHeader = true;
 			lastReadLine = scanner.nextLine();
-			if (lastReadLine.startsWith(" ") || lastReadLine.startsWith("\t")
-				|| lastReadLine.startsWith(".")) {
-				line += lastReadLine.trim();
-				mail.appendTransformedLine(lastReadLine);
+			if (lastReadLine.startsWith("\t") || lastReadLine.startsWith(" ") || lastReadLine.startsWith(".")) {
+				line += "\r\n" + lastReadLine;
 				endOfHeader = false;
 			}
-		} while(!endOfHeader);
+		} while (!endOfHeader);
 		try {
 			MimeHeader header = new MimeHeader(line);
 			mail.addHeaders(header);
-			logger.info("Parsed header => " + header);
+			writer.append(line + "\r\n");
+			logger.debug("Parsed header => " + header);
 		} catch (IllegalArgumentException e) {
-			System.out.println("Inavlid header: " + line + ". Ignoring...");
+			logger.error("Inavlid header: " + line + ". Ignoring...");
 		}
 		return lastReadLine;
 	}

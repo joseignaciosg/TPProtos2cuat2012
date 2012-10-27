@@ -98,11 +98,11 @@ public abstract class AbstractSockectService implements Runnable {
 		}
 	}
 	
-	public DataOutputStream getToClientOutPutStream(){
+	public DataOutputStream getClientOutputStream(){
 	    try {
-		return new DataOutputStream(socket.getOutputStream());
+	    	return new DataOutputStream(socket.getOutputStream());
 	    } catch (IOException e) {
-		logger.error("Could not write to output stream!. Reason: " + e.getMessage());
+	    	logger.error("Could not write to output stream!. Reason: " + e.getMessage());
 	    }
 	    return null;
 	}

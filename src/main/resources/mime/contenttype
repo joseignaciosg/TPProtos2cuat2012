@@ -1,0 +1,16 @@
+# text
+html = text/html
+htm = text/html
+txt = text/html
+css = text/css
+# image
+gif = image/gif
+jpeg = image/jpeg
+jpg = image/jpeg
+jpe = image/jpeg
+bmp = image/x-ms-bmp
+# application
+pdf = application/pdf
+doc = application/msword
+gtar = application/x-gtar
+tar = application/x-tar
