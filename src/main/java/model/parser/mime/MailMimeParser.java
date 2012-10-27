@@ -27,8 +27,7 @@ public class MailMimeParser {
 	}
 
 	public Mail parse(File source, long sizeInBytes, MailTransformer transformer) throws IOException {
-		Mail mail = new Mail(source);
-		mail.setSizeInBytes(sizeInBytes);
+		Mail mail = new Mail(source, sizeInBytes);
 		Scanner sourceScanner = new Scanner(source);
 		File destination = File.createTempFile("transformed_", source.getName());
 		FileWriter destinationWriter = new FileWriter(destination);
@@ -36,6 +35,7 @@ public class MailMimeParser {
 		sourceScanner.close();
 		destinationWriter.flush();
 		destinationWriter.close();
+		mail.setContents(destination);
 		return mail;
 	}
 

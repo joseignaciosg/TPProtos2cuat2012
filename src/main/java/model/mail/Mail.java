@@ -20,15 +20,25 @@ public class Mail {
 	public Mail(File contents) {
 		headers = new HashMap<String, MimeHeader>();
 		attachmentsExtension = new LinkedList<String>();
-		this.contents = contents;
+		setContents(contents, contents.length());
+	}
+	
+	public Mail(File contents, long sizeinBytes) {
+		headers = new HashMap<String, MimeHeader>();
+		attachmentsExtension = new LinkedList<String>();
+		setContents(contents, sizeinBytes);
 	}
 
 	public long getSizeInBytes() {
 		return sizeInBytes;
 	}
-
-	public void setSizeInBytes(long sizeInBytes) {
-		this.sizeInBytes = sizeInBytes;
+	
+	public void setContents(File contents) {
+		setContents(contents, contents.length());
+	}
+	
+	public void setContents(File contents, long sizeinBytes) {
+		this.contents = contents;
 	}
 
 	public void addAttachmentsExtension(String extension) {
