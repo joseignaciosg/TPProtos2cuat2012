@@ -32,7 +32,7 @@ public class IpValidator implements LoginValidator {
 				isClientIpBanned = new SubnetUtils(ip).getInfo().isInRange(userIp);
 			}
 			if (isClientIpBanned) {
-				throw new LoginValidationException();
+				throw new LoginValidationException("IP " + userIp + " is banned from the server.");
 			}
 		}
 	}

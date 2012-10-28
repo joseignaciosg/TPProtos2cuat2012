@@ -1,91 +1,85 @@
 package service.command.impl.stats;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import org.joda.time.LocalDate;
 
-
 public class UserHistogram {
-	
+
 	private String user;
 	private long transferedBytes;
-	private Map<LocalDate, Integer> numberOfAccessesByDay; 
 	private int numberOfReadMail;
 	private int numberOfDeletedMail;
-	
+	private int numberOfAccesses;
+	private AccesByDate accesByDate;
+
 	public UserHistogram(String user) {
 		this.user = user;
-		numberOfAccessesByDay = new HashMap<LocalDate, Integer>();
+		accesByDate = new AccesByDate();
 	}
-	
+
 	public long getTransferedBytes() {
 		return transferedBytes;
 	}
-	
+
 	public void incrementTransferedBytes(long transferedBytes) {
 		this.transferedBytes += transferedBytes;
 	}
 	
-	public int getNumberOfAccesses(LocalDate date) {
-		if(numberOfAccessesByDay.containsKey(date)){
-			return numberOfAccessesByDay.get(date);
-		}
-		
-		return 0;
-			
+	public int getNumberOfAccesses() {
+		return numberOfAccesses;
 	}
-	
-	public void incrementNumberOfAccesses(){
-		LocalDate today = LocalDate.now();
-		if(!numberOfAccessesByDay.containsKey(today)){
-			numberOfAccessesByDay.put(today, 1);
-		}else{
-			int currentAccesses = numberOfAccessesByDay.get(today);
-			currentAccesses++;
-			numberOfAccessesByDay.put(today, currentAccesses);
-		}
+
+	public void incrementNumberOfAccesses() {
+		numberOfAccesses++;
+		accesByDate.incrementAccess();
 	}
-	
+
 	public int getNumberOfReadMail() {
 		return numberOfReadMail;
 	}
 
-	public void incrementNumberOfReadMail(){
+	public void incrementNumberOfReadMail() {
 		numberOfReadMail++;
 	}
-	
+
 	public int getNumberOfDeletedMail() {
 		return numberOfDeletedMail;
 	}
 
-	public void incrementNumberOfDeletedMail(){
+	public void incrementNumberOfDeletedMail() {
 		numberOfDeletedMail++;
+	}
+
+	public int getAccesForToday() {
+		return accesByDate.todayAccesses();
 	}
 
 	public String getPrettyFormat() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("User: " + user + "\r\n");
-		for(Entry<LocalDate, Integer> entry: getNumberOfAccessesMap().entrySet()){
-			sb.append("Accesses ["+ entry.getKey() +"] : " + entry.getValue() + "\r\n");
-		}
+		sb.append("Total accesess: " + numberOfAccesses);
+		sb.append("Acces today: " + accesByDate.todayAccesses());
 		sb.append("Tranfered bytes: " + getTransferedBytes() + "\r\n");
 		sb.append("Read mails: " + getNumberOfReadMail() + "\r\n");
 		sb.append("Deleted mails: " + getNumberOfDeletedMail() + "\r\n");
 		return sb.toString();
 	}
+	
+	private static class AccesByDate {
+		LocalDate lastDayOfAccess;
+		int amount;
 
-	private Map<LocalDate, Integer> getNumberOfAccessesMap() {
-		return numberOfAccessesByDay;
-	}
-
-	public int getNumberOfAccessesToday() {
-		if(numberOfAccessesByDay.containsKey(LocalDate.now())){
-			return numberOfAccessesByDay.get(LocalDate.now());
+		void incrementAccess() {
+			LocalDate today = new LocalDate();
+			if (!today.equals(lastDayOfAccess)) {
+				amount = 0;
+				lastDayOfAccess = today;
+			}
+			amount++;
 		}
-		
-		return -1;
+
+		int todayAccesses() {
+			return (new LocalDate().equals(lastDayOfAccess)) ? amount : 0;
+		}
 	}
 
 }

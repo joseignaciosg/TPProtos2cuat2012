@@ -59,6 +59,7 @@ public class StatsService {
 	}
 
 	public UserHistogram getStatsByUser(String user) {
+		createUserInStatsMap(user);
 		return statsByUserMap.get(user);
 	}
 
@@ -129,14 +130,6 @@ public class StatsService {
 			prettyFormats.add(uh.getPrettyFormat());
 		}
 		return CollectionUtil.join(prettyFormats, "\r\n");
-	}
-
-	public int getNumberOfAccessesToday(String mailAddress) {
-		UserHistogram uh = statsByUserMap.get(mailAddress);
-		if(uh != null){
-			return uh.getNumberOfAccessesToday();
-		}
-		return -1;
 	}
 
 }
