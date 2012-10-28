@@ -37,6 +37,7 @@ public class UserCommand extends ServiceCommand {
 		}
 		user.setPassword(passwordCmd.split(" ")[1]);
 		getBundle().put("user", user);
+		statsService.incrementNumberOfAccesses(user.getMail());
 		owner.getStateMachine().setState(new ParseMailState(owner));
 	}
 

@@ -10,8 +10,8 @@ import javax.imageio.ImageIO;
 
 public class ImageRotator {
 
-	private static final double _theta = 1.57;	// 90 degrees
-	private static final int _thetaInDegrees = 90;
+	private static final double _theta = 3.14;	// 180 degrees
+	private static final int _thetaInDegrees = 180;
 
 	public File createRotatedImage(BufferedImage image) throws IOException {
 		File tmp = File.createTempFile("rotated_", ".png");

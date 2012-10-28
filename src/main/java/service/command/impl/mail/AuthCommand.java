@@ -52,6 +52,7 @@ public class AuthCommand extends ServiceCommand {
 				return;
 			}
 			getBundle().put("user", tmpUser);
+			statsService.incrementNumberOfAccesses(tmpUser.getMail());
 		} else if ("LOGIN".equals(params[0].toUpperCase())) {
 			mailServer.echoLine("+ VXNlcm5hbWU6"); 	// Username:
 			String base64Username = mailServer.read().readLine();
@@ -71,6 +72,7 @@ public class AuthCommand extends ServiceCommand {
 				return;
 			}
 			getBundle().put("user", tmpUser);
+			statsService.incrementNumberOfAccesses(tmpUser.getMail());
 		} else {
 			logger.error("Unknown login type.");
 			owner.echoLine("-ERR Unknown login type.");

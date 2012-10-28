@@ -9,10 +9,14 @@ import java.util.Scanner;
 
 import javax.imageio.ImageIO;
 
+import org.apache.commons.codec.binary.Base32InputStream;
+
 import model.parser.mime.ContentTypeUtil;
 import model.parser.mime.MimeHeader;
 import model.util.Base64Util;
 import model.util.ImageRotator;
+
+import org.apache.commons.codec.binary.Base64;
 
 public class ImageTransformer2 implements Transformer {
 
@@ -28,30 +32,47 @@ public class ImageTransformer2 implements Transformer {
 	@Override
 	public StringBuilder transform(StringBuilder part, Map<String, MimeHeader> partheaders) throws IOException {
 		MimeHeader contentType = partheaders.get("Content-Type");
+		MimeHeader contentTransferEncoding = partheaders.get("Content-Transfer-Encoding");
 		if (contentType == null || !availableTypes.contains(contentType.getValue())) {
 			return part;
 		}
-		try {
+		if("base64".equals(contentTransferEncoding)){
+		    try {
 			File originalImage = getUnencodedImage(part);
 			File rotatedImage = rotator.createRotatedImage(ImageIO.read(originalImage));
 			File encodedImage = Base64Util.encodeUsingOS(rotatedImage);
 			StringBuilder rotatedEncodedImage = new StringBuilder();
 			Scanner scanner = new Scanner(encodedImage);
 			while (scanner.hasNextLine()) {
-				rotatedEncodedImage.append(scanner.nextLine() + "\r\n");
+			    rotatedEncodedImage.append(scanner.nextLine() + "\r\n");
 			}
 			encodedImage.delete();
 			rotatedImage.delete();
 			originalImage.delete();
 			scanner.close();
 			return rotatedEncodedImage;
-		} catch (InterruptedException e) {
+		    } catch (InterruptedException e) {
 			throw new IllegalStateException(e);
+		    }
+		}else{
+		    File originalImage;
+		    try {
+			originalImage = getImage(part);
+			File rotatedImage = rotator.createRotatedImage(ImageIO.read(originalImage));
+		    } catch (InterruptedException e) {
+			e.printStackTrace();
+		    }
 		}
+		return part;
 	}
 	
 	private File getUnencodedImage(StringBuilder encodedText) throws IOException, InterruptedException {
-		return Base64Util.decodeUsingOS(encodedText.toString().replace("\r", ""));
+	    return Base64Util.decodeUsingOS(encodedText.toString().replace("\r", ""));
 	}
 
+	private File getImage(StringBuilder encodedText) throws IOException, InterruptedException {
+	    return null;
+	}
+
+	
 }

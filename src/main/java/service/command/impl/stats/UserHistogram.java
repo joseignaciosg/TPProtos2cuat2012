@@ -4,7 +4,7 @@ package service.command.impl.stats;
 public class UserHistogram {
 	
 	private String user;
-	private int transferedBytes;
+	private long transferedBytes;
 	private int numberOfAccesses;
 	private int numberOfReadMail;
 	private int numberOfDeletedMail;
@@ -13,12 +13,12 @@ public class UserHistogram {
 		this.user = user;
 	}
 	
-	public int getTransferedBytes() {
+	public long getTransferedBytes() {
 		return transferedBytes;
 	}
 	
-	public void incrementTransferedBytes(int transferedBytes) {
-		this.transferedBytes+= transferedBytes;
+	public void incrementTransferedBytes(long transferedBytes) {
+		this.transferedBytes += transferedBytes;
 	}
 	
 	public int getNumberOfAccesses() {
