@@ -1,11 +1,11 @@
 # Start Proxy Server
 service.MailSocketService, 8080
 
-# Start a Mocked Email Server
-service.mock.MockedSocketEmailService, 8082
-
 # Start a Statistics Socket Server
-service.StatsSocketService, 8083
+service.StatsSocketService, 8081
 
 # Start a Configurer Socket Server
-service.ConfigurerService, 8084
+service.ConfigurerService, 8082
+
+# Start a Mocked Email Server
+# service.mock.MockedSocketEmailService, 8083

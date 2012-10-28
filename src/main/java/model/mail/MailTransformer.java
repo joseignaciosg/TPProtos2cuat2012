@@ -88,6 +88,11 @@ public class MailTransformer {
 					logger.warn(command + "did not finish succesfuly. Exit code " + p.exitValue());
 				}
 			}
+			if (transformedIn == mail.getContents()) {
+				transformedOut.delete();
+			} else {
+				transformedIn.delete();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("External trasformations could not be applied!!");
