@@ -33,10 +33,7 @@ public class ImageTransformer implements Transformer {
 	if (contentType.getValue().startsWith("image/")) {
 	    	File inimage = File.createTempFile("transformed_", "sourceimage");
 	    	FileWriter fr = new FileWriter(inimage);
-	    	String[] lines = text.toString().split("\r\n");
-		for(String line: lines){
-		    fr.write(line + "\r\n");
-		}
+		    fr.write(text.toString() + "\r\n");
 		fr.close();
 		//si se hace base64 -D inimage , da la imagen bien
 	    	inimage = decodeBase64(text.toString(), contentTransferEncoding, inimage);
