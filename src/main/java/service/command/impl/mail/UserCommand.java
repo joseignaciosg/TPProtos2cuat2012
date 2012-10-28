@@ -21,6 +21,9 @@ public class UserCommand extends ServiceCommand {
 	public void execute(String[] params) throws Exception {
 		MailSocketService mailServer = (MailSocketService) owner;
 		User user = new User(params[0], null);
+		if (!validateAccessToMailByTime(user, mailServer)){
+			return;
+		}		
 		mailServer.setOriginServer(user.getMailhost());
 		String resp = echoToOriginServerAndReadLine(getOriginalLine());
 		owner.echoLine(resp);
@@ -28,9 +31,6 @@ public class UserCommand extends ServiceCommand {
 			return;
 		}
 		String passwordCmd = owner.read().readLine();
-		if(!validateAccessToMailByTime(user, mailServer)){
-			return;
-		}
 		resp = echoToOriginServerAndReadLine(passwordCmd);
 		owner.echoLine(resp);
 		if (!resp.toUpperCase().startsWith("+OK")) {
@@ -55,7 +55,7 @@ public class UserCommand extends ServiceCommand {
 			return true;
 		} catch (LoginValidationException e) {
 			logger.info("User " + userMail + " is banned. Closing connection.");
-			mailServer.echoLine(StatusCodes.ERR_TIME_BANNED, userMail);
+			mailServer.echoLine("-ERR User does not have acces during this time.");
 			return false;
 		}
 	}

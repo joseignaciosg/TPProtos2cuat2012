@@ -33,7 +33,7 @@ public class TimeValidator implements LoginValidator {
 			final LocalTime startTime = new LocalTime(Integer.valueOf(startTimeParts[0]), Integer.valueOf(startTimeParts[1]));
 			final LocalTime endTime = new LocalTime(Integer.valueOf(endTimeParts[0]), Integer.valueOf(endTimeParts[1]));
 			final Interval timeRestrictionInterval = new Interval(startTime.toDateTimeToday(), endTime.toDateTimeToday());
-			if (timeRestrictionInterval.containsNow()) {
+			if (!timeRestrictionInterval.containsNow()) {
 				throw new LoginValidationException();
 			}
 		} catch (final Exception e) {
