@@ -1,0 +1,54 @@
+Return-path: <>
+Envelope-to: karpo@josegalindo.com.ar
+Delivery-date: Sun, 28 Oct 2012 08:14:01 -0600
+Received: from [173.254.64.10] (port=46202 helo=oproxy11-pub.bluehost.com)
+	by host117.hostmonster.com with smtp (Exim 4.76)
+	id 1TSTcn-0005M0-7p
+	for karpo@josegalindo.com.ar; Sun, 28 Oct 2012 08:14:01 -0600
+Received: (qmail 27882 invoked for bounce); 28 Oct 2012 14:14:00 -0000
+Date: 28 Oct 2012 14:14:00 -0000
+From: MAILER-DAEMON@oproxy11-pub.bluehost.com
+To: karpo@josegalindo.com.ar
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="1351433640oproxy11-pub.bluehost.com7199490"
+Subject: failure notice
+
+--1351433640oproxy11-pub.bluehost.com7199490
+
+Hi. This is the qmail-send program at oproxy11-pub.bluehost.com.
+I'm afraid I wasn't able to deliver your message to the following addresses.
+This is a permanent error; I've given up. Sorry it didn't work out.
+
+<karpo@josegalido.com.ar>:
+Sorry, I couldn't find any host named josegalido.com.ar. (#5.1.2)
+
+--- Enclosed are the original headers of the message.
+
+--1351433640oproxy11-pub.bluehost.com7199490
+Content-Type: message/rfc822
+
+Return-Path: <karpo@josegalindo.com.ar>
+Received: (qmail 27870 invoked by uid 0); 28 Oct 2012 14:14:00 -0000
+Received: from unknown (HELO host117.hostmonster.com) (74.220.207.117)
+  by oproxy11.bluehost.com with SMTP; 28 Oct 2012 14:14:00 -0000
+Received: from [181.28.90.116] (port=44691 helo=[192.168.1.111])
+	by host117.hostmonster.com with esmtpsa (TLSv1:CAMELLIA256-SHA:256)
+	(Exim 4.76)
+	(envelope-from <karpo@josegalindo.com.ar>)
+	id 1TSTcl-0005Kb-RS
+	for karpo@josegalido.com.ar; Sun, 28 Oct 2012 08:14:00 -0600
+Message-ID: <508D3DA4.1030601@josegalindo.com.ar>
+Date: Sun, 28 Oct 2012 11:13:56 -0300
+From: Gonzalo <karpo@josegalindo.com.ar>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:16.0) Gecko/20121011 Thunderbird/16.0.1
+MIME-Version: 1.0
+To: karpo@josegalido.com.ar
+Subject: asdad
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Identified-User: {1177:host117.hostmonster.com:doctorj4:josegalindo.com.ar} {sentby:smtp auth 181.28.90.116 authed with karpo@josegalindo.com.ar}
+
+(Body supressed)
+
+--1351433640oproxy11-pub.bluehost.com7199490--
+.
