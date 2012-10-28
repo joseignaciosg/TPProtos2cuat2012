@@ -9,7 +9,6 @@ import java.util.Scanner;
 
 import javax.imageio.ImageIO;
 
-import org.apache.commons.codec.binary.Base32InputStream;
 
 import model.parser.mime.ContentTypeUtil;
 import model.parser.mime.MimeHeader;
@@ -17,7 +16,6 @@ import model.util.Base64Util;
 import model.util.IOUtil;
 import model.util.ImageRotator;
 
-import org.apache.commons.codec.binary.Base64;
 
 public class ImageTransformer2 implements Transformer {
 
@@ -34,13 +32,15 @@ public class ImageTransformer2 implements Transformer {
 	public StringBuilder transform(StringBuilder part,
 			Map<String, MimeHeader> partheaders) throws IOException {
 		MimeHeader contentType = partheaders.get("Content-Type");
-		MimeHeader contentTransferEncoding = partheaders
-				.get("Content-Transfer-Encoding");
+		MimeHeader contentTransferEncoding = partheaders.get("Content-Transfer-Encoding");
+		if (contentTransferEncoding == null){
+			contentTransferEncoding = new MimeHeader("Content-Transfer-Encoding: 7bit");
+		}
 		if (contentType == null
 				|| !availableTypes.contains(contentType.getValue())) {
 			return part;
 		}
-		if ("base64".equals(contentTransferEncoding)) {
+		if ("base64".equals(contentTransferEncoding.getValue())) {
 			try {
 				File originalImage = getUnencodedImage(part);
 				File rotatedImage = rotator.createRotatedImage(ImageIO
@@ -59,15 +59,7 @@ public class ImageTransformer2 implements Transformer {
 			} catch (InterruptedException e) {
 				throw new IllegalStateException(e);
 			}
-		} else {
-			File originalImage;
-			try {
-				originalImage = getImage(part);
-				File rotatedImage = rotator.createRotatedImage(ImageIO.read(originalImage));
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
+		} 
 		return part;
 	}
 
@@ -77,9 +69,5 @@ public class ImageTransformer2 implements Transformer {
 				.replace("\r", ""));
 	}
 
-	private File getImage(StringBuilder encodedText) throws IOException,
-			InterruptedException {
-		return IOUtil.createFileWithContents(encodedText.toString());
-	}
 
 }

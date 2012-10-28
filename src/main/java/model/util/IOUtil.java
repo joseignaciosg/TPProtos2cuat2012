@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Scanner;
 
+
 public class IOUtil {
 
 	public static String fullPath(String resourcePath) {
@@ -36,4 +37,5 @@ public class IOUtil {
 		writer.close();
 		return file;
 	}
+	
 }
