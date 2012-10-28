@@ -13,7 +13,7 @@ public class Base64Util {
 		return new String(new Base64().decode(text));
 	}
 
-	public static File encodeUsingOS(File file) throws IOException, InterruptedException {
+	public static File encodeToFile(File file) throws IOException, InterruptedException {
 		File encodedContents = File.createTempFile("encoded", "jpg");
 		FileInputStream fis = new FileInputStream(file);
 		FileOutputStream fos = new FileOutputStream(encodedContents);
@@ -28,7 +28,7 @@ public class Base64Util {
 		return encodedContents;
 	}
 
-	public static File decodeUsingOS(String text) throws IOException, InterruptedException {
+	public static File decodeToFile(String text) throws IOException {
 		File file = IOUtil.createFileWithContents(text);
 		byte[] decodedBytes = new Base64().decode(text.getBytes());
 		FileOutputStream fos = new FileOutputStream(file);

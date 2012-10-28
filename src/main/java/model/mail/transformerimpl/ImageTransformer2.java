@@ -27,21 +27,17 @@ public class ImageTransformer2 implements Transformer {
 	}
 
 	@Override
-	public StringBuilder transform(StringBuilder part,
-			Map<String, MimeHeader> partheaders) throws IOException {
+	public StringBuilder transform(StringBuilder part, Map<String, MimeHeader> partheaders) throws IOException {
 		MimeHeader contentType = partheaders.get("Content-Type");
-		MimeHeader contentTransferEncoding = partheaders
-				.get("Content-Transfer-Encoding");
-		if (contentType == null
-				|| !availableTypes.contains(contentType.getValue())) {
+		MimeHeader contentTransferEncoding = partheaders.get("Content-Transfer-Encoding");
+		if (contentType == null || !availableTypes.contains(contentType.getValue())) {
 			return part;
 		}
-		if ("base64".equals(contentTransferEncoding)) {
+		if ("base64".equals(contentTransferEncoding.getValue())) {
 			try {
 				File originalImage = getUnencodedImage(part);
-				File rotatedImage = rotator.createRotatedImage(ImageIO
-						.read(originalImage));
-				File encodedImage = Base64Util.encodeUsingOS(rotatedImage);
+				File rotatedImage = rotator.createRotatedImage(ImageIO.read(originalImage));
+				File encodedImage = Base64Util.encodeToFile(rotatedImage);
 				StringBuilder rotatedEncodedImage = new StringBuilder();
 				Scanner scanner = new Scanner(encodedImage);
 				while (scanner.hasNextLine()) {
@@ -67,14 +63,11 @@ public class ImageTransformer2 implements Transformer {
 		return part;
 	}
 
-	private File getUnencodedImage(StringBuilder encodedText)
-			throws IOException, InterruptedException {
-		return Base64Util.decodeUsingOS(encodedText.toString()
-				.replace("\r", ""));
+	private File getUnencodedImage(StringBuilder encodedText) throws IOException, InterruptedException {
+		return Base64Util.decodeToFile(encodedText.toString().replace("\r", ""));
 	}
 
-	private File getImage(StringBuilder encodedText) throws IOException,
-			InterruptedException {
+	private File getImage(StringBuilder encodedText) throws IOException, InterruptedException {
 		return IOUtil.createFileWithContents(encodedText.toString());
 	}
 
