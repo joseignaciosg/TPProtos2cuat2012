@@ -56,6 +56,7 @@ public class DeleCommand extends ServiceCommand {
 		}
 		mailService.echoLineToOriginServer(getOriginalLine());
 		mailService.echoLine(mailService.readFromOriginServer().readLine());
+		statsService.incrementNumberOfDeletedMail(current.getMail());
 	}
 	
 	private Mail getMail(String mailName) throws IOException {

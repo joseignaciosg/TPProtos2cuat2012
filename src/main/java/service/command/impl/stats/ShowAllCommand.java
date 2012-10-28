@@ -12,7 +12,6 @@ public class ShowAllCommand extends ServiceCommand {
 
 	@Override
 	public void execute(String[] params) {
-		
 		owner.echoLine(StatusCodes.OK_ALL_USER_STATS_DISPLAYED);
 		owner.echo(statsService.getAllUserStats());
 		owner.echoLine(".");
