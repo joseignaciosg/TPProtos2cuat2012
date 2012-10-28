@@ -14,7 +14,6 @@ import org.apache.log4j.Logger;
 
 import service.AbstractSockectService;
 import service.MailSocketService;
-import service.StatusCodes;
 import service.command.ServiceCommand;
 import service.state.impl.mail.ParseMailState;
 
@@ -115,7 +114,7 @@ public class AuthCommand extends ServiceCommand {
 			return true;
 		} catch (LoginValidationException e) {
 			logger.info("User " + userMail + " is banned. Closing connection.");
-			mailServer.echoLine(StatusCodes.ERR_TIME_BANNED, userMail);
+			mailServer.echoLine("-ERR No tiene acceso durante en este horario.");
 			return false;
 		}
 	}
