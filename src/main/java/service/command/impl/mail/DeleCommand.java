@@ -44,7 +44,7 @@ public class DeleCommand extends ServiceCommand {
 	public void execute(String[] params) throws Exception {
 		MailSocketService mailService = (MailSocketService) owner;
 		Mail email = getMail(params[0]);
-		User current = (User) getBundle().get("AUTH_USER");
+		User current = (User) getBundle().get("user");
 		for (MailValidator validator : validators) {
 			try {
 				validator.validate(current, email);

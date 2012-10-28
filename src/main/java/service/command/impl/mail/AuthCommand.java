@@ -51,7 +51,7 @@ public class AuthCommand extends ServiceCommand {
 			if (!resp.toUpperCase().startsWith("+OK")) {
 				return;
 			}
-			getBundle().put("auth_user", tmpUser);
+			getBundle().put("user", tmpUser);
 		} else if ("LOGIN".equals(params[0].toUpperCase())) {
 			mailServer.echoLine("+ VXNlcm5hbWU6"); 	// Username:
 			String base64Username = mailServer.read().readLine();
@@ -70,7 +70,7 @@ public class AuthCommand extends ServiceCommand {
 			if (!result.toUpperCase().startsWith("+OK")) {
 				return;
 			}
-			getBundle().put("auth_user", tmpUser);
+			getBundle().put("user", tmpUser);
 		} else {
 			logger.error("Unknown login type.");
 			owner.echoLine("-ERR Unknown login type.");
