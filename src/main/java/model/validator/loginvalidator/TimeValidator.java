@@ -39,7 +39,7 @@ public class TimeValidator implements LoginValidator {
 			}
 		} catch (final Exception e) {
 			if (e instanceof LoginValidationException) {
-				throw e;
+				throw (LoginValidationException) e;
 			}
 			logger.error("Could not parse schedule for " + mailAddress + " - read: " + timeRestriction);
 		}
