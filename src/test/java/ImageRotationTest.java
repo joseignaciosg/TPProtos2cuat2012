@@ -1,12 +1,7 @@
 import java.util.LinkedList;
 import java.util.List;
 
-import model.util.ProcessUtil;
-
 import org.junit.Test;
-
-
-
 
 public class ImageRotationTest {
 
@@ -18,10 +13,11 @@ public class ImageRotationTest {
 		commands.add("-jar");
 		commands.add("apps/rotateImage.jar");
 		commands.add(toFlip);
+		ProcessBuilder pb = new ProcessBuilder(commands);
 		try {
-		    ProcessUtil.executeApp(commands);
+			Process process = pb.start();
+			process.waitFor();
 		} catch (Exception e) {
-		    e.printStackTrace();
 		}
 	}
 }

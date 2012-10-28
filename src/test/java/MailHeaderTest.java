@@ -3,13 +3,10 @@ import java.io.IOException;
 
 import junit.framework.Assert;
 import model.mail.Mail;
-import model.parser.mime.MailMimeParser;
 import model.parser.mime.MimeHeader;
 import model.util.IOUtil;
 
 import org.junit.Before;
-import org.junit.Test;
-
 
 public class MailHeaderTest {
 
@@ -18,7 +15,7 @@ public class MailHeaderTest {
 	@Before
 	public void init() throws IOException {
 		File file = new File(IOUtil.fullPath("example/mail_7937octets.txt"));
-		MailMimeParser mimeParser = new MailMimeParser();
+		file.delete();
 //		mail = mimeParser.parse(file, 140);
 	}
 

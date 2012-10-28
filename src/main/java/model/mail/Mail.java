@@ -15,7 +15,6 @@ public class Mail {
 	private Map<String, MimeHeader> headers;
 	private List<String> attachmentsExtension;
 	private File contents;
-	private boolean multipartMail;
 
 	public Mail(File contents) {
 		headers = new HashMap<String, MimeHeader>();
@@ -88,18 +87,12 @@ public class Mail {
 		return contents;
 	}
 
-	public boolean isMultipartMail() {
-	    return multipartMail;
-	}
-
-	public void setMultipartMail(boolean multipartMail) {
-	    this.multipartMail = multipartMail;
+	public boolean isMultiPart() {
+	    return getBoundaryKey() != null;
 	}
 
 	public Map<String, MimeHeader> getHeaders() {
 		return headers;
 	}
-	
-	
 
 }

@@ -38,10 +38,9 @@ public class MailMimeParser {
 	private void parseMainBoundary(ParseParameters parseParams) throws IOException {
 		headerParser.parse(parseParams);
 		String boundary = parseParams.mail.getBoundaryKey();
-		parseParams.mail.setMultipartMail(boundary != null);
 		boolean endOfMail = false;
 		String line = parseParams.sourceScanner.nextLine();
-		if (parseParams.mail.isMultipartMail()) {
+		if (parseParams.mail.isMultiPart()) {
 			do {
 				logger.debug("Start Boundary: " + boundary);
 				parsePart(parseParams, boundary, line);

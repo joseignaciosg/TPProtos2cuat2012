@@ -7,8 +7,6 @@ import java.util.Scanner;
 
 import junit.framework.Assert;
 
-import model.util.ProcessUtil;
-
 import org.junit.Test;
 
 public class toL33tAppTest {
@@ -24,11 +22,14 @@ public class toL33tAppTest {
 		commands.add("-jar");
 		commands.add("apps/toL33t.jar");
 		commands.add(part.getAbsolutePath());
+		
+		ProcessBuilder pb = new ProcessBuilder(commands);
+		Process process = pb.start();
 		try {
-			ProcessUtil.executeApp(commands);
-		} catch (Exception e) {
-			e.printStackTrace();
+			process.waitFor();
+		} catch (InterruptedException e) {
 		}
+		
 		Scanner s = new Scanner(part);
 		String line = s.nextLine();
 		System.out.println(line);
