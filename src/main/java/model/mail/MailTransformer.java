@@ -6,15 +6,15 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-
 import model.configuration.Config;
 import model.configuration.SimpleListConfiguration;
 import model.mail.transformerimpl.HideSenderTransformer;
-import model.mail.transformerimpl.ImageTransformer;
+import model.mail.transformerimpl.ImageTransformer2;
 import model.mail.transformerimpl.LeetTransformer;
 import model.mail.transformerimpl.Transformer;
 import model.parser.mime.MimeHeader;
+
+import org.apache.log4j.Logger;
 
 public class MailTransformer {
 
@@ -53,7 +53,7 @@ public class MailTransformer {
 			if ("l33t".equals(option.toLowerCase())) {
 				transformers.add(new LeetTransformer());
 			} else if ("rotateimages".equals(option.toLowerCase())) {
-				transformers.add(new ImageTransformer());
+				transformers.add(new ImageTransformer2());
 			}
 		}
 		return transformers;

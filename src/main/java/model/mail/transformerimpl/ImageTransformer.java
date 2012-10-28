@@ -22,11 +22,10 @@ import org.apache.commons.codec.binary.Base64;
 
 public class ImageTransformer implements Transformer {
 
-	String[] supportedImageTypes = { "jpeg", "rgb", "tiff", "xbm", "png", "jpg" };
+	private static final String[] supportedImageTypes = { "jpeg", "rgb", "tiff", "xbm", "png", "jpg" };
 
 	@Override
-	public StringBuilder transform(StringBuilder text,
-			Map<String, MimeHeader> partheaders) throws IOException {
+	public StringBuilder transform(StringBuilder text, Map<String, MimeHeader> partheaders) throws IOException {
 		MimeHeader contentType = partheaders.get("Content-Type");
 		MimeHeader contentTransferEncoding = partheaders.get("Content-Transfer-Encoding");
 		StringBuilder ret = new StringBuilder();
@@ -36,8 +35,7 @@ public class ImageTransformer implements Transformer {
 			fr.write(text.toString() + "\r\n");
 			fr.close();
 			// si se hace base64 -D inimage , da la imagen bien
-			inimage = decodeBase64(text.toString(), contentTransferEncoding,
-					inimage);
+			inimage = decodeBase64(text.toString(), contentTransferEncoding, inimage);
 			InputStream is = null;
 			if (inimage != null) {
 				try {
@@ -65,8 +63,7 @@ public class ImageTransformer implements Transformer {
 				e.printStackTrace();
 			}
 			out.toByteArray();
-			final File outimage = File.createTempFile("transformed_",
-					"retimage");
+			final File outimage = File.createTempFile("transformed_", "retimage");
 			try {
 				ImageIO.write(dimg, "png", outimage);
 			} catch (final IOException e) {
