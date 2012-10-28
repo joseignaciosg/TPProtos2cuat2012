@@ -22,8 +22,8 @@ public class Mail {
 		setContents(contents);
 	}
 
-	public long getSizeInBytes() {
-		return contents == null ? 0 : contents.length();
+	public int getSizeInBytes() {
+		return contents == null ? 0 : (int) contents.length();
 	}
 	
 	public void setContents(File contents) {

@@ -37,6 +37,7 @@ public class UserCommand extends ServiceCommand {
 		}
 		user.setPassword(passwordCmd.split(" ")[1]);
 		getBundle().put("user", user);
+		statsService.incrementNumberOfAccesses(user.getMail());
 		owner.getStateMachine().setState(new ParseMailState(owner));
 	}
 
@@ -56,6 +57,9 @@ public class UserCommand extends ServiceCommand {
 		} catch (LoginValidationException e) {
 			logger.info("User " + userMail + " is banned. Closing connection.");
 			mailServer.echoLine("-ERR User does not have acces during this time.");
+			return false;
+		}catch (Exception e){
+			logger.error("Error while validating time access for user: " + userMail);
 			return false;
 		}
 	}

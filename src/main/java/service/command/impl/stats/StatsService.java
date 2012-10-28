@@ -37,12 +37,21 @@ public class StatsService {
 		statsByUserMap = new ConcurrentHashMap<String, UserHistogram>();
 	}
 
-	public void incrementNumberOfAccesses() {
+	public void incrementNumberOfAccesses(String userMail) {
 		numberOfAccesses.incrementAndGet();
+		createUserInStatsMap(userMail);
+		incrementUserAccesses(userMail);
 	}
 
-	public void incrementTransferedBytes(int bytes) {
+	private void createUserInStatsMap(String userMail) {
+		if (!statsByUserMap.containsKey(userMail)) {
+			statsByUserMap.put(userMail, new UserHistogram(userMail));
+		}		
+	}
+
+	public void incrementTransferedBytes(int bytes, String userMail) {
 		transferedBytes.addAndGet(bytes);
+		incrementUserTransferedBytes(userMail, bytes);
 	}
 
 	public int getTransferedBytes() {
@@ -53,29 +62,38 @@ public class StatsService {
 		return statsByUserMap.get(user);
 	}
 
-	public void incrementUserTransferedBytes(String user, int bytes) {
+	private void incrementUserTransferedBytes(String user, int bytes) {
 		UserHistogram uh = statsByUserMap.get(user);
 		if (uh != null) {
 			uh.incrementTransferedBytes(bytes);
 		}
 	}
 
-	public void incrementUserReadMail(String user) {
+	private void incrementUserReadMail(String user) {
 		UserHistogram uh = statsByUserMap.get(user);
 		if (uh != null) {
 			uh.incrementNumberOfReadMail();
 		}
 	}
 
-	public void incrementNumberOfReadMail() {
+	public void incrementNumberOfReadMail(String userMail) {
 		numberOfReadMail.incrementAndGet();
+		incrementUserReadMail(userMail);
 	}
 
 	public int getNumberOfAccesses() {
 		return numberOfAccesses.get();
 	}
+	
 
-	public void incrementUserDeletedMail(String user) {
+	private void incrementUserAccesses(String user) {
+		UserHistogram uh = statsByUserMap.get(user);
+		if (uh != null) {
+			uh.incrementNumberOfAccesses();
+		}
+	}
+
+	private void incrementUserDeletedMail(String user) {
 		UserHistogram uh = statsByUserMap.get(user);
 		if (uh != null) {
 			uh.incrementNumberOfDeletedMail();
@@ -84,6 +102,11 @@ public class StatsService {
 
 	public int getNumberOfDeletedMail() {
 		return numberOfDeletedMail.get();
+	}
+	
+	public void incrementNumberOfDeletedMail(String userMail) {
+		numberOfDeletedMail.incrementAndGet();
+		incrementUserDeletedMail(userMail);
 	}
 
 	public int getNumberOfReadMail() {
