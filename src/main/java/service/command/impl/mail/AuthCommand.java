@@ -8,6 +8,7 @@ import model.configuration.KeyValueConfiguration;
 import model.util.Base64Util;
 import model.util.CollectionUtil;
 import model.validator.LoginValidationException;
+import model.validator.loginvalidator.AccessCountValidator;
 import model.validator.loginvalidator.TimeValidator;
 
 import org.apache.log4j.Logger;
@@ -36,7 +37,7 @@ public class AuthCommand extends ServiceCommand {
 			mailServer.echoLine("+");
 			String base64Credentials = mailServer.read().readLine();
 			User tmpUser = createUser(base64Credentials);
-			if(!validateAccessToMailByTime(tmpUser)) {
+			if(!validateAccessToMailByTime(tmpUser) || !validateAccessToMailByCount(tmpUser)) {
 				return;
 			}
 			String host = getMailServer(tmpUser);
@@ -59,7 +60,7 @@ public class AuthCommand extends ServiceCommand {
 			mailServer.echoLine("+ UGFzc3dvcmQ6"); 	// Password:
 			String base64Password = mailServer.read().readLine();
 			User tmpUser = createUser(base64Username, base64Password);
-			if(!validateAccessToMailByTime(tmpUser)) {
+			if(!validateAccessToMailByTime(tmpUser) || !validateAccessToMailByCount(tmpUser)) {
 				return;
 			}
 			mailServer.setOriginServer(getMailServer(tmpUser));
@@ -118,6 +119,20 @@ public class AuthCommand extends ServiceCommand {
 		} catch (LoginValidationException e) {
 			logger.info("User " + userMail + " is banned. Closing connection.");
 			mailServer.echoLine("-ERR No tiene acceso durante en este horario.");
+			return false;
+		}
+	}
+	
+	private boolean validateAccessToMailByCount(User user) {
+		MailSocketService mailServer = (MailSocketService) owner;
+		String userMail = user.getMail();
+		logger.debug("Checking amount of accesses for user: " + userMail);
+		try {
+			new AccessCountValidator(userMail).validate();
+			return true;
+		} catch (LoginValidationException e) {
+			logger.info("User " + userMail + " is banned. Closing connection.");
+			mailServer.echoLine("-ERR No tiene acceso, ya entro demasiadas veces hoy.");
 			return false;
 		}
 	}

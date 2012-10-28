@@ -131,4 +131,12 @@ public class StatsService {
 		return CollectionUtil.join(prettyFormats, "\r\n");
 	}
 
+	public int getNumberOfAccessesToday(String mailAddress) {
+		UserHistogram uh = statsByUserMap.get(mailAddress);
+		if(uh != null){
+			return uh.getNumberOfAccessesToday();
+		}
+		return -1;
+	}
+
 }

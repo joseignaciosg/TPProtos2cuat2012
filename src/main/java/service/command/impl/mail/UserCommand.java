@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import model.User;
 import model.validator.LoginValidationException;
+import model.validator.loginvalidator.AccessCountValidator;
 import model.validator.loginvalidator.TimeValidator;
 import service.AbstractSockectService;
 import service.MailSocketService;
@@ -20,7 +21,7 @@ public class UserCommand extends ServiceCommand {
 	public void execute(String[] params) throws Exception {
 		MailSocketService mailServer = (MailSocketService) owner;
 		User user = new User(params[0], null);
-		if (!validateAccessToMailByTime(user)) {
+		if (!validateAccessToMailByTime(user) || !validateAccessToMailByCount(user)) {
 			return;
 		}
 		mailServer.setOriginServer(user.getMailhost());
@@ -57,6 +58,20 @@ public class UserCommand extends ServiceCommand {
 		} catch (LoginValidationException e) {
 			logger.info("User " + userMail + " is banned. Closing connection.");
 			mailServer.echoLine("-ERR User does not have acces during this time.");
+			return false;
+		}
+	}
+	
+	private boolean validateAccessToMailByCount(User user) {
+		MailSocketService mailServer = (MailSocketService) owner;
+		String userMail = user.getMail();
+		logger.debug("Checking amount of accesses for user: " + userMail);
+		try {
+			new AccessCountValidator(userMail).validate();
+			return true;
+		} catch (LoginValidationException e) {
+			logger.info("User " + userMail + " is banned. Closing connection.");
+			mailServer.echoLine("-ERR No tiene acceso, ya entro demasiadas veces hoy.");
 			return false;
 		}
 	}
