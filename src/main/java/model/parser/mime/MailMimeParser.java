@@ -3,6 +3,7 @@ package model.parser.mime;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -51,15 +52,18 @@ public class MailMimeParser {
 				}
 			} while (!endOfMail);
 		} else {
-			Map<String, MimeHeader> headers = new HashMap<String, MimeHeader>();
+			MimeHeader header = new MimeHeader("Content-Type: text/plain");
+			Map<String, MimeHeader> headers = Collections.singletonMap(header.getKey(), header);
+			StringBuilder text = new StringBuilder();
 			do {
-				MimeHeader header = new MimeHeader("Content-Type: text/plain");
-				headers.put(header.getKey(), header);
-				StringBuilder transLine = parseParams.transformer.transformPart(headers, new StringBuilder(line));
-				parseParams.destinationWriter.append(transLine.toString() + "\r\n");
 				line = parseParams.sourceScanner.nextLine();
 				endOfMail = line.equals(".");
+				if (!endOfMail) {					
+					text.append(line + "\r\n");
+				}
 			} while (!endOfMail);
+			parseParams.destinationWriter.append(parseParams.transformer.transformPart(headers, text));
+			parseParams.destinationWriter.append("\r\n");
 		}
 		parseParams.destinationWriter.append(line + "\r\n");
 	}
