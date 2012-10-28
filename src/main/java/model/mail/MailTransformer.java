@@ -6,6 +6,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import model.configuration.Config;
 import model.configuration.SimpleListConfiguration;
 import model.mail.transformerimpl.HideSenderTransformer;
@@ -16,6 +18,7 @@ import model.parser.mime.MimeHeader;
 
 public class MailTransformer {
 
+	private static final Logger logger = Logger.getLogger(MailTransformer.class);
 	private static final SimpleListConfiguration config = Config.getInstance().getSimpleListConfig("transformation");
 
 	public void transformHeader(MimeHeader header) throws IOException {
@@ -34,7 +37,11 @@ public class MailTransformer {
 		StringBuilder retPart = part;
 		List<Transformer> transformers = getTransformerList();
 		for (Transformer transformer : transformers) {
-		    retPart = transformer.transform(retPart, partHeaders);
+			try {
+				retPart = transformer.transform(retPart, partHeaders);
+			} catch (Exception e) {
+				logger.error("Could not apply transformer: " + transformer.getClass(), e);
+			}
 		}
 		return retPart;
 	}
