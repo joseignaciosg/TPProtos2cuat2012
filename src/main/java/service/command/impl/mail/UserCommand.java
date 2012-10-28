@@ -58,9 +58,6 @@ public class UserCommand extends ServiceCommand {
 			logger.info("User " + userMail + " is banned. Closing connection.");
 			mailServer.echoLine("-ERR User does not have acces during this time.");
 			return false;
-		}catch (Exception e){
-			logger.error("Error while validating time access for user: " + userMail);
-			return false;
 		}
 	}
 }

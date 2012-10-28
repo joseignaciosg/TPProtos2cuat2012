@@ -21,7 +21,7 @@ public class TimeValidator implements LoginValidator {
 	}
 	
 	@Override
-	public void validate() throws Exception {
+	public void validate() throws LoginValidationException {
 		String timeRestriction = accessTimeConfig.get(mailAddress);
 		if (timeRestriction == null) {
 			return;

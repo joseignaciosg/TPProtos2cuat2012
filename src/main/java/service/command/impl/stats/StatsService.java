@@ -49,8 +49,8 @@ public class StatsService {
 		}		
 	}
 
-	public void incrementTransferedBytes(int bytes, String userMail) {
-		transferedBytes.addAndGet(bytes);
+	public void incrementTransferedBytes(long bytes, String userMail) {
+		transferedBytes.addAndGet((int) bytes);
 		incrementUserTransferedBytes(userMail, bytes);
 	}
 
@@ -62,7 +62,7 @@ public class StatsService {
 		return statsByUserMap.get(user);
 	}
 
-	private void incrementUserTransferedBytes(String user, int bytes) {
+	private void incrementUserTransferedBytes(String user, long bytes) {
 		UserHistogram uh = statsByUserMap.get(user);
 		if (uh != null) {
 			uh.incrementTransferedBytes(bytes);

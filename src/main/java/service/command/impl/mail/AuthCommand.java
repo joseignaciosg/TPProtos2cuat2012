@@ -119,9 +119,6 @@ public class AuthCommand extends ServiceCommand {
 			logger.info("User " + userMail + " is banned. Closing connection.");
 			mailServer.echoLine("-ERR No tiene acceso durante en este horario.");
 			return false;
-		} catch (Exception e){
-			logger.error("Error while validating time access for user: " + userMail);
-			return false;
 		}
 	}
 }
