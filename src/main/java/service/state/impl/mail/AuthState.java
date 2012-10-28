@@ -3,7 +3,6 @@ package service.state.impl.mail;
 import model.validator.LoginValidationException;
 import model.validator.loginvalidator.IpValidator;
 import service.AbstractSockectService;
-import service.StatusCodes;
 import service.command.impl.mail.AuthCommand;
 import service.command.impl.mail.DefaultCommand;
 import service.command.impl.mail.ProxyCapaCommand;
@@ -30,7 +29,7 @@ public class AuthState extends State {
 		try {
 			new IpValidator(clientIp).validate();
 		} catch (LoginValidationException e) {
-			owner.echoLine("IP address " + clientIp + " is banned.");
+			owner.echoLine("-ERR IP address " + clientIp + " is banned.");
 			logger.info("IP " + clientIp + " is banned. Closing connection.");
 			owner.setEndOfTransmission(true);
 		}
