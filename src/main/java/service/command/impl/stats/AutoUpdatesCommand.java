@@ -14,9 +14,11 @@ import service.worker.StatsTimedTask;
 public class AutoUpdatesCommand extends ServiceCommand {
 
 	private static KeyValueConfiguration statsConfig = Config.getInstance().getKeyValueConfig("stats_service");
+	private StatsTimer statsTimer;
 	
 	public AutoUpdatesCommand(AbstractSockectService owner) {
 		super(owner);
+		this.statsTimer = getTimer();
 	}
 
 	@Override
@@ -25,8 +27,10 @@ public class AutoUpdatesCommand extends ServiceCommand {
 			owner.echoLine(StatusCodes.ERR_INVALID_PARAMETERS_ARGUMENTS);
 			return;
 		}
-		StatsTimer statsTimer = getTimer();
 		if ("start".equalsIgnoreCase(params[0])) {
+			if(statsTimer.finished) {
+				statsTimer = getTimer();
+			}
 			if (statsTimer.started) {
 				owner.echoLine(StatusCodes.ERR_INVALID_PARAMETERS, "Already started");
 				return;
@@ -43,6 +47,7 @@ public class AutoUpdatesCommand extends ServiceCommand {
 			}
 			statsTimer.timer.cancel();
 			statsTimer.started = false;
+			statsTimer.finished = true;
 			owner.echoLine(StatusCodes.OK_SUCCESS);
 		} else {
 			owner.echoLine(StatusCodes.ERR_INVALID_PARAMETERS, "Use start or stop");
@@ -51,7 +56,7 @@ public class AutoUpdatesCommand extends ServiceCommand {
 	
 	private StatsTimer getTimer() {
 		StatsTimer statsTimer = (StatsTimer) getBundle().get("statsTimer");
-		if (statsTimer == null) {
+		if (statsTimer == null || statsTimer.finished) {
 			statsTimer = new StatsTimer(new Timer());
 			getBundle().put("statsTimer", statsTimer);
 		}
@@ -61,10 +66,12 @@ public class AutoUpdatesCommand extends ServiceCommand {
 	private static class StatsTimer {
 		Timer timer;
 		boolean started;
+		boolean finished;
 		
 		public StatsTimer(Timer timer) {
 			this.timer = timer; 
 			this.started = false;
+			this.finished = false;
 		}
 	}
 }
