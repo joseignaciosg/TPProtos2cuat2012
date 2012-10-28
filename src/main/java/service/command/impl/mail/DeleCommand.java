@@ -8,8 +8,8 @@ import java.util.List;
 
 import model.User;
 import model.mail.Mail;
-import model.validator.MailValidator;
 import model.validator.MailValidationException;
+import model.validator.MailValidator;
 import model.validator.emailvalidator.DelContentTypeValidator;
 import model.validator.emailvalidator.DelHeaderPatternValidator;
 import model.validator.emailvalidator.DelMaxDateValidator;
@@ -59,6 +59,10 @@ public class DeleCommand extends ServiceCommand {
 	}
 	
 	private Mail getMail(String mailName) throws IOException {
+		Mail cached = ((User) getBundle().get("user")).getMail(mailName); 
+		if (cached != null) {
+			return cached;
+		}
 		MailSocketService mailService = (MailSocketService) owner;
 		mailService.echoLineToOriginServer("RETR " + mailName);
 		BufferedReader mailInputReader = mailService.readFromOriginServer();

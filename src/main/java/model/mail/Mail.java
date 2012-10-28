@@ -99,4 +99,7 @@ public class Mail {
 		return headers;
 	}
 
+	public void delete() {
+		contents.delete();
+	}
 }

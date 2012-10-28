@@ -1,5 +1,6 @@
 package service.state.impl.mail;
 
+import model.User;
 import service.AbstractSockectService;
 import service.command.impl.mail.DefaultCommand;
 import service.command.impl.mail.DeleCommand;
@@ -24,6 +25,13 @@ public class ParseMailState extends State {
 	@Override
 	public void exec(String[] params) {
 		commandRecognizer.exec(params);
+	}
+	
+	@Override
+	public void exit() {
+		super.exit();
+		User current = (User) getBundle().get("user");
+		current.clearAllCachedData();
 	}
 
 }

@@ -29,7 +29,7 @@ public abstract class ServiceCommand {
 	}
 	
 	public Map<String, Object> getBundle() {
-		return owner.getStateMachine().getCurrent().getBundle();
+		return owner.getStateMachine().getBundle();
 	}
 	
 	public void setOriginalParams(String[] originalParams) {

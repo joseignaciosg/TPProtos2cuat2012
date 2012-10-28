@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
 
+import model.User;
 import model.mail.Mail;
 
 import org.apache.log4j.Logger;
@@ -36,7 +37,7 @@ public class RetrCommand extends ServiceCommand {
 		mailSocketService.echoLine("+OK " + mail.getSizeInBytes() + " octets");
 		echoMailToClient(mail);
 		mailContent.delete();
-		mail.getContents().delete();
+		((User) getBundle().get("user")).setMail(params[0], mail);
 	}
 
 	private void echoMailToClient(Mail mail) throws IOException {
