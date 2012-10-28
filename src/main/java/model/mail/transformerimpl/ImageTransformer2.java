@@ -1,6 +1,5 @@
 package model.mail.transformerimpl;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -18,31 +17,40 @@ import model.util.ImageRotator;
 public class ImageTransformer2 implements Transformer {
 
 	private ImageRotator rotator = new ImageRotator();
+	private static final List<String> availableTypes = new LinkedList<String>();
 	
-	@Override
-	public StringBuilder transform(StringBuilder part, Map<String, MimeHeader> partheaders) throws IOException {
-		List<String> availableTypes = new LinkedList<String>();
+	static {
 		availableTypes.add(ContentTypeUtil.getContentType("jpg"));
 		availableTypes.add(ContentTypeUtil.getContentType("jpeg"));
 		availableTypes.add(ContentTypeUtil.getContentType("png"));
+	}
+	
+	@Override
+	public StringBuilder transform(StringBuilder part, Map<String, MimeHeader> partheaders) throws IOException {
 		if (!availableTypes.contains(partheaders.get("Content-Type").getValue())) {
 			return part;
 		}
 		try {
-			File contents = Base64Util.decodeUsingOS(part.toString().replace("\r", ""));
-			BufferedImage image = ImageIO.read(contents); 
-			File rotated = rotator.createRotatedImage(image);
-			File encodedContents = Base64Util.encodeUsingOS(rotated);
+			File originalImage = getUnencodedImage(part);
+			File rotatedImage = rotator.createRotatedImage(ImageIO.read(originalImage));
+			File encodedImage = Base64Util.encodeUsingOS(rotatedImage);
 			StringBuilder rotatedEncodedImage = new StringBuilder();
-			Scanner scanner = new Scanner(encodedContents);
+			Scanner scanner = new Scanner(encodedImage);
 			while (scanner.hasNextLine()) {
 				rotatedEncodedImage.append(scanner.nextLine() + "\r\n");
 			}
+			encodedImage.delete();
+			rotatedImage.delete();
+			originalImage.delete();
 			scanner.close();
 			return rotatedEncodedImage;
 		} catch (InterruptedException e) {
 			throw new IllegalStateException(e);
 		}
+	}
+	
+	private File getUnencodedImage(StringBuilder encodedText) throws IOException, InterruptedException {
+		return Base64Util.decodeUsingOS(encodedText.toString().replace("\r", ""));
 	}
 
 }
