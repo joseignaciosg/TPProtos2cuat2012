@@ -46,8 +46,8 @@
 \end{frame}
 
 \section{POP3 Proxy}
-\subsection{Estructura general}
-\begin{frame}{Estructura general}
+\subsection{Arquitectura general}
+\begin{frame}{Arquitectura general}
 \begin{figure}[H]
 \begin{center}
 \includegraphics[scale=0.40]{./images/Servers.png}
@@ -58,14 +58,23 @@
 
 \begin{frame}{Servicios}
 
-\par \textbf{Servicio de monitoreo (8083):} El servicio de monitoreo sirve para poder visualizar, de manera remota, las estadísticas generales del servidor proxy. Basta con conectarse al puerto 8083 del servidor e ingresar la clave de administrador para la sección de monitoreo. Ejemplo de conexión al servicio de monitoreo:
+\par \textbf{Servicio de monitoreo (8081):} El servicio de monitoreo sirve para poder visualizar, de manera remota, las estadísticas generales del servidor proxy. Basta con conectarse al puerto 8083 del servidor e ingresar la clave de administrador para la sección de monitoreo. Ejemplo de conexión al servicio de monitoreo:
 
 \begin{block}{Conexión por netcat al servicio de monitoreo}
-nc localhost 8083
+nc localhost 8081
 \end{block}
 
-\par \textbf{Servicio de configuración remota (8083):} El servicio de configuración remota escuchará en el puerto 8084. En secciones posteriores se detalla el funcionamiento de este servicio.
+\par \textbf{Servicio de configuración remota (8082):} El servicio de configuración remota escuchará en el puerto 8084. En secciones posteriores se detalla el funcionamiento de este servicio.
 
+\end{frame}
+
+\begin{frame}{Arquitectura general: Servicios}
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.45]{./images/SocketService.png}
+\label{modelado}
+\end{center}
+\end{figure}
 \end{frame}
 
 \section{Configuración de la aplicación}
@@ -139,7 +148,7 @@ juan@monits.com = 19:00-22:00\\
 
 \end{frame}
 
-\begin{frame}{access\textunderscore successfull\textunderscore login.conf}
+\begin{frame}{access\textunderscore count.conf}
 
 \par Aquí se define el control de accesos por cantidad de logins exitosos. Los pares son del tipo [usuario, cantidad de logins admitidos por día]\\[0.5cm]
 
@@ -260,9 +269,9 @@ hasAttachments\\
 
 \par Los \textit{status code} del 100 en adelante están intencionados para casos en los que el servidor deba comunicar cualquier tipo de error. El servidor puede incluír una entidad conteniendo una explicación de la situación de error e informando si ésta es una situación permanente o temporaria.\\
 
-\begin{block}{Ejecución con errores}
+\begin{alertblock}{Ejecución con errores}
 -ERR ERROR\textunderscore CODE [HUMAN READABLE ERROR MESSAGE]
-\end{block}
+\end{alertblock}
 
 
 \par Los programas externos que implementen este protocolo podrían mostrarle al usuario cualquier entidad incluída junto a los códigos de error con el fin de ser más amigables para con el usuario.\\
@@ -409,7 +418,7 @@ S: +OK 0 [Good bye] // Connection clossed\\
 \end{columns}
 \end{frame}
 
-\section{Problemas y dificultades detectados durante el analisis de los RFC}
+\section{Problemas y dificultades detectados}
 \subsection{Servicio y protocolo de configuración}
 \begin{frame}{Servicio y protocolo de configuración}
 \par Para implentar el servicio y el protocolo de configuración, en un primer momento se pensó es ir por una configuración orientada a archivos. Esta solución, cuya ventaja era era su rápida implementación y simplicidad, trajo consigo un conjunto de problemas:\\
@@ -432,16 +441,54 @@ S: +OK 0 [Good bye] // Connection clossed\\
 
 
 
-\section{Casos de prueba a realizarse}
+\section{Casos de prueba}
 
-\subsection{Tests Unitarios}
+\subsubsection{Tests Unitarios}
 \begin{frame}{Tests unitarios}
 \par    Se implementaron tests unitarios tanto para componentes de baja granularidad de la aplicación, como son los validadores y los transformadores (ImageTransformer, LeetTransformer y AnonymTransformer), como para las clases del modelo, específicamente User, y Mail, que modelan un usuario y a un correo electrónico, respectivamente. 
 \end{frame}
 
-\subsection{Tests de Integración}
+\subsubsection{Tests de Integración}
 \begin{frame}{Tests de integración}
 \par	La finalidad sea probar la funcionalidad entera de la aplicación, mediante la interacción del proxy con servidores mock \textbf{(MockitoServer)}. De esta manera se va a poder probar los distintos requerimientos solicitados y el comportamiendo del proxy, por medio de escenarios de prueba exitosos y no exitosos, pudiendo así también probar, mediante la utilización de herramientas de testeo como \textbf{JMeter} , la performace del proxy.
+\end{frame}
+
+\section{Arquitectura de la aplicación}
+
+\subsection{Máquina de estados}
+\begin{frame}{Máquina de estados}
+\par Se pensó la implementación como una máquina de estados donde, lógicamente, cada estado puede habilitar la ejecución de otros estados.\\[0.5cm]
+Esta estrategia fue útil al realizar la multiplexación de cuentas y a su vez nos permite tener un código simple, limpio y entendible a la hora de extender el desarrollo.
+\end{frame}
+
+\begin{frame}{Arquitectura general: Máquina de estados}
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.52]{./images/Estados.png}
+\label{modelado}
+\end{center}
+\end{figure}
+\end{frame}
+
+
+\subsection{Control de accesos y validadores}
+
+\begin{frame}{Arquitectura general: Control de accesos}
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.6]{./images/Validators.png}
+\label{modelado}
+\end{center}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Arquitectura general: Validadores de borrado}
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.5]{./images/NotDelValidators.png}
+\label{modelado}
+\end{center}
+\end{figure}
 \end{frame}
 
 
