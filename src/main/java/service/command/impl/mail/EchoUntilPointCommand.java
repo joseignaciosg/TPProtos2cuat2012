@@ -14,7 +14,7 @@ public class EchoUntilPointCommand  extends ServiceCommand {
 	}
 
 	@Override
-	public void execute(String[] params) {
+	public void execute(String[] params) throws Exception {
 		MailSocketService service = (MailSocketService) getOwner();
 		service.echoLineToOriginServer(getOriginalLine());
 		BufferedReader responseBuffer = service.readFromOriginServer();

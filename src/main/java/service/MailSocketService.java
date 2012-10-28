@@ -6,23 +6,29 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
+import model.User;
 import model.configuration.Config;
 import model.mail.MailRetriever;
 import model.mail.MailTransformer;
 import model.parser.mime.MailMimeParser;
+import model.validator.LoginValidationException;
+import model.validator.UserLoginValidator;
 
 import org.apache.log4j.Logger;
 
 import service.state.impl.mail.AuthState;
+import service.state.impl.mail.ParseMailState;
 
 public class MailSocketService extends AbstractSockectService {
 
 	private static final Logger logger = Logger.getLogger(MailSocketService.class);
 	
 	private Socket originServerSocket;
+	
 	private MailRetriever mailRetriever;
 	private MailTransformer mailTranformer;
 	private MailMimeParser mailMimeParser;
+	private UserLoginValidator userLoginvalidator;
 	
 	public MailSocketService(Socket socket) {
 		super(socket);
@@ -30,6 +36,7 @@ public class MailSocketService extends AbstractSockectService {
 		mailRetriever = new MailRetriever();
 		mailTranformer = new MailTransformer();
 		mailMimeParser = new MailMimeParser();
+		userLoginvalidator = new UserLoginValidator();
 	}
 
 	@Override
@@ -77,12 +84,16 @@ public class MailSocketService extends AbstractSockectService {
 		return mailMimeParser;
 	}
 	
-	public void echoLineToOriginServer(String s) {
+	public UserLoginValidator getUserLoginvalidator() {
+		return userLoginvalidator;
+	}
+	
+	public void echoLineToOriginServer(String s) throws IOException {
 		logger.trace("Echo to origin server: " + s);
 		echoToOriginServer(s + "\r\n");
 	}
 	
-	public void echoToOriginServer(String s) {
+	public void echoToOriginServer(String s) throws IOException {
 		try {
 			DataOutputStream out = new DataOutputStream(originServerSocket.getOutputStream());
 			out.writeBytes(s);
@@ -91,13 +102,8 @@ public class MailSocketService extends AbstractSockectService {
 		}
 	}
 	
-	public BufferedReader readFromOriginServer() {
-		try {
-			return new BufferedReader(new InputStreamReader(originServerSocket.getInputStream()));
-		} catch (IOException e) {
-			logger.error("Could not write to output stream!. Reason: " + e.getMessage());
-			throw new IllegalStateException("Could not read from server!");
-		}
+	public BufferedReader readFromOriginServer() throws IOException {
+		return new BufferedReader(new InputStreamReader(originServerSocket.getInputStream()));
 	}
 	
 	public String setOriginServer(String host) throws IOException {
@@ -106,5 +112,12 @@ public class MailSocketService extends AbstractSockectService {
 		String line = readFromOriginServer().readLine();
 		logger.debug("Mail server new connection status: " + line);
 		return line;
+	}
+	
+	public void userLoggedIn(User user) throws LoginValidationException {
+		userLoginvalidator.validateUserLogin(user);
+		getStateMachine().getBundle().put("user", user);
+		getStateMachine().setState(new ParseMailState(this));
+		statsService.incrementNumberOfAccesses(user.getMail());
 	}
 }

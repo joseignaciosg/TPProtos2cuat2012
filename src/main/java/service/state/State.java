@@ -7,10 +7,12 @@ import org.apache.log4j.Logger;
 
 import service.AbstractSockectService;
 import service.command.ServiceCommandRecognizer;
+import service.command.impl.stats.StatsService;
 
 public abstract class State {
 
 	protected static final Logger logger = Logger.getLogger(State.class);
+	protected static final StatsService statsService = StatsService.getInstace();
 	
 	protected ServiceCommandRecognizer commandRecognizer;
 	protected AbstractSockectService owner;

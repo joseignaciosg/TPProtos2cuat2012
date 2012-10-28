@@ -8,15 +8,12 @@ import model.configuration.KeyValueConfiguration;
 import model.util.Base64Util;
 import model.util.CollectionUtil;
 import model.validator.LoginValidationException;
-import model.validator.loginvalidator.AccessCountValidator;
-import model.validator.loginvalidator.TimeValidator;
 
 import org.apache.log4j.Logger;
 
 import service.AbstractSockectService;
 import service.MailSocketService;
 import service.command.ServiceCommand;
-import service.state.impl.mail.ParseMailState;
 
 public class AuthCommand extends ServiceCommand {
 
@@ -37,7 +34,11 @@ public class AuthCommand extends ServiceCommand {
 			mailServer.echoLine("+");
 			String base64Credentials = mailServer.read().readLine();
 			User tmpUser = createUser(base64Credentials);
-			if(!validateAccessToMailByTime(tmpUser) || !validateAccessToMailByCount(tmpUser)) {
+			try {
+				mailServer.getUserLoginvalidator().userCanLogin(tmpUser);
+			} catch (LoginValidationException e) {
+				mailServer.echoLine("-ERR " + e.getMessage());
+				owner.setEndOfTransmission(true);
 				return;
 			}
 			String host = getMailServer(tmpUser);
@@ -52,15 +53,18 @@ public class AuthCommand extends ServiceCommand {
 			if (!resp.toUpperCase().startsWith("+OK")) {
 				return;
 			}
-			getBundle().put("user", tmpUser);
-			statsService.incrementNumberOfAccesses(tmpUser.getMail());
+			mailServer.userLoggedIn(tmpUser);
 		} else if ("LOGIN".equals(params[0].toUpperCase())) {
 			mailServer.echoLine("+ VXNlcm5hbWU6"); 	// Username:
 			String base64Username = mailServer.read().readLine();
 			mailServer.echoLine("+ UGFzc3dvcmQ6"); 	// Password:
 			String base64Password = mailServer.read().readLine();
 			User tmpUser = createUser(base64Username, base64Password);
-			if(!validateAccessToMailByTime(tmpUser) || !validateAccessToMailByCount(tmpUser)) {
+			try {
+				mailServer.getUserLoginvalidator().userCanLogin(tmpUser);
+			} catch (LoginValidationException e) {
+				mailServer.echoLine("-ERR " + e.getMessage());
+				owner.setEndOfTransmission(true);
 				return;
 			}
 			mailServer.setOriginServer(getMailServer(tmpUser));
@@ -72,14 +76,12 @@ public class AuthCommand extends ServiceCommand {
 			if (!result.toUpperCase().startsWith("+OK")) {
 				return;
 			}
-			getBundle().put("user", tmpUser);
-			statsService.incrementNumberOfAccesses(tmpUser.getMail());
+			mailServer.userLoggedIn(tmpUser);
 		} else {
 			logger.error("Unknown login type.");
 			owner.echoLine("-ERR Unknown login type.");
 			return;
 		}
-		owner.getStateMachine().setState(new ParseMailState(owner));
 	}
 
 	private String echoToOriginServerAndReadLine(String line) throws IOException {
@@ -104,36 +106,8 @@ public class AuthCommand extends ServiceCommand {
 	
 	private String getMailServer(User user) {
 		KeyValueConfiguration originServerConfig = Config.getInstance().getKeyValueConfig("origin_server");
-		String host = user.getMailhost();
-		String server = originServerConfig.get(host);
+		String server = originServerConfig.get(user.getMail());
 		return server == null ? originServerConfig.get("default") : server;
 	}
-	
-	private boolean validateAccessToMailByTime(User user) {
-		MailSocketService mailServer = (MailSocketService) owner;
-		String userMail = user.getMail();
-		logger.debug("Checking time access for user: " + userMail);
-		try {
-			new TimeValidator(userMail).validate();
-			return true;
-		} catch (LoginValidationException e) {
-			logger.info("User " + userMail + " is banned. Closing connection.");
-			mailServer.echoLine("-ERR No tiene acceso durante en este horario.");
-			return false;
-		}
-	}
-	
-	private boolean validateAccessToMailByCount(User user) {
-		MailSocketService mailServer = (MailSocketService) owner;
-		String userMail = user.getMail();
-		logger.debug("Checking amount of accesses for user: " + userMail);
-		try {
-			new AccessCountValidator(userMail).validate();
-			return true;
-		} catch (LoginValidationException e) {
-			logger.info("User " + userMail + " is banned. Closing connection.");
-			mailServer.echoLine("-ERR No tiene acceso, ya entro demasiadas veces hoy.");
-			return false;
-		}
-	}
+
 }

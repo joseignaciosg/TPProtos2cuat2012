@@ -3,13 +3,12 @@ package service.command.impl.mail;
 import java.io.IOException;
 
 import model.User;
+import model.configuration.Config;
+import model.configuration.KeyValueConfiguration;
 import model.validator.LoginValidationException;
-import model.validator.loginvalidator.AccessCountValidator;
-import model.validator.loginvalidator.TimeValidator;
 import service.AbstractSockectService;
 import service.MailSocketService;
 import service.command.ServiceCommand;
-import service.state.impl.mail.ParseMailState;
 
 public class UserCommand extends ServiceCommand {
 
@@ -21,10 +20,14 @@ public class UserCommand extends ServiceCommand {
 	public void execute(String[] params) throws Exception {
 		MailSocketService mailServer = (MailSocketService) owner;
 		User user = new User(params[0], null);
-		if (!validateAccessToMailByTime(user) || !validateAccessToMailByCount(user)) {
+		try {
+			mailServer.getUserLoginvalidator().userCanLogin(user);
+		} catch (LoginValidationException e) {
+			mailServer.echoLine("-ERR " + e.getMessage());
+			owner.setEndOfTransmission(true);
 			return;
 		}
-		mailServer.setOriginServer(user.getMailhost());
+		mailServer.setOriginServer(getMailServer(user));
 		String resp = echoToOriginServerAndReadLine(getOriginalLine());
 		owner.echoLine(resp);
 		if (!"+OK".equals(resp)) {
@@ -37,9 +40,7 @@ public class UserCommand extends ServiceCommand {
 			return;
 		}
 		user.setPassword(passwordCmd.split(" ")[1]);
-		getBundle().put("user", user);
-		statsService.incrementNumberOfAccesses(user.getMail());
-		owner.getStateMachine().setState(new ParseMailState(owner));
+		mailServer.userLoggedIn(user);
 	}
 
 	private String echoToOriginServerAndReadLine(String line) throws IOException {
@@ -48,31 +49,10 @@ public class UserCommand extends ServiceCommand {
 		return service.readFromOriginServer().readLine();
 	}
 	
-	private boolean validateAccessToMailByTime(User user) {
-		MailSocketService mailServer = (MailSocketService) owner;
-		String userMail = user.getMail();
-		logger.debug("Checking time access for user: " + userMail);
-		try {
-			new TimeValidator(userMail).validate();
-			return true;
-		} catch (LoginValidationException e) {
-			logger.info("User " + userMail + " is banned. Closing connection.");
-			mailServer.echoLine("-ERR User does not have acces during this time.");
-			return false;
-		}
+	private String getMailServer(User user) {
+		KeyValueConfiguration originServerConfig = Config.getInstance().getKeyValueConfig("origin_server");
+		String server = originServerConfig.get(user.getMail());
+		return server == null ? originServerConfig.get("default") : server;
 	}
-	
-	private boolean validateAccessToMailByCount(User user) {
-		MailSocketService mailServer = (MailSocketService) owner;
-		String userMail = user.getMail();
-		logger.debug("Checking amount of accesses for user: " + userMail);
-		try {
-			new AccessCountValidator(userMail).validate();
-			return true;
-		} catch (LoginValidationException e) {
-			logger.info("User " + userMail + " is banned. Closing connection.");
-			mailServer.echoLine("-ERR No tiene acceso, ya entro demasiadas veces hoy.");
-			return false;
-		}
-	}
+
 }

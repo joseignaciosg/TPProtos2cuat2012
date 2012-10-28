@@ -9,15 +9,11 @@ import java.util.Scanner;
 
 import javax.imageio.ImageIO;
 
-import org.apache.commons.codec.binary.Base32InputStream;
-
 import model.parser.mime.ContentTypeUtil;
 import model.parser.mime.MimeHeader;
 import model.util.Base64Util;
 import model.util.IOUtil;
 import model.util.ImageRotator;
-
-import org.apache.commons.codec.binary.Base64;
 
 public class ImageTransformer2 implements Transformer {
 

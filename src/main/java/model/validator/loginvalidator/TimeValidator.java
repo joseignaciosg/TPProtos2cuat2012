@@ -22,6 +22,7 @@ public class TimeValidator implements LoginValidator {
 	
 	@Override
 	public void validate() throws LoginValidationException {
+		logger.info("Checking time access for user: " + mailAddress);
 		String timeRestriction = accessTimeConfig.get(mailAddress);
 		if (timeRestriction == null) {
 			return;
@@ -35,7 +36,7 @@ public class TimeValidator implements LoginValidator {
 			final LocalTime endTime = new LocalTime(Integer.valueOf(endTimeParts[0]), Integer.valueOf(endTimeParts[1]));
 			final Interval timeRestrictionInterval = new Interval(startTime.toDateTimeToday(), endTime.toDateTimeToday());
 			if (timeRestrictionInterval.containsNow()) {
-				throw new LoginValidationException();
+				throw new LoginValidationException(mailAddress + " does not have access during this time");
 			}
 		} catch (final Exception e) {
 			if (e instanceof LoginValidationException) {
