@@ -27,7 +27,8 @@ public class ImageTransformer2 implements Transformer {
 	
 	@Override
 	public StringBuilder transform(StringBuilder part, Map<String, MimeHeader> partheaders) throws IOException {
-		if (!availableTypes.contains(partheaders.get("Content-Type").getValue())) {
+		MimeHeader contentType = partheaders.get("Content-Type");
+		if (contentType == null || !availableTypes.contains(contentType.getValue())) {
 			return part;
 		}
 		try {

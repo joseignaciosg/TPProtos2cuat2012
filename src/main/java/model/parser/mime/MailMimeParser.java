@@ -32,6 +32,8 @@ public class MailMimeParser {
 		sourceScanner.close();
 		destinationWriter.flush();
 		destinationWriter.close();
+		// apply external transformations
+		transformer.transformComplete(mail);
 		return mail;
 	}
 
@@ -75,7 +77,7 @@ public class MailMimeParser {
 		Scanner sourceScanner = parseParams.sourceScanner;
 		Map<String, MimeHeader> headers = readBoundaryHeaders(parseParams);
 		MimeHeader contentType = headers.get("Content-Type");
-		String subBoundary = contentType.getExtraValue("boundary");
+		String subBoundary = contentType == null ? null : contentType.getExtraValue("boundary");
 		if (subBoundary != null) {
 			logger.info("Sub Part " + subBoundary + " found. Recursively parsing.");
 			parsePart(parseParams, subBoundary, sourceScanner.nextLine());
