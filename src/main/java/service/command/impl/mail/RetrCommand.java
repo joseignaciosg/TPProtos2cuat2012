@@ -35,6 +35,8 @@ public class RetrCommand extends ServiceCommand {
 		// Ignore first line because transformed mail may differ in size from original mail
 		mailSocketService.echoLine("+OK " + mail.getSizeInBytes() + " octets");
 		echoMailToClient(mail);
+		mailContent.delete();
+		mail.getContents().delete();
 	}
 
 	private void echoMailToClient(Mail mail) throws IOException {

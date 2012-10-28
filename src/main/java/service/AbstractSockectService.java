@@ -85,7 +85,7 @@ public abstract class AbstractSockectService implements Runnable {
 	}
 	
 	public void echoLine(String s) {
-		logger.trace("Echo to client: " + s);
+		logger.debug("Echo to client: " + s);
 		echo(s + "\r\n");
 	}
 	
