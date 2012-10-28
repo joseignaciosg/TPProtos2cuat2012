@@ -36,7 +36,7 @@ public class AuthCommand extends ServiceCommand {
 			mailServer.echoLine("+");
 			String base64Credentials = mailServer.read().readLine();
 			User tmpUser = createUser(base64Credentials);
-			if(!validateAccessToMailByTime(tmpUser, mailServer)){
+			if(!validateAccessToMailByTime(tmpUser)) {
 				return;
 			}
 			String host = getMailServer(tmpUser);
@@ -58,7 +58,7 @@ public class AuthCommand extends ServiceCommand {
 			mailServer.echoLine("+ UGFzc3dvcmQ6"); 	// Password:
 			String base64Password = mailServer.read().readLine();
 			User tmpUser = createUser(base64Username, base64Password);
-			if(!validateAccessToMailByTime(tmpUser, mailServer)){
+			if(!validateAccessToMailByTime(tmpUser)) {
 				return;
 			}
 			mailServer.setOriginServer(getMailServer(tmpUser));
@@ -73,7 +73,7 @@ public class AuthCommand extends ServiceCommand {
 			getBundle().put("auth_user", tmpUser);
 		} else {
 			logger.error("Unknown login type.");
-			owner.echoLine("-ERR");
+			owner.echoLine("-ERR Unknown login type.");
 			return;
 		}
 		owner.getStateMachine().setState(new ParseMailState(owner));
@@ -106,7 +106,8 @@ public class AuthCommand extends ServiceCommand {
 		return server == null ? originServerConfig.get("default") : server;
 	}
 	
-	private boolean validateAccessToMailByTime(User user, MailSocketService mailServer) throws Exception {
+	private boolean validateAccessToMailByTime(User user) {
+		MailSocketService mailServer = (MailSocketService) owner;
 		String userMail = user.getMail();
 		logger.debug("Checking time access for user: " + userMail);
 		try {
