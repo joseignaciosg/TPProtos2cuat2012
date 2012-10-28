@@ -31,7 +31,7 @@ public class Base64Util {
 		File file = createFileWithContents(text);
 		List<String> commands = new LinkedList<String>();
 		commands.add("base64");
-		commands.add("-d");
+		commands.add("-D");
 		commands.add(file.getAbsolutePath());
 		ProcessBuilder pb = new ProcessBuilder(commands);
 		File decodedContents = File.createTempFile("decode_", ".tmp");
