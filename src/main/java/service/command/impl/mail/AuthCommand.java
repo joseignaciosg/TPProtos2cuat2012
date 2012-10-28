@@ -5,12 +5,11 @@ import java.io.IOException;
 import model.User;
 import model.configuration.Config;
 import model.configuration.KeyValueConfiguration;
+import model.util.Base64Util;
 import model.util.CollectionUtil;
 import model.validator.LoginValidationException;
-import model.validator.loginvalidator.IpValidator;
 import model.validator.loginvalidator.TimeValidator;
 
-import org.apache.commons.net.util.Base64;
 import org.apache.log4j.Logger;
 
 import service.AbstractSockectService;
@@ -88,15 +87,14 @@ public class AuthCommand extends ServiceCommand {
 	}
 
 	private User createUser(String base64Credentials) {
-		Object obj = new Base64().decode(base64Credentials.getBytes());
-		String decoded = new String((byte[]) obj);
+		String decoded = Base64Util.decode(base64Credentials);
 		String[] parts = decoded.split("\0");
 		return new User(parts[1], parts[2]);
 	}
 	
 	private User createUser(String base64Username, String base64Password) {
-		String decodedUsername = new String((byte[]) new Base64().decode(base64Username.getBytes()));
-		String decodedPasswd = new String((byte[]) new Base64().decode(base64Password.getBytes()));
+		String decodedUsername = Base64Util.decode(base64Username);
+		String decodedPasswd = Base64Util.decode(base64Password);
 		String username = decodedUsername.split("\0")[0];
 		String passwd = decodedPasswd.split("\0")[0];
 		return new User(username, passwd);
