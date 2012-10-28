@@ -1,12 +1,7 @@
 package model.parser.mime;
 
-import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Map.Entry;
 import java.util.Scanner;
-
-import model.mail.Mail;
-import model.mail.MailTransformer;
 
 import org.apache.log4j.Logger;
 
@@ -14,29 +9,24 @@ public class MimeHeaderParser {
 
 	private static Logger logger = Logger.getLogger(MimeHeaderParser.class);
 
-	public void parse(Scanner scanner, Mail mail, MailTransformer transformer) throws IOException {
-		logger.debug("Reading mail headers:");
+	public void parse(ParseParameters parseParams) throws IOException {
+		logger.debug("Parsing mail headers.");
+		Scanner scanner = parseParams.sourceScanner;
 		String lastReadLine = scanner.nextLine();
 		while (scanner.hasNextLine()) {
-			lastReadLine = createHeader(lastReadLine, scanner, mail, transformer);
+			lastReadLine = createHeader(parseParams, lastReadLine);
 			if (lastReadLine.equals("")) {
+				parseParams.destinationWriter.append(lastReadLine + "\r\n");
 				break;
 			}
 		}
-		String boundary = mail.getBoundaryKey();
-		if (boundary == null) {
+		if (!parseParams.mail.hasBoundaryKey()) {
 			throw new IllegalStateException("boundary header could not be parsed");
 		}
 	}
-
-	public void writeHeaders(Mail mail, FileWriter writer) throws IOException{
-		for(Entry<String, MimeHeader> entry: mail.getHeaders().entrySet()){
-			writer.append(entry.getValue() + "\r\n");
-		}
-		writer.append("\r\n");
-	}
 	
-	private String createHeader(String lastReadLine, Scanner scanner, Mail mail, MailTransformer tranformer) throws IOException {
+	private String createHeader(ParseParameters parseParams, String lastReadLine) throws IOException {
+		Scanner scanner = parseParams.sourceScanner;
 		boolean endOfHeader;
 		String line = lastReadLine;
 		do {
@@ -49,12 +39,18 @@ public class MimeHeaderParser {
 		} while (!endOfHeader);
 		try {
 			MimeHeader header = new MimeHeader(line);
-			mail.addHeaders(header);
+			parseParams.mail.addHeaders(header);
+			writeHeader(parseParams, header);
 			logger.debug("Parsed header => " + header);
 		} catch (IllegalArgumentException e) {
 			logger.error("Inavlid header: " + line + ". Ignoring...");
 		}
 		return lastReadLine;
+	}
+	
+	private void writeHeader(ParseParameters parseParams, MimeHeader header) throws IOException{
+		parseParams.transformer.transformHeader(header);
+		parseParams.destinationWriter.append(header + "\r\n");
 	}
 
 }

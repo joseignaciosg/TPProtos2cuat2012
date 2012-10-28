@@ -28,18 +28,16 @@ public class MailMimeParser {
 		Scanner sourceScanner = new Scanner(source);
 		FileWriter destinationWriter = new FileWriter(destination);
 		parseMainBoundary(new ParseParameters(mail, sourceScanner, destinationWriter, transformer));
-		destinationWriter.flush();
 		sourceScanner.close();
+		destinationWriter.flush();
 		destinationWriter.close();
 		return mail;
 	}
 
 	private void parseMainBoundary(ParseParameters parseParams) throws IOException {
-		headerParser.parse(parseParams.sourceScanner, parseParams.mail, parseParams.transformer);
-		parseParams.transformer.transformHeaders(parseParams.mail.getHeaders());
-		headerParser.writeHeaders(parseParams.mail, parseParams.destinaionWriter);
+		headerParser.parse(parseParams);
 		String boundary = parseParams.mail.getBoundaryKey();
-		parseParams.mail.setMultipartMail("text/plain".equals(boundary));
+		parseParams.mail.setMultipartMail(boundary != null);
 		boolean endOfMail = false;
 		String line = parseParams.sourceScanner.nextLine();
 		if (parseParams.mail.isMultipartMail()) {
@@ -57,20 +55,20 @@ public class MailMimeParser {
 			do {
 				MimeHeader header = new MimeHeader("Content-Type: text/plain");
 				headers.put(header.getKey(), header);
-				StringBuilder transLine = parseParams.transformer.transform(new StringBuilder(line), headers);
-				parseParams.destinaionWriter.append(transLine.toString() + "\r\n");
+				StringBuilder transLine = parseParams.transformer.transformPart(headers, new StringBuilder(line));
+				parseParams.destinationWriter.append(transLine.toString() + "\r\n");
 				line = parseParams.sourceScanner.nextLine();
 				endOfMail = line.equals(".");
 			} while (!endOfMail);
 		}
-		parseParams.destinaionWriter.append(line + "\r\n");
+		parseParams.destinationWriter.append(line + "\r\n");
 	}
 
 	private void parsePart(ParseParameters parseParams, String boundaryKey, String lastLine) throws IOException {
 		if (!lastLine.equals("--" + boundaryKey)) {
 			throw new IllegalStateException("Expected beggining of boundary");
 		}
-		parseParams.destinaionWriter.append("--" + boundaryKey + "\r\n");
+		parseParams.destinationWriter.append("--" + boundaryKey + "\r\n");
 		Scanner sourceScanner = parseParams.sourceScanner;
 		Map<String, MimeHeader> headers = readBoundaryHeaders(parseParams);
 		MimeHeader contentType = headers.get("Content-Type");
@@ -90,12 +88,12 @@ public class MailMimeParser {
 				text.append(line + "\r\n");
 			}
 		} while (!endOfBoundary);
-		parseParams.destinaionWriter.append(parseParams.transformer.transform(text, headers));
+		parseParams.destinationWriter.append(parseParams.transformer.transformPart(headers, text));
 		if (line.equals("--" + boundaryKey)) {
 			parsePart(parseParams, boundaryKey, line);
 			return;
 		} else if (line.equals("--" + boundaryKey + "--")) {
-			parseParams.destinaionWriter.append(line + "\r\n");
+			parseParams.destinationWriter.append(line + "\r\n");
 			return;
 		} else {
 			throw new IllegalStateException("Unexpected line: " + line);
@@ -109,28 +107,15 @@ public class MailMimeParser {
 			String line = sourceScanner.nextLine();
 			// Empty line marks the end of sub-boundary headers
 			if (line.equals("")) {
-				parseParams.destinaionWriter.append(line + "\r\n");
+				parseParams.destinationWriter.append(line + "\r\n");
 				break;
 			}
 			MimeHeader header = new MimeHeader(line);
 			headers.put(header.getKey(), header);
-			parseParams.destinaionWriter.append(header.getOriginalLine() + "\r\n");
+			parseParams.destinationWriter.append(header.toString() + "\r\n");
 			logger.debug("Parsed Part header => " + header);
 		}
 		return headers;
 	}
 
-	private static class ParseParameters {
-		Mail mail;
-		Scanner sourceScanner;
-		FileWriter destinaionWriter;
-		MailTransformer transformer;
-
-		public ParseParameters(Mail mail, Scanner sourceScanner, FileWriter destinaionWriter, MailTransformer trasformer) {
-			this.mail = mail;
-			this.sourceScanner = sourceScanner;
-			this.destinaionWriter = destinaionWriter;
-			this.transformer = trasformer;
-		}
-	}
 }

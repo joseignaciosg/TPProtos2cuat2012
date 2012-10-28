@@ -55,12 +55,17 @@ public class Mail {
 		return headers.get(name);
 	}
 
+	public boolean hasBoundaryKey() {
+		MimeHeader header = headers.get("Content-Type");
+		return header.getValue().startsWith("text/plain") || header.getExtraValue("boundary") != null;
+	}
+
 	public String getBoundaryKey() {
 		MimeHeader header = headers.get("Content-Type");
-		if(!header.getValue().startsWith("text/plain")){
-		    return header == null ? null : header.getExtraValue("boundary");
+		if(!header.getValue().startsWith("text/plain")) {
+		    return header.getExtraValue("boundary");
 		}
-		return "text/plain"; //indicates that it is a text-plain mail 
+		return null;
 	}
 
 	public LocalDate getDate() {

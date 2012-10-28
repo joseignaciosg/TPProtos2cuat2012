@@ -9,14 +9,11 @@ import model.util.StringUtil;
 
 public class MimeHeader {
 
-	private String originalLine;
 	private String key, value;
 	private List<String> extraValues;
 	
 	public MimeHeader(String s) {
 		validateLine(s);
-		this.originalLine = s;
-		s = s.replaceAll("\r\n", "");
 		int splitIndex = s.indexOf(":");
 		key = s.substring(0, splitIndex);
 		int endIndex = s.indexOf(";");
@@ -27,7 +24,7 @@ public class MimeHeader {
 			String exavalueLine = s.substring(endIndex + 1);
 			String[] parts = exavalueLine.split(";");
 			for (String part : parts) {
-				extraValues.add(part.trim());
+				extraValues.add(part);
 			}
 		}
 	}
@@ -49,8 +46,16 @@ public class MimeHeader {
 		return key;
 	}
 	
+	public void setKey(String key) {
+		this.key = key;
+	}
+	
 	public String getValue() {
 		return value;
+	}
+	
+	public void setValue(String value) {
+		this.value = value;
 	}
 	
 	public String getExtraValue(String name) {
@@ -75,16 +80,13 @@ public class MimeHeader {
 	
 	@Override
 	public String toString() {
-		if(!extraValues.isEmpty()){
+		if (!extraValues.isEmpty()) {
 			StringBuilder sb = new StringBuilder();
-			sb.append(key + ": " + value + " ");
-			sb.append(CollectionUtil.join(extraValues, "; "));
+			sb.append(key + ": " + value + ";");
+			sb.append(CollectionUtil.join(extraValues, ";"));
 			return sb.toString();
 		}
-			return key + ": " + value;
+		return key + ": " + value;
 	}
-	
-	public String getOriginalLine() {
-		return originalLine;
-	}
+
 }

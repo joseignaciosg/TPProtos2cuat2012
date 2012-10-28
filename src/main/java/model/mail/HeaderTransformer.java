@@ -2,9 +2,10 @@ package model.mail;
 
 import java.io.IOException;
 
+import model.parser.mime.MimeHeader;
+
 public interface HeaderTransformer {
 	
-	public void transform() throws IOException;
-
+	void transform(MimeHeader header) throws IOException;
 
 }
