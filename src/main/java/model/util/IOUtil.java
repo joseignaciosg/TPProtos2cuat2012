@@ -1,5 +1,8 @@
 package model.util;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Scanner;
@@ -23,5 +26,14 @@ public class IOUtil {
 	
 	public static URL getResource(String resourcePath) {
 		return IOUtil.class.getClassLoader().getResource(resourcePath);
+	}
+	
+	public static File createFileWithContents(String text) throws IOException {
+		File file = File.createTempFile("decode_", ".tmp");
+		FileWriter writer = new FileWriter(file);
+		writer.append(text);
+		writer.flush();
+		writer.close();
+		return file;
 	}
 }
