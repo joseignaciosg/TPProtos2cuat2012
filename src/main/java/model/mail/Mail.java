@@ -6,10 +6,10 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import model.parser.mime.MimeHeader;
 
@@ -18,12 +18,12 @@ import org.joda.time.LocalDate;
 public class Mail {
 
 	private Map<String, MimeHeader> headers;
-	private List<String> attachmentsExtension;
+	private Set<String> attachmentsExtension;
 	private File contents;
 
 	public Mail(File contents) {
 		headers = new HashMap<String, MimeHeader>();
-		attachmentsExtension = new LinkedList<String>();
+		attachmentsExtension = new HashSet<String>();
 		setContents(contents);
 	}
 
@@ -39,7 +39,7 @@ public class Mail {
 		attachmentsExtension.add(extension);
 	}
 
-	public List<String> getAttachmentsExtension() {
+	public Set<String> getAttachmentsExtension() {
 		return attachmentsExtension;
 	}
 

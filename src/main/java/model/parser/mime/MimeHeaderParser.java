@@ -10,7 +10,6 @@ public class MimeHeaderParser {
 	private static Logger logger = Logger.getLogger(MimeHeaderParser.class);
 
 	public void parse(ParseParameters parseParams) throws IOException {
-		logger.debug("Parsing mail headers.");
 		Scanner scanner = parseParams.sourceScanner;
 		String lastReadLine = scanner.nextLine();
 		while (scanner.hasNextLine()) {
@@ -41,6 +40,9 @@ public class MimeHeaderParser {
 			MimeHeader header = new MimeHeader(line);
 			parseParams.mail.addHeaders(header);
 			writeHeader(parseParams, header);
+			if (header.getKey().equals("Content-Type")) {
+				parseParams.mail.addAttachmentsExtension(header.getValue());
+			}
 			logger.debug("Parsed header => " + header);
 		} catch (IllegalArgumentException e) {
 			logger.error("Inavlid header: " + line + ". Ignoring...");

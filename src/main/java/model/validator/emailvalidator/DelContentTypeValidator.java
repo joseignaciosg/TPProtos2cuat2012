@@ -1,15 +1,13 @@
 package model.validator.emailvalidator;
 
-import java.util.Arrays;
-
 import model.User;
 import model.configuration.Config;
 import model.configuration.KeyValueConfiguration;
 import model.mail.Mail;
 import model.parser.mime.ContentTypeUtil;
 import model.util.CollectionUtil;
-import model.validator.MailValidator;
 import model.validator.MailValidationException;
+import model.validator.MailValidator;
 
 public class DelContentTypeValidator implements MailValidator {
 
@@ -25,7 +23,7 @@ public class DelContentTypeValidator implements MailValidator {
 		for (String extension : fileExtensions) {
 			String mimeType = ContentTypeUtil.getContentType(extension);
 			if (email.hasAttachmentWithExtension(mimeType)) {
-				String message = "Restricting message deletion because mail has attachments with the following extension: " + Arrays.toString(fileExtensions);
+				String message = "Restricting message deletion because mail has a " + extension + " attachment.";
 				throw new MailValidationException(message);
 			}
 		}
