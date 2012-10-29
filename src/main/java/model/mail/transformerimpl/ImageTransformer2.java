@@ -58,7 +58,7 @@ public class ImageTransformer2 implements Transformer {
 	}
 
 	private File getUnencodedImage(StringBuilder encodedText) throws IOException, InterruptedException {
-		return Base64Util.decodeToFile(encodedText.toString().replace("\r", ""));
+		return Base64Util.decodeUsingOS(encodedText.toString().replace("\r", ""));
 	}
 
 
