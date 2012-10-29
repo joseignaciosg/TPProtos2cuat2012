@@ -56,7 +56,7 @@ public class UserHistogram {
 	public String getPrettyFormat() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("User: " + user + "\r\n");
-		sb.append("Total accesess: " + numberOfAccesses);
+		sb.append("Total accesess: " + numberOfAccesses + "\r\n");
 		sb.append("Acces today: " + accesByDate.todayAccesses());
 		sb.append("Tranfered bytes: " + getTransferedBytes() + "\r\n");
 		sb.append("Read mails: " + getNumberOfReadMail() + "\r\n");
