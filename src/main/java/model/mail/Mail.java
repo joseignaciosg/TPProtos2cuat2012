@@ -1,9 +1,14 @@
 package model.mail;
 
 import java.io.File;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import model.parser.mime.MimeHeader;
@@ -72,7 +77,19 @@ public class Mail {
 	}
 
 	public LocalDate getDate() {
-		return new LocalDate(headers.get("Delivery-date").getValue());
+		String headerDate = headers.get("Delivery-date").getValue();
+		String[] headerDatea = headerDate.split(" "); 
+		Date date;
+		try {
+			date = new SimpleDateFormat("MMM", Locale.ENGLISH).parse(headerDatea[2]);
+		} catch (ParseException e) {
+			throw new IllegalArgumentException("Could not parse month:"+ headerDatea[2]);
+		}
+		Calendar.getInstance().setTime(date);
+		int month = Calendar.getInstance().get(Calendar.MONTH);
+		LocalDate maxDate = new LocalDate(
+				Integer.valueOf(headerDatea[3]),month+1, Integer.valueOf(headerDatea[1]));
+		return maxDate;
 	}
 
 	public String getSender() {

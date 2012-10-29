@@ -27,8 +27,8 @@ public class DelMaxDateValidator implements MailValidator {
 		if (!email.getDate().isAfter(maxDate)) {
 			String message = "Restricting message deletion because mail date: "
 				+ email.getDate()
-				+ " is lower to configuration file declared" + " date "
-				+ maxDate + " for this user (" + user.getMail() + ")";
+				+ " is lower to date " + maxDate 
+				+ " for this user (" + user.getMail() + ")";
 			throw new MailValidationException(message);
 		}
 	}
