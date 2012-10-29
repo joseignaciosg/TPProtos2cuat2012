@@ -50,7 +50,7 @@ public class DeleCommand extends ServiceCommand {
 				validator.validate(current, email);
 			} catch (MailValidationException e) {
 				logger.info(e.getMessage());
-				owner.echoLine("-ERR " + e.getMessage() + ".");
+				owner.echoLine("-ERR " + e.getMessage());
 				return;
 			}
 		}
