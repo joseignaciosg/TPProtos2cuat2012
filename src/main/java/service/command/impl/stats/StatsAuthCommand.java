@@ -3,7 +3,7 @@ package service.command.impl.stats;
 import model.configuration.Config;
 import service.AbstractSockectService;
 import service.command.impl.AuthCommand;
-import service.state.impl.stats.ReadState;
+import service.state.impl.stats.StatsReadState;
 
 public class StatsAuthCommand extends AuthCommand {
 	
@@ -15,6 +15,6 @@ public class StatsAuthCommand extends AuthCommand {
 
 	@Override
 	public void onLogin() {
-		owner.getStateMachine().setState(new ReadState(owner));
+		owner.getStateMachine().setState(new StatsReadState(owner));
 	}
 }

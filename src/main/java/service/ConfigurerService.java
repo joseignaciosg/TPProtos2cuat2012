@@ -2,13 +2,13 @@ package service;
 
 import java.net.Socket;
 
-import service.state.impl.configurer.AuthorityState;
+import service.state.impl.configurer.ConfAuthorityState;
 
 public class ConfigurerService extends AbstractSockectService {
 	
 	public ConfigurerService(Socket socket) {
 		super(socket);
-		stateMachine.setState(new AuthorityState(this));
+		stateMachine.setState(new ConfAuthorityState(this));
 	}
 	
 	@Override

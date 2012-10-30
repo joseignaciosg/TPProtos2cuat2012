@@ -29,7 +29,7 @@ public class Config {
 		return generalConfguration;
 	}
 	
-	public String getFullPath(String name) {
+	public String getConfigFullPath(String name) {
 		String fileName = generalConfguration.get(name);
 		String resourcePath = generalConfguration.get("specific_conf_dir");
 		return IOUtil.fullPath(resourcePath + fileName);

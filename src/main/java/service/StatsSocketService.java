@@ -2,13 +2,13 @@ package service;
 
 import java.net.Socket;
 
-import service.state.impl.stats.AuthorityState;
+import service.state.impl.stats.StatsAuthorityState;
 
 public class StatsSocketService extends AbstractSockectService {
 
 	public StatsSocketService(Socket socket) {
 		super(socket);
-		stateMachine.setState(new AuthorityState(this));
+		stateMachine.setState(new StatsAuthorityState(this));
 	}
 	
 	@Override

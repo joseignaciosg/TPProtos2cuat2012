@@ -5,7 +5,7 @@ import service.command.impl.PutCommand;
 import service.command.impl.ListCommand;
 import service.command.impl.DeleteLineCommand;
 import service.command.impl.GetFileCommand;
-import service.command.impl.configurer.LogOutCommand;
+import service.command.impl.configurer.ConfLogOutCommand;
 import service.state.State;
 
 public class ReadState extends State {
@@ -16,7 +16,7 @@ public class ReadState extends State {
 		commandRecognizer.register("DEL", DeleteLineCommand.class);
 		commandRecognizer.register("GET", GetFileCommand.class);
 		commandRecognizer.register("LIST", ListCommand.class);
-		commandRecognizer.register("EXIT", LogOutCommand.class);
+		commandRecognizer.register("EXIT", ConfLogOutCommand.class);
 	}
 	
 	@Override

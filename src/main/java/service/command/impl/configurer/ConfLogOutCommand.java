@@ -3,17 +3,17 @@ package service.command.impl.configurer;
 import service.AbstractSockectService;
 import service.StatusCodes;
 import service.command.ServiceCommand;
-import service.state.impl.configurer.AuthorityState;
+import service.state.impl.configurer.ConfAuthorityState;
 
-public class LogOutCommand extends ServiceCommand {
+public class ConfLogOutCommand extends ServiceCommand {
 
-	public LogOutCommand(AbstractSockectService owner) {
+	public ConfLogOutCommand(AbstractSockectService owner) {
 		super(owner);
 	}
 
 	@Override
 	public void execute(String[] params) {
-		owner.getStateMachine().setState(new AuthorityState(owner));
+		owner.getStateMachine().setState(new ConfAuthorityState(owner));
 		owner.echoLine(StatusCodes.OK_LOGGED_OUT);
 	}
 

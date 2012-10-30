@@ -1,15 +1,15 @@
-package service.state.impl.stats;
+package service.state.impl.configurer;
 
 import service.AbstractSockectService;
 import service.command.impl.ExitCommand;
-import service.command.impl.stats.StatsAuthCommand;
+import service.command.impl.configurer.ConfigurerAuthCommand;
 import service.state.State;
 
-public class AuthorityState extends State {
+public class ConfAuthorityState extends State {
 
-	public AuthorityState(AbstractSockectService owner) {
+	public ConfAuthorityState(AbstractSockectService owner) {
 		super(owner);
-		commandRecognizer.register("AUTH", StatsAuthCommand.class);
+		commandRecognizer.register("AUTH", ConfigurerAuthCommand.class);
 		commandRecognizer.register("EXIT", ExitCommand.class);
 	}
 

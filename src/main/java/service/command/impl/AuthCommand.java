@@ -43,4 +43,5 @@ public abstract class AuthCommand extends ServiceCommand {
 	}
 	
 	public abstract void onLogin();
+	
 }

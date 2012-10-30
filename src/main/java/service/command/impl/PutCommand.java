@@ -22,7 +22,7 @@ public class PutCommand extends ServiceCommand {
 			return;
 		}
 		String line = CollectionUtil.join(params, 1);
-		String fullPath = Config.getInstance().getFullPath(params[0]);
+		String fullPath = Config.getInstance().getConfigFullPath(params[0]);
 		try {
 			FileWriter fw = new FileWriter(fullPath, true);
 			fw.write("\r\n" + line.trim());
