@@ -55,14 +55,13 @@ public class RetrCommand extends ServiceCommand {
 	}
 	
 	private void echoMailToClient(Mail mail) throws IOException {
-		String userMail = ((User) getBundle().get("user")).getMail();
 		Scanner s = new Scanner(mail.getContents());
-		logger.info("echoing mail to client...");
 		while (s.hasNextLine()) {
 			owner.echoLine(s.nextLine());
 		}
+		s.close();
+		String userMail = ((User) getBundle().get("user")).getMail();
 		statsService.incrementNumberOfReadMail(userMail);
 		statsService.incrementTransferedBytes(mail.getSizeInBytes(), userMail);
-		s.close();
 	}
 }
