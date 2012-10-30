@@ -19,7 +19,6 @@ public class UserLoginValidator {
 	}
 	
 	public void validateUserLogin(User user) throws LoginValidationException {
-		
 	}
 
 }

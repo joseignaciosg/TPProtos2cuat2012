@@ -29,6 +29,7 @@ public class MailSocketService extends AbstractSockectService {
 	private MailTransformer mailTranformer;
 	private MailMimeParser mailMimeParser;
 	private UserLoginValidator userLoginvalidator;
+	private DataOutputStream outToOriginServer;
 	
 	public MailSocketService(Socket socket) {
 		super(socket);
@@ -56,12 +57,9 @@ public class MailSocketService extends AbstractSockectService {
 		logger.trace("Connection closed");
 		if (originServerSocket != null) {
 			originServerSocket.close();
+			outToOriginServer.close();
 		}
 		super.onConnectionClosed();
-	}
-	
-	public void setOriginServerSocket(Socket originServerSocket) {
-		this.originServerSocket = originServerSocket;
 	}
 	
 	public boolean hasOriginServerSocket() {
@@ -95,8 +93,7 @@ public class MailSocketService extends AbstractSockectService {
 	
 	public void echoToOriginServer(String s) throws IOException {
 		try {
-			DataOutputStream out = new DataOutputStream(originServerSocket.getOutputStream());
-			out.writeBytes(s);
+			outToOriginServer.writeBytes(s);
 		} catch (IOException e) {
 			logger.error("Could not write to output stream!. Reason: " + e.getMessage());
 		}
@@ -110,8 +107,13 @@ public class MailSocketService extends AbstractSockectService {
 		int port = Config.getInstance().getGeneralConfig().getInt("pop3_port");
 		setOriginServerSocket(new Socket(host, port));
 		String line = readFromOriginServer().readLine();
-		logger.debug("Mail server new connection status: " + line);
+		logger.info("Mail server new connection status: " + line);
 		return line;
+	}
+	
+	public void setOriginServerSocket(Socket originServerSocket) throws IOException {
+		this.originServerSocket = originServerSocket;
+		outToOriginServer = new DataOutputStream(originServerSocket.getOutputStream());
 	}
 	
 	public void userLoggedIn(User user) throws LoginValidationException {
@@ -119,5 +121,6 @@ public class MailSocketService extends AbstractSockectService {
 		getStateMachine().getBundle().put("user", user);
 		getStateMachine().setState(new ParseMailState(this));
 		statsService.incrementNumberOfAccesses(user.getMail());
+		logger.info(user.getMail() + " logueado correctamente.");
 	}
 }

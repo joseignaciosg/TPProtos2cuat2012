@@ -24,6 +24,7 @@ public class MailMimeParser {
 	}
 
 	public Mail parse(File source, MailTransformer transformer) throws IOException {
+		logger.debug("Parsing mail: " + source.getAbsolutePath());
 		File destination = File.createTempFile("transformed_", source.getName());
 		Mail mail = new Mail(destination);
 		Scanner sourceScanner = new Scanner(source);

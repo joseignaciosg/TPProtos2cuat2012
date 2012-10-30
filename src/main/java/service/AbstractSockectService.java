@@ -22,7 +22,8 @@ public abstract class AbstractSockectService implements Runnable {
 	protected Socket socket;
 	protected boolean endOfTransmission;
 	protected ServiceStateMachine stateMachine;
-
+	private DataOutputStream out;
+	
 	public AbstractSockectService(Socket socket) {
 		this.socket = socket;
 		stateMachine = new ServiceStateMachine(this);
@@ -55,6 +56,7 @@ public abstract class AbstractSockectService implements Runnable {
 	}
 
 	protected void onConnectionEstabished() throws Exception {
+		out = new DataOutputStream(socket.getOutputStream());
 	}
 	
 	protected abstract void exec(String command) throws Exception;
@@ -62,6 +64,7 @@ public abstract class AbstractSockectService implements Runnable {
 	protected void onConnectionClosed() throws Exception {
 		stateMachine.exit();
 		socket.close();
+		out.close();
 	}
 	
 	public void echoLine(StatusCodes statusCode) {
@@ -85,13 +88,12 @@ public abstract class AbstractSockectService implements Runnable {
 	}
 	
 	public void echoLine(String s) {
-		logger.debug("Echo to client: " + s);
+		// logger.debug("Echo to client: " + s);
 		echo(s + "\r\n");
 	}
 	
 	public void echo(String s) {
 		try {
-			DataOutputStream out = new DataOutputStream(socket.getOutputStream());
 			out.writeBytes(s);
 		} catch (IOException e) {
 		    logger.error("Could not write to output stream!. Reason: " + e.getMessage());
@@ -99,12 +101,7 @@ public abstract class AbstractSockectService implements Runnable {
 	}
 	
 	public DataOutputStream getClientOutputStream(){
-	    try {
-	    	return new DataOutputStream(socket.getOutputStream());
-	    } catch (IOException e) {
-	    	logger.error("Could not write to output stream!. Reason: " + e.getMessage());
-	    }
-	    return null;
+		return out;
 	}
 	
 	public BufferedReader read() {

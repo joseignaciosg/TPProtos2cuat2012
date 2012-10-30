@@ -54,13 +54,14 @@ public class ServiceCommandRecognizer {
 			logger.info("Unrecognized command");
 			return;
 		}
-		logger.debug("Command recognized, executing class: " + clazz);
+		logger.info("Command recognized, executing class: " + clazz.getSimpleName());
 		String[] parts = new String[params.length - 1];
 		System.arraycopy(params, 1, parts, 0, params.length - 1);
 		ServiceCommand command = createInstance(clazz);
 		command.setOriginalParams(params);
 		try {
 			command.execute(parts);
+			logger.info("Command " + clazz.getSimpleName() + " finished execution.");
 		} catch (Exception e) {
 			logger.error("Error executing command: " + command);
 			throw new IllegalStateException(e);
