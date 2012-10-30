@@ -43,7 +43,7 @@ public class MailSocketService extends AbstractSockectService {
 	@Override
 	protected void onConnectionEstabished() throws Exception {
 		super.onConnectionEstabished();
-		echoLine("+OK Mail Proxy Ready.");
+		echoLine("+OK Mail Poxy Ready.");
 	}
 	
 	@Override
@@ -92,11 +92,7 @@ public class MailSocketService extends AbstractSockectService {
 	}
 	
 	public void echoToOriginServer(String s) throws IOException {
-		try {
-			outToOriginServer.writeBytes(s);
-		} catch (IOException e) {
-			logger.error("Could not write to output stream!. Reason: " + e.getMessage());
-		}
+		outToOriginServer.writeBytes(s);
 	}
 	
 	public BufferedReader readFromOriginServer() throws IOException {

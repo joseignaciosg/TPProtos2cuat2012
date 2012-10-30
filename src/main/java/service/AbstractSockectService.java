@@ -57,6 +57,7 @@ public abstract class AbstractSockectService implements Runnable {
 
 	protected void onConnectionEstabished() throws Exception {
 		out = new DataOutputStream(socket.getOutputStream());
+		logger.info("Connection with client extablished. Inet Address: " + socket.getInetAddress());
 	}
 	
 	protected abstract void exec(String command) throws Exception;
