@@ -6,6 +6,8 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Scanner;
 
+import model.util.StringUtil;
+
 public class SimpleListConfiguration {
 
 	private String path;
@@ -26,7 +28,13 @@ public class SimpleListConfiguration {
 			values.clear();
 			Scanner scanner = new Scanner(new File(path));
 			while (scanner.hasNextLine()) {
-				values.add(scanner.nextLine());
+				String line = scanner.nextLine();
+				if (!StringUtil.empty(line) && !StringUtil.empty(line.trim())) {
+					String trimmed = line.trim();
+					if (!trimmed.startsWith("#")) {
+						values.add(trimmed);
+					}
+				}
 			}
 			scanner.close();
 		} catch (FileNotFoundException e) {
