@@ -13,6 +13,7 @@ public class StatsSocketService extends AbstractSockectService {
 	
 	@Override
 	protected void onConnectionEstabished() throws Exception {
+		super.onConnectionEstabished();
 		echoLine(StatusCodes.OK_STATISTICS_READY);
 	}
 	

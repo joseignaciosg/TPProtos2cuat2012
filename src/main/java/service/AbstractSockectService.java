@@ -101,7 +101,7 @@ public abstract class AbstractSockectService implements Runnable {
 		}
 	}
 	
-	public DataOutputStream getClientOutputStream(){
+	public DataOutputStream getClientOutputStream() {
 		return out;
 	}
 	

@@ -60,10 +60,6 @@ public class DeleCommand extends ServiceCommand {
 	}
 	
 	private Mail getMail(String mailName) throws IOException {
-		Mail cached = ((User) getBundle().get("user")).getMail(mailName); 
-		if (cached != null) {
-			return cached;
-		}
 		MailSocketService mailService = (MailSocketService) owner;
 		mailService.echoLineToOriginServer("RETR " + mailName);
 		BufferedReader mailInputReader = mailService.readFromOriginServer();

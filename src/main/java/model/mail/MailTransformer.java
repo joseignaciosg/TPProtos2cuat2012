@@ -25,6 +25,10 @@ public class MailTransformer {
 	private static final SimpleListConfiguration transConfig = Config.getInstance().getSimpleListConfig("transformation");
 	private static final SimpleListConfiguration externalTransConfig = Config.getInstance().getSimpleListConfig("external_transformation");
 
+	public boolean hasActiveTransformations() {
+		return !transConfig.getValues().isEmpty() || !externalTransConfig.getValues().isEmpty();
+	}
+	
 	public void transformHeader(MimeHeader header) throws IOException {
 		List<HeaderTransformer> transformers = new ArrayList<HeaderTransformer>();
 		for (String option : transConfig.getValues()) {

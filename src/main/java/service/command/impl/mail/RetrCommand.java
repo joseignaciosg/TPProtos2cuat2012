@@ -7,6 +7,8 @@ import java.util.Scanner;
 
 import model.User;
 import model.mail.Mail;
+import model.mail.MailRetriever;
+import model.mail.MailTransformer;
 
 import org.apache.log4j.Logger;
 
@@ -31,15 +33,27 @@ public class RetrCommand extends ServiceCommand {
 		if (!firstLine.toUpperCase().startsWith("+OK")) {
 			return;
 		}
-		File mailContent = mailSocketService.getMailRetriever().retrieve(params[0], mailInStream);
-		Mail mail = mailSocketService.getMailMimeParser().parse(mailContent, mailSocketService.getMailTranformer());
-		// Ignore first line because transformed mail may differ in size from original mail
-		mailSocketService.echoLine("+OK " + mail.getSizeInBytes() + " octets");
-		echoMailToClient(mail);
-		mailContent.delete();
-		((User) getBundle().get("user")).setMail(params[0], mail);
+		MailRetriever mailRetriever = mailSocketService.getMailRetriever();
+		MailTransformer mailTransformer = mailSocketService.getMailTranformer();
+		// XXX: when no transformation is needed, mail can be sent without further parsing.
+		if (!mailTransformer.hasActiveTransformations()) {
+			logger.info("No transformation needed, sending mail without parsing.");
+			mailSocketService.echoLine(firstLine);
+			mailRetriever.retrieve(mailInStream, mailSocketService.getClientOutputStream());
+		} else {
+			logger.info("Downloading mail from origin server.");
+			File originalMail = mailRetriever.retrieve(params[0], mailInStream);
+			logger.info("Applying transformations.");
+			Mail mail = mailSocketService.getMailMimeParser().parse(originalMail, mailTransformer);
+			// Ignore first line because transformed mail may differ in size from original mail
+			mailSocketService.echoLine("+OK " + mail.getSizeInBytes() + " octets");
+			logger.info("Sending mail to client.");
+			echoMailToClient(mail);
+			originalMail.delete();
+			mail.getContents().delete();
+		}
 	}
-
+	
 	private void echoMailToClient(Mail mail) throws IOException {
 		String userMail = ((User) getBundle().get("user")).getMail();
 		Scanner s = new Scanner(mail.getContents());

@@ -13,6 +13,7 @@ public class ConfigurerService extends AbstractSockectService {
 	
 	@Override
 	protected void onConnectionEstabished() throws Exception {
+		super.onConnectionEstabished();
 		echoLine(StatusCodes.OK_CONFIGURER_READY);
 	}
 	
