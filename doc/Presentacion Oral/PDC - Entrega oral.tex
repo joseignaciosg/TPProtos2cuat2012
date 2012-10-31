@@ -7,6 +7,33 @@
 
 \usepackage{beamerthemesplit}
 
+%for java code
+%---------------------------------------------------------------------------------------
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=Java,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\tiny\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true
+  tabsize=3
+}
+%---------------------------------------------------------------------------------------
+
 \usetheme{Warsaw} 
 
 \title{Proxy POP3}
@@ -19,10 +46,12 @@
 \begin{document}
 
 \frame{\titlepage}
-
 \begin{frame}[allowframebreaks]{Tabla de contenidos}
 \tableofcontents
 \end{frame}
+
+%---------------------------------------------------------------------------------------
+
 
 \section{Introducción}
 \subsection{RFCs relevantes}
@@ -35,53 +64,160 @@
 \end{itemize}
 \end{frame}
 
-\subsection{Librerías a utilizar}
+\subsection{Librerías utilizadas}
 \begin{frame}{Librerías a utilizar}
 \begin{itemize}
     \item \textbf{Log4j:} Logueo de informacion.
     \item \textbf{JodaTime:} Manejo de fechas.
     \item \textbf{Java.Util.Concurrent:} Manejo de concurrencia.
-    \item \textbf{java.nio.file:} Monitoreo por cambios de directorios.
 \end{itemize} 
 \end{frame}
 
-\section{POP3 Proxy}
+%---------------------------------------------------------------------------------------
+
+
+\section{Arquitectura de la Aplicación}
+
 \subsection{Arquitectura general}
 \begin{frame}{Arquitectura general}
 \begin{figure}[H]
 \begin{center}
-\includegraphics[scale=0.40]{./images/Servers.png}
+\includegraphics[scale=0.50]{images/Servers.png}
 \label{modelado}
 \end{center}
 \end{figure}
 \end{frame}
 
+
 \begin{frame}{Servicios}
 
-\par \textbf{Servicio de monitoreo (8081):} El servicio de monitoreo sirve para poder visualizar, de manera remota, las estadísticas generales del servidor proxy. Basta con conectarse al puerto 8083 del servidor e ingresar la clave de administrador para la sección de monitoreo. Ejemplo de conexión al servicio de monitoreo:
+\par \textbf{Servicio de monitoreo (8081):} El servicio de monitoreo sirve para poder visualizar, de manera remota, las estadísticas generales del servidor proxy. Basta con conectarse al puerto del servidor e ingresar la clave de administrador para la sección de monitoreo. Ejemplo de conexión al servicio de monitoreo:
 
 \begin{block}{Conexión por netcat al servicio de monitoreo}
 nc localhost 8081
 \end{block}
 
-\par \textbf{Servicio de configuración remota (8082):} El servicio de configuración remota escuchará en el puerto 8084. En secciones posteriores se detalla el funcionamiento de este servicio.
+\end{frame}
+
+\begin{frame}{Servicios Cont}
+
+\par \textbf{Servicio de configuración remota (8082):} El servicio de configuración remota se utilizara para editar configuraciones del servidor de manera remota. En secciones posteriores se detalla el funcionamiento de este servicio.
 
 \end{frame}
 
 \begin{frame}{Arquitectura general: Servicios}
 \begin{figure}[H]
 \begin{center}
-\includegraphics[scale=0.45]{./images/SocketService.png}
-\label{modelado}
+\includegraphics[scale=0.45]{images/SocketService.png}
 \end{center}
 \end{figure}
 \end{frame}
 
+%---------------------------------------------------------------------------------------
+
+\subsection{Alquitectura del Servicio de Mail}
+\begin{frame}{Alquitectura del Servicio de Mail}
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.47]{images/charts/ArquitecturaPOXY.png}
+\end{center}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+\lstinputlisting{code/AbstractSocketServerRun.java}
+\end{frame}
+
+\subsection{Ejemplo de Logueo Exitoso}
+\begin{frame}{Ejemplo de Logueo Exitoso}
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.47]{images/charts/MultiplexadorDeCuentas.png}
+\end{center}
+\end{figure}
+\end{frame}
+
+
+\begin{frame}
+\par Multiplexación de cuentas
+\lstinputlisting{code/AccountMultiplexation.java}
+\end{frame}
+
+\subsection{Ejemplo de Comando Retr  Exitoso}
+\begin{frame}{Ejemplo de Comando Retr  Exitoso}
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.45]{images/charts/RetrExampleWorkFlow.png}
+\end{center}
+\end{figure}
+\end{frame}
+
+\subsection{Ejemplo de borrado}
+\begin{frame}{Ejemplo de borrado}
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.47]{images/charts/DeleExampleWorkFlow.png}
+\end{center}
+\end{figure}
+\end{frame}
+
+
+\subsection{Máquina de estados}
+\begin{frame}{Máquina de estados}
+\par Se pensó la implementación como una máquina de estados donde, lógicamente, cada estado puede habilitar la ejecución de otros estados.\\[0.5cm]
+Esta estrategia fue útil al realizar la multiplexación de cuentas y a su vez nos permite tener un código simple, limpio y entendible a la hora de extender el desarrollo.
+\end{frame}
+
+\begin{frame}{Arquitectura general: Máquina de estados}
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.52]{images/Estados.png}
+\end{center}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+\par Ejemplo de estado
+\lstinputlisting{code/State.java}
+\end{frame}
+
+\subsection{Control de accesos y validadores}
+
+\begin{frame}{Arquitectura general: Control de accesos}
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.6]{images/Validators.png}
+\end{center}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Arquitectura general: Validadores de borrado}
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.5]{images/NotDelValidators.png}
+\end{center}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Arquitectura general: Transformadores}
+\par Transformadores
+\lstinputlisting{code/MailTransformer.java}
+\end{frame}
+
+\begin{frame}{Transformadores}
+\par Optimizaciones
+\par  
+\par Se había optado por una estrategia multithread en la que se dedicaba un thread para parsear y convertir los datos del mail a tratar e ir escribiendolos a en un InputStream a medida que se encuentren listos, mientras que a la par, otro thread iba leyendo y enviando los datos al cliente.
+\par Esta estrategia no pudo ser implementada debido a que las aplciaciones externas, reqiueren del mail completo para ejecutarse.
+\end{frame}
+
+%---------------------------------------------------------------------------------------
+
 \section{Configuración de la aplicación}
 \begin{frame}{Configuración de la aplicación}
 
-\par La configuración del proxy se hará por medio de archivos que se escanearán permanentemente para detectar cambios en ellos.\\[1cm]
-\par Por ejemplo, si que quieren agregar los filtros de ip, bastará con crear un archivo \textit{bannedips.conf}, y copiarlo al directorio \textit{/config/filters/bannedips.conf}.
+\par La configuración en el proxy se hará por medio de archivos que se leeran y mantendrán actualizdaos en memoria.\\[1cm]
+\par Por ejemplo, si que quieren agregar filtros de IP, bastará con editar el archivo \textit{banned\_ip.conf} y agregarlos en nuevas lineas.
 
 \end{frame}
 
@@ -234,11 +370,13 @@ hasAttachments\\
 
 \end{frame}
 
+%---------------------------------------------------------------------------------------
+
 \section{Protocolos desarrollados: Configuración remota}
 
 \begin{frame}{Protocolos desarrollados}
 
-\par Para configurar el servidor de forma remota lo que se debe hacer es conectarse a un servicio que éste provee en el puerto \textbf{8084} y hablar el \textbf{Protocolo de Configuración Remota} definido en la siguiente sección.
+\par Para configurar el servidor de forma remota lo que se debe hacer es conectarse a un servicio que éste provee en el puerto \textbf{8082} y hablar el \textbf{Protocolo de Configuración Remota} definido en la siguiente sección.
 
 \end{frame}
 
@@ -369,7 +507,7 @@ S: -ERR 200 [Invalid password]\\
 C: AUTH anothedPassword\\
 S: -ERR 200 [Invalid password]\\
 C: AUTH forgottenPassword\\
-S: -ERR 103 [Too many login attempts, try later.]
+S: -ERR 103 [Too many unsuccessful attempts. Bye!.]
 \end{block}
 \end{frame}
 
@@ -418,6 +556,9 @@ S: +OK 0 [Good bye] // Connection clossed\\
 \end{columns}
 \end{frame}
 
+
+%---------------------------------------------------------------------------------------
+
 \section{Problemas y dificultades detectados}
 \subsection{Servicio y protocolo de configuración}
 \begin{frame}{Servicio y protocolo de configuración}
@@ -431,7 +572,8 @@ S: +OK 0 [Good bye] // Connection clossed\\
 \subsection{Multiplexación de cuentas}
 \begin{frame}{Multiplexación de cuentas}
 \par El problema que surgió en este punto estuvo relacionado con la forma en que los MUAs se autentican son el servidor. \\[0.5cm]
-\par Fue necesario cerrar el conexión que se tenía anteriormente y crear una nueva conexión al servidor origin del usuario en particular, si así el archivo de configuración de multiplexación de cuentas así lo indicaba.
+\par El nombre de usuario era requerido para saber con que servidor hablar, pero este se obtenia, a veces, luego de recibir pedidos de ejecucion de otros comandos.
+\par Frente a esto se optó por emular un servidor hasta el momento de recibir el comando de login con el nombre de usuario.
 \end{frame}
 
 \subsection{Parser de mails MIME}
@@ -440,12 +582,67 @@ S: +OK 0 [Good bye] // Connection clossed\\
 \end{frame}
 
 
+%---------------------------------------------------------------------------------------
+
+\section{Limitaciones de la Aplicación}
+\begin{frame}{Limitaciones de la Aplicación}
+\begin{itemize}
+\item Uso de Threads bloqueantes
+\item No utilización de SSL
+\item Baja escalibilidad
+\end{itemize}
+\end{frame}
+
+\section{Posibles Extensiones}
+\begin{frame}{Posibles Extensiones}
+\begin{itemize}
+\item Optimización de las rotaciones de las imágenes
+\item Caches para mails para el caso de delete
+\item Uso de memoria exclusivo para mails "pequeños"
+\item Utilización de SSL
+\end{itemize}
+\end{frame}
+
+
+%---------------------------------------------------------------------------------------
 
 \section{Casos de prueba}
 
 \subsubsection{Tests Unitarios}
-\begin{frame}{Tests unitarios}
-\par    Se implementaron tests unitarios tanto para componentes de baja granularidad de la aplicación, como son los validadores y los transformadores (ImageTransformer, LeetTransformer y AnonymTransformer), como para las clases del modelo, específicamente User, y Mail, que modelan un usuario y a un correo electrónico, respectivamente. 
+\begin{frame}{Tests de performance: Mail 20 MB}
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.26]{images/Stat1.png}
+\label{stats1}
+\end{center}
+\end{figure}   
+\end{frame}
+
+\begin{frame}{Tests de performance: Mail 20 MB}
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.26]{images/Stat2.png}
+\label{stats2}
+\end{center}
+\end{figure}   
+\end{frame}
+
+\begin{frame}{Tests de performance: Mail 20 MB}
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.26]{images/Stat3.png}
+\label{stats3}
+\end{center}
+\end{figure}   
+\end{frame}
+
+\begin{frame}{Tests de performance: Mail 20 MB}
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.26]{images/Stat4.png}
+\label{stats4}
+\end{center}
+\end{figure}   
 \end{frame}
 
 \subsubsection{Tests de Integración}
@@ -453,44 +650,35 @@ S: +OK 0 [Good bye] // Connection clossed\\
 \par	La finalidad sea probar la funcionalidad entera de la aplicación, mediante la interacción del proxy con servidores mock \textbf{(MockitoServer)}. De esta manera se va a poder probar los distintos requerimientos solicitados y el comportamiendo del proxy, por medio de escenarios de prueba exitosos y no exitosos, pudiendo así también probar, mediante la utilización de herramientas de testeo como \textbf{JMeter} , la performace del proxy.
 \end{frame}
 
-\section{Arquitectura de la aplicación}
+%---------------------------------------------------------------------------------------
 
-\subsection{Máquina de estados}
-\begin{frame}{Máquina de estados}
-\par Se pensó la implementación como una máquina de estados donde, lógicamente, cada estado puede habilitar la ejecución de otros estados.\\[0.5cm]
-Esta estrategia fue útil al realizar la multiplexación de cuentas y a su vez nos permite tener un código simple, limpio y entendible a la hora de extender el desarrollo.
+\section{Conclusiones}
+\begin{frame}{Conclusiones}
+
+%\par En el transcurso de este trabajo se aprendío mucho,  desde el funcionamiento
+%de protocolos ampliamente usados como son pop3 hasta la implementación de un protocolo propio.
+%Queremos destacar especialmente la novedad de tener que toparse con las problemáticas relacionadas
+%con la utilización de sockets en la realización de un programa de capa de aplicación, tanto al entender
+%los protocolos implementados, como al momento de crear el protocolo de configuración.
+%En conclusión, fue un trabajo de demandó mucho trabajo y una programación muy cuidadosa, pero sentimos 
+%que nos aportó mucho al momento de entender los protocolos que gobiernan internet. 
+%Una crítica, podría ser que tal vez, determinados requerimientos, como la rotación de imágenes, no nos sumaron
+%mucho al entendimiento de la materia, agregando mucho tiempo de desarrollo, que si bien no fue desaprovechado
+%podría haber sido usado en otro requerimiento más enriquecedor.
+
+\begin{itemize}
+\item Protocolo POP3 extendido
+\item MIME
+\item Programación con sockets
+\item Funcionamiento de TCP
+\item Práctica de programación con threads
+\item Probemáticas de la creación y definición de un protocolo
+
+\end{itemize}
 \end{frame}
 
-\begin{frame}{Arquitectura general: Máquina de estados}
-\begin{figure}[H]
-\begin{center}
-\includegraphics[scale=0.52]{./images/Estados.png}
-\label{modelado}
-\end{center}
-\end{figure}
-\end{frame}
-
-
-\subsection{Control de accesos y validadores}
-
-\begin{frame}{Arquitectura general: Control de accesos}
-\begin{figure}[H]
-\begin{center}
-\includegraphics[scale=0.6]{./images/Validators.png}
-\label{modelado}
-\end{center}
-\end{figure}
-\end{frame}
-
-\begin{frame}{Arquitectura general: Validadores de borrado}
-\begin{figure}[H]
-\begin{center}
-\includegraphics[scale=0.5]{./images/NotDelValidators.png}
-\label{modelado}
-\end{center}
-\end{figure}
-\end{frame}
 
 
 
 \end{document}
+
