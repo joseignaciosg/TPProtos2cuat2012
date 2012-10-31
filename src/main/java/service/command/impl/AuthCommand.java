@@ -18,8 +18,7 @@ public abstract class AuthCommand extends ServiceCommand {
 	
 	@Override
 	public void execute(String[] params) {
-		String passwd = (String) getBundle().get("password");
-		if (CollectionUtil.empty(params) || !passwd.equals(params[0])) {
+		if (CollectionUtil.empty(params) || !validatePassword(params[0])) {
 			int attempts = incrementLoginAttempts();
 			if (attempts == MAX_INVALID_ATTEMPTS) {
 				getOwner().echoLine(StatusCodes.ERR_TOO_MANY_ATTEMPTS);
@@ -30,7 +29,7 @@ public abstract class AuthCommand extends ServiceCommand {
 			return;
 		}
 		getOwner().echoLine(StatusCodes.OK_PASSWORD_ACCEPTED);
-		onLogin();
+		loggedIn();
 	}
 
 	private int incrementLoginAttempts() {
@@ -42,6 +41,7 @@ public abstract class AuthCommand extends ServiceCommand {
 		return invalidAttempts;
 	}
 	
-	public abstract void onLogin();
+	protected abstract void loggedIn();
 	
+	protected abstract boolean validatePassword(String password);
 }

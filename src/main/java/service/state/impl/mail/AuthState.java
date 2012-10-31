@@ -4,9 +4,10 @@ import model.validator.LoginValidationException;
 import model.validator.loginvalidator.IpValidator;
 import service.AbstractSockectService;
 import service.command.impl.mail.AuthCommand;
-import service.command.impl.mail.DefaultCommand;
 import service.command.impl.mail.ProxyCapaCommand;
 import service.command.impl.mail.QuitCommand;
+import service.command.impl.mail.UnknownCommand;
+import service.command.impl.mail.UnsupportedCommand;
 import service.command.impl.mail.UserCommand;
 import service.state.State;
 
@@ -14,11 +15,13 @@ public class AuthState extends State {
 
 	public AuthState(AbstractSockectService owner) {
 		super(owner);
+		commandRecognizer.register("APOP", UnsupportedCommand.class);
 		commandRecognizer.register("AUTH", AuthCommand.class);
 		commandRecognizer.register("USER", UserCommand.class);
-		commandRecognizer.register("CAPA", ProxyCapaCommand.class);
 		commandRecognizer.register("QUIT", QuitCommand.class);
-		commandRecognizer.registerDefault(DefaultCommand.class);
+		// Non rfc stadard
+		commandRecognizer.register("CAPA", ProxyCapaCommand.class);
+		commandRecognizer.registerDefault(UnknownCommand.class);
 	}
 
 	@Override

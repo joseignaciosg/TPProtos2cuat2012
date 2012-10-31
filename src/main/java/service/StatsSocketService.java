@@ -3,6 +3,7 @@ package service;
 import java.net.Socket;
 
 import service.state.impl.stats.StatsAuthorityState;
+import service.state.impl.stats.StatsReadState;
 
 public class StatsSocketService extends AbstractSockectService {
 
@@ -22,4 +23,7 @@ public class StatsSocketService extends AbstractSockectService {
 		stateMachine.exec(command.split(" "));
 	}
 
+	public void loggedIn() {
+		getStateMachine().setState(new StatsReadState(this));
+	}
 }

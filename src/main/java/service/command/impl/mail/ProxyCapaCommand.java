@@ -17,7 +17,6 @@ public class ProxyCapaCommand extends ServiceCommand {
 		owner.echoLine("CAPA");
 		owner.echoLine("STAT");
 		owner.echoLine("UIDL");
-		owner.echoLine("RESP-CODES");
 		owner.echoLine(".");
 	}
 }

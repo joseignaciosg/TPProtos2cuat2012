@@ -17,7 +17,7 @@ import model.validator.UserLoginValidator;
 import org.apache.log4j.Logger;
 
 import service.state.impl.mail.AuthState;
-import service.state.impl.mail.ParseMailState;
+import service.state.impl.mail.TransactionMailState;
 
 public class MailSocketService extends AbstractSockectService {
 
@@ -115,7 +115,7 @@ public class MailSocketService extends AbstractSockectService {
 	public void userLoggedIn(User user) throws LoginValidationException {
 		userLoginvalidator.validateUserLogin(user);
 		getStateMachine().getBundle().put("user", user);
-		getStateMachine().setState(new ParseMailState(this));
+		getStateMachine().setState(new TransactionMailState(this));
 		statsService.incrementNumberOfAccesses(user.getMail());
 		logger.info(user.getMail() + " logueado correctamente.");
 	}

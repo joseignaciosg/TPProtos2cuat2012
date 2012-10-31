@@ -8,6 +8,7 @@ import java.util.List;
 
 import model.User;
 import model.mail.Mail;
+import model.util.CollectionUtil;
 import model.validator.MailValidationException;
 import model.validator.MailValidator;
 import model.validator.emailvalidator.DelContentTypeValidator;
@@ -43,6 +44,10 @@ public class DeleCommand extends ServiceCommand {
 	@Override
 	public void execute(String[] params) throws Exception {
 		MailSocketService mailService = (MailSocketService) owner;
+		if (CollectionUtil.empty(params)) {
+			owner.echoLine("-ERR missing msg argument.");
+			return;
+		}
 		Mail email = getMail(params[0]);
 		User current = (User) getBundle().get("user");
 		for (MailValidator validator : validators) {

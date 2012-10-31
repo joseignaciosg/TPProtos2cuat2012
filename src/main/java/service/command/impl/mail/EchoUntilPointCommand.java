@@ -1,7 +1,6 @@
 package service.command.impl.mail;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 
 import service.AbstractSockectService;
 import service.MailSocketService;
@@ -18,25 +17,16 @@ public class EchoUntilPointCommand  extends ServiceCommand {
 		MailSocketService service = (MailSocketService) getOwner();
 		service.echoLineToOriginServer(getOriginalLine());
 		BufferedReader responseBuffer = service.readFromOriginServer();
-		String statusLine = readLine(responseBuffer);
+		String statusLine = responseBuffer.readLine();
 		service.echoLine(statusLine);
 		if (!statusLine.startsWith("+OK")) {
-			service.echoLine(statusLine);
-			System.out.println("Error! - " + statusLine);
 			return;
 		}
 		String line;
 		do {
-			line = readLine(responseBuffer);
+			line = responseBuffer.readLine();
 			service.echoLine(line);
 		} while (!line.equals("."));
 	}
 
-	public String readLine(BufferedReader responseBuffer) {
-		try {
-			return responseBuffer.readLine();
-		} catch (IOException e) {
-			throw new IllegalStateException("Error reading line - " + e.getMessage());
-		}
-	}
 }

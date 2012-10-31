@@ -9,6 +9,7 @@ import model.User;
 import model.mail.Mail;
 import model.mail.MailRetriever;
 import model.mail.MailTransformer;
+import model.util.CollectionUtil;
 
 import org.apache.log4j.Logger;
 
@@ -27,10 +28,15 @@ public class RetrCommand extends ServiceCommand {
 	@Override
 	public void execute(String[] params) throws Exception {
 		MailSocketService mailSocketService = (MailSocketService) owner;
+		if (CollectionUtil.empty(params)) {
+			owner.echoLine("-ERR missing msg argument.");
+			return;
+		}
 		mailSocketService.echoLineToOriginServer(getOriginalLine());
 		BufferedReader mailInStream = mailSocketService.readFromOriginServer();
 		String firstLine = mailInStream.readLine();
 		if (!firstLine.toUpperCase().startsWith("+OK")) {
+			owner.echoLine(firstLine);
 			return;
 		}
 		MailRetriever mailRetriever = mailSocketService.getMailRetriever();

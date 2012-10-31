@@ -78,9 +78,8 @@ public class AuthCommand extends ServiceCommand {
 			}
 			mailServer.userLoggedIn(tmpUser);
 		} else {
-			logger.error("Unknown login type.");
+			logger.error("Unknown login type: " + getOriginalLine());
 			owner.echoLine("-ERR Unknown login type.");
-			return;
 		}
 	}
 
