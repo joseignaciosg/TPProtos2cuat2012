@@ -8,7 +8,7 @@ import model.util.StringUtil;
 import org.apache.log4j.Logger;
 
 import service.AbstractSockectService;
-import service.GenericServer;
+import service.WelcomeSocketService;
 
 public class ServerInitializer {
 
@@ -44,7 +44,7 @@ public class ServerInitializer {
 			Class<? extends AbstractSockectService> clazz;
 			if (AbstractSockectService.class.isAssignableFrom(Class.forName(className))) {				
 				clazz = (Class<? extends AbstractSockectService>) Class.forName(className);
-				new Thread(new GenericServer(port, clazz)).start();
+				new Thread(new WelcomeSocketService(port, clazz)).start();
 				return true;
 			} else {
 				logger.error(className + " does not extend " + AbstractSockectService.class);

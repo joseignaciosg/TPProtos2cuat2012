@@ -9,17 +9,17 @@ import java.util.concurrent.Executors;
 import org.apache.log4j.Logger;
 
 
-public class GenericServer implements Runnable {
+public class WelcomeSocketService implements Runnable {
 	
-	private static Logger logger = Logger.getLogger(GenericServer.class);
+	private static Logger logger = Logger.getLogger(WelcomeSocketService.class);
 	
 	private int port;
-	private Class<? extends AbstractSockectService> serverClass;
+	private Class<? extends AbstractSockectService> serviceClass;
 	private ExecutorService threadPool;
 
-	public GenericServer(int port, Class<? extends AbstractSockectService> serverClass) {
+	public WelcomeSocketService(int port, Class<? extends AbstractSockectService> serviceClass) {
 		this.port = port;
-		this.serverClass = serverClass;
+		this.serviceClass = serviceClass;
 		threadPool = Executors.newCachedThreadPool();
 	}
 	
@@ -29,8 +29,8 @@ public class GenericServer implements Runnable {
 			ServerSocket welcomeSocket = new ServerSocket(port);
 			while (!Thread.interrupted()) {
 				final Socket connectionSocket = welcomeSocket.accept();
-				AbstractSockectService server = createInstance(serverClass, connectionSocket);
-				logger.info("Conection accepted. Attending Server: " + serverClass);
+				AbstractSockectService server = createInstance(serviceClass, connectionSocket);
+				logger.info("Conection accepted. Attending Server: " + serviceClass);
 				threadPool.submit(server);
 			}
 			logger.info("TCP Server ended, closing connection.");
