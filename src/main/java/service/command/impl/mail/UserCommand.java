@@ -27,7 +27,7 @@ public class UserCommand extends ServiceCommand {
 			owner.setEndOfTransmission(true);
 			return;
 		}
-		mailServer.setOriginServer(getMailServer(user));
+		mailServer.setOriginServer(user.getMailServer());
 		String resp = echoToOriginServerAndReadLine(getOriginalLine());
 		owner.echoLine(resp);
 		if (!"+OK".equals(resp)) {
@@ -47,12 +47,6 @@ public class UserCommand extends ServiceCommand {
 		MailSocketService service = (MailSocketService) owner;
 		service.echoLineToOriginServer(line);
 		return service.readFromOriginServer().readLine();
-	}
-	
-	private String getMailServer(User user) {
-		KeyValueConfiguration originServerConfig = Config.getInstance().getKeyValueConfig("origin_server");
-		String server = originServerConfig.get(user.getMail());
-		return server == null ? originServerConfig.get("default") : server;
 	}
 
 }

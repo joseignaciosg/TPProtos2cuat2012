@@ -100,6 +100,7 @@ public class MailSocketService extends AbstractSockectService {
 	}
 	
 	public String setOriginServer(String host) throws IOException {
+		logger.info("Origin server is now: " + host);
 		int port = Config.getInstance().getGeneralConfig().getInt("pop3_port");
 		setOriginServerSocket(new Socket(host, port));
 		String line = readFromOriginServer().readLine();

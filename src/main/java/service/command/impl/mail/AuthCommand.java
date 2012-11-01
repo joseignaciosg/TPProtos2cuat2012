@@ -3,8 +3,6 @@ package service.command.impl.mail;
 import java.io.IOException;
 
 import model.User;
-import model.configuration.Config;
-import model.configuration.KeyValueConfiguration;
 import model.util.Base64Util;
 import model.util.CollectionUtil;
 import model.validator.LoginValidationException;
@@ -41,8 +39,7 @@ public class AuthCommand extends ServiceCommand {
 				owner.setEndOfTransmission(true);
 				return;
 			}
-			String host = getMailServer(tmpUser);
-			mailServer.setOriginServer(host);
+			mailServer.setOriginServer(tmpUser.getMailServer());
 			// login against REAL origin server
 			String resp = echoToOriginServerAndReadLine(getOriginalLine());
 			if (!"+".equals(resp.trim())) {
@@ -67,7 +64,7 @@ public class AuthCommand extends ServiceCommand {
 				owner.setEndOfTransmission(true);
 				return;
 			}
-			mailServer.setOriginServer(getMailServer(tmpUser));
+			mailServer.setOriginServer(tmpUser.getMailServer());
 			// login against REAL origin server
 			echoToOriginServerAndReadLine(getOriginalLine());
 			echoToOriginServerAndReadLine(base64Username);
@@ -101,12 +98,6 @@ public class AuthCommand extends ServiceCommand {
 		String username = decodedUsername.split("\0")[0];
 		String passwd = decodedPasswd.split("\0")[0];
 		return new User(username, passwd);
-	}
-	
-	private String getMailServer(User user) {
-		KeyValueConfiguration originServerConfig = Config.getInstance().getKeyValueConfig("origin_server");
-		String server = originServerConfig.get(user.getMail());
-		return server == null ? originServerConfig.get("default") : server;
 	}
 
 }

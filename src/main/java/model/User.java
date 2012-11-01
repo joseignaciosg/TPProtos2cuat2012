@@ -1,11 +1,12 @@
 package model;
 
-import java.util.HashMap;
-
-import model.mail.Mail;
+import model.configuration.Config;
+import model.configuration.KeyValueConfiguration;
 
 public class User {
 
+	private static final KeyValueConfiguration originServerConfig = Config.getInstance().getKeyValueConfig("origin_server");
+	
 	private String mail;
 	private String password;
 	
@@ -29,5 +30,9 @@ public class User {
 	public String getMailhost() {
 		return mail.split("@")[1];
 	}
-	
+
+	public String getMailServer() {
+		String server = originServerConfig.get(mail);
+		return server == null ? originServerConfig.get("default") : server;
+	}
 }
