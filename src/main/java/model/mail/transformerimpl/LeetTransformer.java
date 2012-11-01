@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 import model.parser.mime.MimeHeader;
 import model.util.Base64Util;
+import model.util.IOUtil;
 
 public class LeetTransformer implements Transformer {
 
@@ -22,25 +23,23 @@ public class LeetTransformer implements Transformer {
 		if (contentTransferEncoding == null && contentType.getValue().startsWith("text/plain")) {
 			return new StringBuilder(toLeet(text.toString()));
 		} else if ("base64".equals(contentTransferEncoding.getValue())) {
-			File decodedText;
+			File decodedFile;
 			File convertedText = File.createTempFile("encode_", ".tmp");
 			FileWriter writer = new FileWriter(convertedText);
 			StringBuilder builder = new StringBuilder();
 			try {
-				decodedText = Base64Util.decodeUsingOS(text.toString()
-						.replace("\r", ""));
-				Scanner decodedTextScanner = new Scanner(decodedText);
-				while(decodedTextScanner.hasNextLine()){
-					String line = decodedTextScanner.nextLine();
-					writer.append(toLeet(line)); 
+				decodedFile = Base64Util.decodeUsingOS(text.toString());
+				Scanner decodedContents = new Scanner(decodedFile);
+				while(decodedContents.hasNextLine()){
+					writer.append(toLeet(decodedContents.nextLine() + "\r\n")); 
 				}
-				decodedTextScanner.close();
+				decodedContents.close();
 				writer.close();
 				File encodedText = Base64Util.encodeToFile(convertedText);
 				Scanner encodedTextScaner = new Scanner(encodedText);
 				while(encodedTextScaner.hasNextLine()){
 					String line = encodedTextScaner.nextLine();
-					builder.append(toLeet(line)); 
+					builder.append(line); 
 				}
 				encodedTextScaner.close();
 			} catch (InterruptedException e) {
