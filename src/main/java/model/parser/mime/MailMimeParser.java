@@ -54,14 +54,13 @@ public class MailMimeParser {
 				}
 			} while (!endOfMail);
 		} else {
-			MimeHeader header = new MimeHeader("Content-Type: text/plain");
-			Map<String, MimeHeader> headers = Collections.singletonMap(header.getKey(), header);
+			Map<String, MimeHeader> headers = parseParams.mail.getHeaders();
 			StringBuilder text = new StringBuilder();
 			do {
-				line = parseParams.sourceScanner.nextLine();
 				endOfMail = line.equals(".");
 				if (!endOfMail) {					
 					text.append(line + "\r\n");
+					line = parseParams.sourceScanner.nextLine();
 				}
 			} while (!endOfMail);
 			parseParams.destinationWriter.append(parseParams.transformer.transformPart(headers, text));

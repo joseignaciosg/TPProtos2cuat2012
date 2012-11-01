@@ -31,6 +31,7 @@ public class Mail {
 		return contents == null ? 0 : contents.length();
 	}
 	
+	
 	public void setContents(File contents) {
 		this.contents = contents;
 	}

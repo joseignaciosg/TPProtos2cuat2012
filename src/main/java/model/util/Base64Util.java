@@ -32,7 +32,7 @@ public class Base64Util {
 		List<String> commands = new LinkedList<String>();
 		commands.add("base64");
 		String osname = System.getProperty("os.name");
-		if ("MAC OS X".equals(osname)) {
+		if ("mac os x".equals(osname.toLowerCase()) ) {
 			commands.add("-D");
 		} else {
 			commands.add("-d");
