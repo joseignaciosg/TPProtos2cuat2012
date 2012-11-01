@@ -3,8 +3,7 @@ package service.command.impl.mail;
 import java.io.IOException;
 
 import model.User;
-import model.configuration.Config;
-import model.configuration.KeyValueConfiguration;
+import model.util.CollectionUtil;
 import model.validator.LoginValidationException;
 import service.AbstractSockectService;
 import service.MailSocketService;
@@ -19,6 +18,10 @@ public class UserCommand extends ServiceCommand {
 	@Override
 	public void execute(String[] params) throws Exception {
 		MailSocketService mailServer = (MailSocketService) owner;
+		if (CollectionUtil.empty(params)) {
+			mailServer.echo("-ERR Invalid parameters");
+			return;
+		}
 		User user = new User(params[0], null);
 		try {
 			mailServer.getUserLoginvalidator().userCanLogin(user);
@@ -30,7 +33,7 @@ public class UserCommand extends ServiceCommand {
 		mailServer.setOriginServer(user.getMailServer());
 		String resp = echoToOriginServerAndReadLine(getOriginalLine());
 		owner.echoLine(resp);
-		if (!"+OK".equals(resp)) {
+		if (!resp.toUpperCase().startsWith("+OK")) {
 			return;
 		}
 		String passwordCmd = owner.read().readLine();
