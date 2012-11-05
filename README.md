@@ -51,14 +51,18 @@ notdelete_structure.conf
 
 origin_server.conf
 > nombreDeUsuario = hostDelOriginServer
+
 > default = hostDelOriginServer
 
 stats_service.conf.conf
 > password = passwordParaAcceder
+
 > (otros)
 
 transformation.conf.conf
 > hidesender
+
 > l33t
+
 > rotateimages
 
