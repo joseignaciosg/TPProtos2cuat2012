@@ -25,6 +25,7 @@ banned_ip
 
 configurer.conf
 > password = passwordParaAcceder
+
 > (otros)
 
 external_transformations.conf
