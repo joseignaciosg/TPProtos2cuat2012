@@ -5,59 +5,59 @@ El programa puede compilarse utizando maven2
 mvn clean package
 </pre>
 
-Para correrlo simplemente ejecutar la clase ProxyInitializer y levantara del archivo ** server.init ** los servicios configurados.
+Para correrlo simplemente ejecutar la clase **ProxyInitializer** y levantara del archivo **server.init** los servicios configurados.
 
 -------------------------
 
-Archivos de configuración
+Archivos de configuración:
 
-* server.init
-* * FullServiceClassName, pornNumber
+server.init
+* FullServiceClassName, pornNumber
 
-* access_amount.conf
-* * nombreDeUsuario = cantidadMaximaDeLoginsPorDia
+access_amount.conf
+* nombreDeUsuario = cantidadMaximaDeLoginsPorDia
 
-* access_time.conf
-* * nombreDeUsuario = hh:mm-hh:mm (desde-hasta)
+access_time.conf
+* nombreDeUsuario = hh:mm-hh:mm (desde-hasta)
 
-* banned_ip
-* * direccionIp
+banned_ip
+* direccionIp
 
-* configurer.conf
-* * password = passwordParaAcceder
-* * (otros)
+configurer.conf
+* password = passwordParaAcceder
+* (otros)
 
-* external_transformations.conf
-* * programaYArgumentosAEjecutar
+external_transformations.conf
+* programaYArgumentosAEjecutar
 
-* notdelete_content_type.conf
-* * nombreDeUsuario = extensionesBloqueantes
+notdelete_content_type.conf
+* nombreDeUsuario = extensionesBloqueantes
 
-* notdelete_header_pattern.conf
-* * nombreDeUsuario = patronesEnLosHeadersBloqueanes
+notdelete_header_pattern.conf
+* nombreDeUsuario = patronesEnLosHeadersBloqueanes
 
-* notdelete_max_age.conf
-* * nombreDeUsuario = dd/mm/yyyy
+notdelete_max_age.conf
+* nombreDeUsuario = dd/mm/yyyy
 
-* notdelete_sender.conf
-* * nombreDeUsuario = listadoDeUsuarios
+notdelete_sender.conf
+* nombreDeUsuario = listadoDeUsuarios
 
-* notdelete_size.conf
-* * nombreDeUsuario = tamañoMaximoPermitido
+notdelete_size.conf
+* nombreDeUsuario = tamañoMaximoPermitido
 
-* notdelete_structure.conf
-* * nombreDeUsuario = dissabledAttachments
+notdelete_structure.conf
+* nombreDeUsuario = dissabledAttachments
 
-* origin_server.conf
-* * nombreDeUsuario = hostDelOriginServer
-* * default = hostDelOriginServer
+origin_server.conf
+* nombreDeUsuario = hostDelOriginServer
+* default = hostDelOriginServer
 
-* stats_service.conf.conf
-* * password = passwordParaAcceder
-* * (otros)
+stats_service.conf.conf
+* password = passwordParaAcceder
+* (otros)
 
-* transformation.conf.conf
-* * hidesender
-* * l33t
-* * rotateimages
+transformation.conf.conf
+* hidesender
+* l33t
+* rotateimages
 
