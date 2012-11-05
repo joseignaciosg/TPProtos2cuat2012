@@ -9,6 +9,7 @@ import java.util.Scanner;
 import model.parser.mime.MimeHeader;
 import model.util.Base64Util;
 
+import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.net.QuotedPrintableCodec;
 
 public class LeetTransformer implements Transformer {
@@ -17,39 +18,35 @@ public class LeetTransformer implements Transformer {
 	public StringBuilder transform(StringBuilder text,
 			Map<String, MimeHeader> partheaders) throws IOException {
 		MimeHeader contentType = partheaders.get("Content-Type");
-		MimeHeader contentTransferEncoding = partheaders
-				.get("Content-Transfer-Encoding");
+		MimeHeader contentTransferEncoding = partheaders.get("Content-Transfer-Encoding");
 		if (contentType == null) {
 			return text;
 		}
-		if (contentTransferEncoding == null
-				&& contentType.getValue().startsWith("text/plain")) {
+		if (contentTransferEncoding == null && contentType.getValue().startsWith("text/plain")) {
 			return new StringBuilder(toLeet(text.toString()));
 		} else if ("base64".equals(contentTransferEncoding.getValue())) {
-			File decodedFile;
-			File convertedText = File.createTempFile("encode_", ".tmp");
-			FileWriter writer = new FileWriter(convertedText);
-			StringBuilder builder = new StringBuilder();
+			File encodedFile = File.createTempFile("encode_", ".tmp");
+			FileWriter encodedContentsWriter = new FileWriter(encodedFile);
 			try {
-				decodedFile = Base64Util.decodeUsingOS(text.toString());
+				File decodedFile = Base64Util.decodeUsingOS(text.toString());
 				Scanner decodedContents = new Scanner(decodedFile);
 				while (decodedContents.hasNextLine()) {
-					writer.append(toLeet(decodedContents.nextLine() + "\r\n"));
+					encodedContentsWriter.append(toLeet(decodedContents.nextLine() + "\r\n"));
 				}
 				decodedContents.close();
-				writer.close();
-				File encodedText = Base64Util.encodeToFile(convertedText);
+				encodedContentsWriter.close();
+				File encodedText = Base64Util.encodeToFile(encodedFile);
 				Scanner encodedTextScaner = new Scanner(encodedText);
+				StringBuilder builder = new StringBuilder();
 				while (encodedTextScaner.hasNextLine()) {
 					String line = encodedTextScaner.nextLine();
 					builder.append(line);
 				}
 				encodedTextScaner.close();
+				return builder;
 			} catch (InterruptedException e) {
-				e.printStackTrace();
-				throw new IOException();
+				throw new IllegalStateException(e);
 			}
-			return builder;
 		} else { // quoted-printable
 			String decodeString = decode(text.toString());
 			String transformed = toLeet(decodeString);
@@ -67,11 +64,11 @@ public class LeetTransformer implements Transformer {
 	}
 
 	private String decode(String quotedPrintable) {
+		QuotedPrintableCodec codec = new QuotedPrintableCodec("ISO-8859-1");
 		try {
-			QuotedPrintableCodec codec = new QuotedPrintableCodec("ISO-8859-1");
 			return codec.decode(quotedPrintable);
-		} catch (Exception e) {
-			return quotedPrintable;
+		} catch (DecoderException e) {
+			throw new IllegalStateException("Could not decode: " + quotedPrintable);
 		}
 	}
 
