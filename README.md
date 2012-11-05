@@ -1,6 +1,6 @@
-TP 1 - Servidor Proxy para protocolo POP3
+*TP 1 - Servidor Proxy para protocolo POP3*
 
-El programa puede compilarse utizando maven2
+El programa puede compilarse utizando maven2 de la siguiente manera
 <pre>
 mvn clean package
 </pre>
@@ -12,52 +12,52 @@ Para correrlo simplemente ejecutar la clase **ProxyInitializer** y levantara del
 *Archivos de configuración:*
 
 server.init
-> * FullServiceClassName, pornNumber
+> FullServiceClassName, portNumber
 
 access_amount.conf
-* nombreDeUsuario = cantidadMaximaDeLoginsPorDia
+> nombreDeUsuario = cantidadMaximaDeLoginsPorDia
 
 access_time.conf
-* nombreDeUsuario = hh:mm-hh:mm (desde-hasta)
+> nombreDeUsuario = hh:mm-hh:mm (desde-hasta)
 
 banned_ip
-* direccionIp
+> direccionIp
 
 configurer.conf
-* password = passwordParaAcceder
-* (otros)
+> password = passwordParaAcceder
+> (otros)
 
 external_transformations.conf
-* programaYArgumentosAEjecutar
+> programaYArgumentosAEjecutar
 
 notdelete_content_type.conf
-* nombreDeUsuario = extensionesBloqueantes
+> nombreDeUsuario = extensionesBloqueantes
 
 notdelete_header_pattern.conf
-* nombreDeUsuario = patronesEnLosHeadersBloqueanes
+> nombreDeUsuario = patronesEnLosHeadersBloqueanes
 
 notdelete_max_age.conf
-* nombreDeUsuario = dd/mm/yyyy
+> nombreDeUsuario = dd/mm/yyyy
 
 notdelete_sender.conf
-* nombreDeUsuario = listadoDeUsuarios
+> nombreDeUsuario = listadoDeUsuarios
 
 notdelete_size.conf
-* nombreDeUsuario = tamañoMaximoPermitido
+> nombreDeUsuario = tamañoMaximoPermitido
 
 notdelete_structure.conf
-* nombreDeUsuario = dissabledAttachments
+> nombreDeUsuario = dissabledAttachments
 
 origin_server.conf
-* nombreDeUsuario = hostDelOriginServer
-* default = hostDelOriginServer
+> nombreDeUsuario = hostDelOriginServer
+> default = hostDelOriginServer
 
 stats_service.conf.conf
-* password = passwordParaAcceder
-* (otros)
+> password = passwordParaAcceder
+> (otros)
 
 transformation.conf.conf
-* hidesender
-* l33t
-* rotateimages
+> hidesender
+> l33t
+> rotateimages
 
