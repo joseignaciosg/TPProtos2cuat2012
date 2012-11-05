@@ -12,7 +12,7 @@ Para correrlo simplemente ejecutar la clase **ProxyInitializer** y levantara del
 *Archivos de configuración:*
 
 server.init
-* > FullServiceClassName, pornNumber
+> * FullServiceClassName, pornNumber
 
 access_amount.conf
 * nombreDeUsuario = cantidadMaximaDeLoginsPorDia
