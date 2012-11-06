@@ -24,7 +24,8 @@ public class LeetTransformer implements Transformer {
 		}
 		if (contentTransferEncoding == null && contentType.getValue().startsWith("text/plain")) {
 			return new StringBuilder(toLeet(text.toString()));
-		} else if ("base64".equals(contentTransferEncoding.getValue())) {
+		} else if (contentTransferEncoding != null && "base64".equals(contentTransferEncoding.getValue())
+				&& contentType.getValue().startsWith("text/plain")) {
 			File encodedFile = File.createTempFile("encode_", ".tmp");
 			FileWriter encodedContentsWriter = new FileWriter(encodedFile);
 			try {
@@ -47,11 +48,12 @@ public class LeetTransformer implements Transformer {
 			} catch (InterruptedException e) {
 				throw new IllegalStateException(e);
 			}
-		} else { // quoted-printable
+		} else if(contentTransferEncoding != null && contentType.getValue().startsWith("text/plain")) { // quoted-printable
 			String decodeString = decode(text.toString());
 			String transformed = toLeet(decodeString);
 			return new StringBuilder(transformed);
 		}
+		return text;
 	}
 
 	private String toLeet(String text) {
