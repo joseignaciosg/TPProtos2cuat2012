@@ -77,8 +77,46 @@ public class Mail {
 		return date;
 	}
 
+	/*
+	 * RFC 2822 specifies:
+	 * 
+	 *  from            =       "From:" mailbox-list CRLF
+	 *  sender          =       "Sender:" mailbox CRLF
+	 *  
+	 *  The from field consists of the field name "From" and a
+	 *  comma-separated list of one or more mailbox specifications
+	 *  
+	 *  the field name "Sender" and a single mailbox specification
+	 *  
+	 * */
 	public String getSender() {
-		return headers.get("Return-path").getValue();
+		String sender = null;
+		boolean lookForSender = false;
+		String[] headerFromArray = headers.get("from").getValue().split(",");
+		if(headerFromArray.length == 1){
+			sender = headerFromArray[0];
+			if (sender==null){
+				lookForSender = true;
+			}
+		}else{
+			lookForSender = true;
+		}
+			
+		if(lookForSender){
+			sender = headers.get("sender").getValue();
+		}
+		
+		String[] aux;
+		if(sender.contains("<")){
+			aux = sender.split("<");
+			sender = aux[1];
+			aux = sender.split(">");
+			sender = aux[0];
+		}else if (sender.contains(" ")){
+			aux = sender.split(" ");
+			sender = aux[1];
+		}
+		return sender;
 	}
 
 	public boolean containsHeader(String key, String value) {

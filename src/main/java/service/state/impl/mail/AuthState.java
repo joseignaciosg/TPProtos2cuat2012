@@ -32,7 +32,6 @@ public class AuthState extends State {
 		try {
 			new IpValidator(clientIp).validate();
 		} catch (LoginValidationException e) {
-//			owner.echoLine("-ERR " + e.getMessage());
 			logger.info("IP " + clientIp + " is banned. Closing connection.");
 			owner.setEndOfTransmission(true);
 		}
