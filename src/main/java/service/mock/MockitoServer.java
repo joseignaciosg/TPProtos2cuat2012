@@ -4,8 +4,11 @@ import static org.mockito.Matchers.matches;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import model.util.IOUtil;
 
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -37,9 +40,9 @@ public class MockitoServer implements Server {
 			}
 		);
 		when(mocked.exec(matches("PASS (.+?)"))).thenReturn("+OK Logged In.\r\n");
-		when(mocked.exec("STAT")).thenReturn("+OK 2 240\r\n");
-		when(mocked.exec("UIDL")).thenReturn("+OK\r\n1 UID1-" + (int) (Math.random()*1000) + "\r\n2 UID2-" + (int) (Math.random()*1000) + "\r\n.\r\n");
-		when(mocked.exec("LIST")).thenReturn("+OK 2 messages (240 octets)\r\n1 120\r\n2 120\r\n.\r\n");
+		when(mocked.exec("STAT")).thenReturn("+OK 1 7937\r\n");
+		when(mocked.exec("UIDL")).thenReturn("+OK\r\n1 UID1-" + (int) (Math.random()*1000) + "\r\n.\r\n");
+		when(mocked.exec("LIST")).thenReturn("+OK 1 messages (7937 octets)\r\n1 7937\r\n.\r\n");
 		when(mocked.exec(matches("DELE (\\d)+"))).thenAnswer(
 			new Answer<String>() {
 				@Override
@@ -56,13 +59,12 @@ public class MockitoServer implements Server {
 			new Answer<String>() {
 				@Override
 				public String answer(InvocationOnMock invocation) throws Throwable {
-					int size = 120;
-					String mail = "";
-					while (size > 0) {
-						mail += "A";
-						size--;
+					Scanner scanner = IOUtil.createScanner("mail_7937octets.txt");
+					String line = "";
+					while(scanner.hasNextLine()) {
+						line += scanner.nextLine() + "\n\r";
 					}
-					return "+OK 120 octets\r\nThis is the message " + mail + "\r\n.\r\n";
+					return "+OK 7937 octets\r\n" + line + ".\r\n";
 				}
 			}
 		);
