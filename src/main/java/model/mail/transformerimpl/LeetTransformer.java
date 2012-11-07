@@ -18,40 +18,46 @@ public class LeetTransformer implements Transformer {
 	public StringBuilder transform(StringBuilder text,
 			Map<String, MimeHeader> partheaders) throws IOException {
 		MimeHeader contentType = partheaders.get("Content-Type");
-		MimeHeader contentTransferEncoding = partheaders.get("Content-Transfer-Encoding");
+		MimeHeader contentTransferEncoding = partheaders
+				.get("Content-Transfer-Encoding");
 		if (contentType == null) {
 			return text;
-		}
-		if (contentTransferEncoding == null && contentType.getValue().startsWith("text/plain")) {
-			return new StringBuilder(toLeet(text.toString()));
-		} else if (contentTransferEncoding != null && "base64".equals(contentTransferEncoding.getValue())
-				&& contentType.getValue().startsWith("text/plain")) {
-			File encodedFile = File.createTempFile("encode_", ".tmp");
-			FileWriter encodedContentsWriter = new FileWriter(encodedFile);
-			try {
-				File decodedFile = Base64Util.decodeUsingOS(text.toString());
-				Scanner decodedContents = new Scanner(decodedFile);
-				while (decodedContents.hasNextLine()) {
-					encodedContentsWriter.append(toLeet(decodedContents.nextLine() + "\r\n"));
+		} else if (contentType.getValue().toLowerCase().startsWith("text/plain")) {
+			if (contentTransferEncoding == null) {
+				return new StringBuilder(toLeet(text.toString()));
+			} else {
+				if ("base64".equals(contentTransferEncoding.getValue())) {
+					File encodedFile = File.createTempFile("encode_", ".tmp");
+					FileWriter encodedContentsWriter = new FileWriter(
+							encodedFile);
+					try {
+						File decodedFile = Base64Util.decodeUsingOS(text
+								.toString());
+						Scanner decodedContents = new Scanner(decodedFile);
+						while (decodedContents.hasNextLine()) {
+							encodedContentsWriter.append(toLeet(decodedContents
+									.nextLine() + "\r\n"));
+						}
+						decodedContents.close();
+						encodedContentsWriter.close();
+						File encodedText = Base64Util.encodeToFile(encodedFile);
+						Scanner encodedTextScaner = new Scanner(encodedText);
+						StringBuilder builder = new StringBuilder();
+						while (encodedTextScaner.hasNextLine()) {
+							String line = encodedTextScaner.nextLine();
+							builder.append(line);
+						}
+						encodedTextScaner.close();
+						return builder;
+					} catch (InterruptedException e) {
+						throw new IllegalStateException(e);
+					}
+				} else { // quoted-printable
+					String decodeString = decode(text.toString());
+					String transformed = toLeet(decodeString);
+					return new StringBuilder(transformed);
 				}
-				decodedContents.close();
-				encodedContentsWriter.close();
-				File encodedText = Base64Util.encodeToFile(encodedFile);
-				Scanner encodedTextScaner = new Scanner(encodedText);
-				StringBuilder builder = new StringBuilder();
-				while (encodedTextScaner.hasNextLine()) {
-					String line = encodedTextScaner.nextLine();
-					builder.append(line);
-				}
-				encodedTextScaner.close();
-				return builder;
-			} catch (InterruptedException e) {
-				throw new IllegalStateException(e);
 			}
-		} else if(contentTransferEncoding != null && contentType.getValue().startsWith("text/plain")) { // quoted-printable
-			String decodeString = decode(text.toString());
-			String transformed = toLeet(decodeString);
-			return new StringBuilder(transformed);
 		}
 		return text;
 	}
@@ -70,7 +76,8 @@ public class LeetTransformer implements Transformer {
 		try {
 			return codec.decode(quotedPrintable);
 		} catch (DecoderException e) {
-			throw new IllegalStateException("Could not decode: " + quotedPrintable);
+			throw new IllegalStateException("Could not decode: "
+					+ quotedPrintable);
 		}
 	}
 
