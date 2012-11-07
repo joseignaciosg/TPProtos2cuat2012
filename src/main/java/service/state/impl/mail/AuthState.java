@@ -38,9 +38,4 @@ public class AuthState extends State {
 		}
 	}
 
-	@Override
-	public void exec(String[] params) {
-		commandRecognizer.exec(params);
-	}
-
 }

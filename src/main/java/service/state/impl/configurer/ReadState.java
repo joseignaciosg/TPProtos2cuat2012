@@ -18,10 +18,5 @@ public class ReadState extends State {
 		commandRecognizer.register("LIST", ListCommand.class);
 		commandRecognizer.register("EXIT", ConfLogOutCommand.class);
 	}
-	
-	@Override
-	public void exec(String[] params) {
-		commandRecognizer.exec(params);
-	}
 
 }

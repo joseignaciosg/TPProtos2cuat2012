@@ -60,24 +60,19 @@ public class Mail {
 		return headers.get(name);
 	}
 
-	public boolean hasBoundaryKey() {
-		MimeHeader header = headers.get("Content-Type");
-		return header.getValue().startsWith("text/plain") || header.getExtraValue("boundary") != null;
-	}
-
 	public String getBoundaryKey() {
 		MimeHeader header = headers.get("Content-Type");
-		if(header != null && !header.getValue().startsWith("text/plain")) {
-			String boundary = header.getExtraValue("boundary");
-			if (boundary == null) {
-				return null;
-			}
-			if (boundary.startsWith("\"")) {	// un-quote
-				boundary = boundary.substring(1, boundary.length() - 1);
-			}
-		    return boundary;
+		if (header == null) {
+			return null;
 		}
-		return null;
+		String boundary = header.getExtraValue("boundary");
+		if (boundary == null) {
+			return null;
+		}
+		if (boundary.startsWith("\"")) {	// un-quote
+			boundary = boundary.substring(1, boundary.length() - 1);
+		}
+	    return boundary;
 	}
 
 	public LocalDate getDate() {

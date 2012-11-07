@@ -1,5 +1,6 @@
 package service.state;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -30,7 +31,14 @@ public abstract class State {
 		logger.debug("Entering state: " + getClass());
 	}
 	
-	public abstract void exec(String[] params);
+	public void exec(String[] params) {
+		try {
+			commandRecognizer.exec(params);
+		} catch(Exception e) {
+			logger.error("Error executing command " + Arrays.toString(params), e);
+			owner.echo("-ERR An internal error accoured.");
+		}
+	}
 
 	public void exit() {
 		logger.debug("Exiting state: " + getClass());

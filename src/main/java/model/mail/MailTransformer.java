@@ -48,7 +48,6 @@ public class MailTransformer {
 			try {
 				retPart = transformer.transform(retPart, partHeaders);
 			} catch (Exception e) {
-				e.printStackTrace();
 				logger.error("Could not apply transformer: " + transformer.getClass(), e);
 			}
 		}
