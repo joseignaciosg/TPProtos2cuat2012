@@ -35,10 +35,5 @@ public class TransactionMailState extends State {
 		// Default
 		commandRecognizer.registerDefault(UnsupportedCommand.class);
 	}
-	
-	@Override
-	public void exec(String[] params) {
-		commandRecognizer.exec(params);
-	}
 
 }

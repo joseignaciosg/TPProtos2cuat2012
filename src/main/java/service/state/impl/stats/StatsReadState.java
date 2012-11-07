@@ -19,10 +19,5 @@ public class StatsReadState extends State {
 		commandRecognizer.register("STATS", ShowCommand.class);
 		commandRecognizer.register("AUTO", AutoUpdatesCommand.class);
 	}
-	
-	@Override
-	public void exec(String[] params) {
-		commandRecognizer.exec(params);
-	}
 
 }

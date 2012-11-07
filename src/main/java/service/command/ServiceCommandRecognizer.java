@@ -42,7 +42,7 @@ public class ServiceCommandRecognizer {
 		return available;
 	}
 	
-	public void exec(String[] params) {
+	public void exec(String[] params) throws Exception {
 		if (params.length == 0) {
 			owner.echoLine(StatusCodes.ERR_UNRECOGNIZED_COMMAND);
 			return;
@@ -59,13 +59,8 @@ public class ServiceCommandRecognizer {
 		System.arraycopy(params, 1, parts, 0, params.length - 1);
 		ServiceCommand command = createInstance(clazz);
 		command.setOriginalParams(params);
-		try {
-			command.execute(parts);
-			logger.info("Command " + clazz.getSimpleName() + " finished execution.");
-		} catch (Exception e) {
-			logger.error("Error executing command: " + command);
-			throw new IllegalStateException(e);
-		}
+		command.execute(parts);
+		logger.info("Command " + clazz.getSimpleName() + " finished execution.");
 	}
 	
 	private ServiceCommand createInstance(Class<? extends ServiceCommand> clazz) {

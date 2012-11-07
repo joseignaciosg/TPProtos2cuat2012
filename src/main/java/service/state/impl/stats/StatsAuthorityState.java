@@ -12,10 +12,5 @@ public class StatsAuthorityState extends State {
 		commandRecognizer.register("AUTH", StatsAuthCommand.class);
 		commandRecognizer.register("EXIT", ExitCommand.class);
 	}
-
-	@Override
-	public void exec(String[] params) {
-		commandRecognizer.exec(params);
-	}
 	
 }

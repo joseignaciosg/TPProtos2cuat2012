@@ -12,10 +12,5 @@ public class ConfAuthorityState extends State {
 		commandRecognizer.register("AUTH", ConfigurerAuthCommand.class);
 		commandRecognizer.register("EXIT", ExitCommand.class);
 	}
-
-	@Override
-	public void exec(String[] params) {
-		commandRecognizer.exec(params);
-	}
 	
 }
