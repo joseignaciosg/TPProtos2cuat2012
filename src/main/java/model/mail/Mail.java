@@ -120,11 +120,7 @@ public class Mail {
 	}
 
 	public boolean containsHeader(String key, String value) {
-		MimeHeader header = headers.get(key);
-		if (header == null) {
-			return false;
-		}
-		return header.getValue().equals(value);
+		return headers.contains(key, value);
 	}
 
 	public File getContents() {

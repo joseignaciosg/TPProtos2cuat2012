@@ -37,7 +37,7 @@ public class DelHeaderPatternValidator implements MailValidator {
 		}
 		for (Entry<String, String> entry : headerPatternMap.entrySet()) {
 			if (email.containsHeader(entry.getKey(), entry.getValue())) {
-				String message = "Restricting message deletion because mail has the following header " + entry;
+				String message = "Restricting message deletion because mail has the following header " + entry.getValue();
 				throw new MailValidationException(message);
 			}
 		}

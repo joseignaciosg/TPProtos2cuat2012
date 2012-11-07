@@ -20,4 +20,15 @@ public class MimeHeaderCollection {
 	public MimeHeader get(String key) {
 		return headers.get(key.toLowerCase());
 	}
+	
+	public boolean contains(String key, String value) {
+		MimeHeader header = get(key);
+		if (header == null) {
+			return false;
+		}
+		if (value == null) {
+			return header.getValue() == null;
+		}
+		return header.getValue().toLowerCase().equals(value.toLowerCase());
+	}
 }

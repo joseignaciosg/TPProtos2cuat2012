@@ -29,6 +29,7 @@ public class KeyValueConfiguration {
 	
 	public void update() {
 		try {
+			properties.clear();
 			properties.load(new FileReader(new File(path)));
 		} catch (Exception e) {
 			e.printStackTrace();
