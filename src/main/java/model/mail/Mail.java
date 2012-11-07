@@ -1,17 +1,14 @@
 package model.mail;
 
 import java.io.File;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashSet;
-import java.util.Locale;
 import java.util.Set;
 
 import model.parser.mime.MimeHeader;
 
 import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 public class Mail {
 
@@ -67,19 +64,17 @@ public class Mail {
 	}
 
 	public LocalDate getDate() {
-		String headerDate = headers.get("Delivery-date").getValue();
-		String[] headerDatea = headerDate.split(" "); 
-		Date date;
-		try {
-			date = new SimpleDateFormat("MMM", Locale.ENGLISH).parse(headerDatea[2]);
-		} catch (ParseException e) {
-			throw new IllegalArgumentException("Could not parse month:"+ headerDatea[2]);
+		String headerDate = headers.get("Date").getValue();
+		DateTimeFormatter formatter =
+			    DateTimeFormat.forPattern("E, dd MMM yyyy kk:mm:ss Z").withOffsetParsed();
+		LocalDate date;
+		try{
+			date = formatter.parseDateTime(headerDate).toLocalDate();
+		}catch(Exception e){
+			throw new IllegalArgumentException("Could not parse month:"+ headerDate);
 		}
-		Calendar.getInstance().setTime(date);
-		int month = Calendar.getInstance().get(Calendar.MONTH);
-		LocalDate maxDate = new LocalDate(
-				Integer.valueOf(headerDatea[3]),month+1, Integer.valueOf(headerDatea[1]));
-		return maxDate;
+		
+		return date;
 	}
 
 	public String getSender() {

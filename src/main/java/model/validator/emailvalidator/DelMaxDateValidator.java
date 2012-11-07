@@ -24,10 +24,10 @@ public class DelMaxDateValidator implements MailValidator {
 		}
 		DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yyyy");
 		LocalDate maxDate = dtf.parseLocalDate(maxDateString.trim());
-		if (!email.getDate().isAfter(maxDate)) {
+		if (!email.getDate().isBefore(maxDate)) {
 			String message = "Restricting message deletion because mail date: "
 				+ email.getDate()
-				+ " is lower to date " + maxDate 
+				+ " is newer than config date " + maxDate 
 				+ " for this user (" + user.getMail() + ")";
 			throw new MailValidationException(message);
 		}
