@@ -28,7 +28,7 @@ public class MailMimeParser {
 		Mail mail = new Mail(destination);
 		Scanner sourceScanner = new Scanner(source);
 		FileWriter destinationWriter = new FileWriter(destination);
-		parseMainBoundary(new ParseParameters(mail, sourceScanner, destinationWriter, transformer));
+		parseFileAndTransform(new ParseParameters(mail, sourceScanner, destinationWriter, transformer));
 		sourceScanner.close();
 		destinationWriter.flush();
 		destinationWriter.close();
@@ -37,14 +37,13 @@ public class MailMimeParser {
 		return mail;
 	}
 
-	private void parseMainBoundary(ParseParameters parseParams) throws IOException {
+	private void parseFileAndTransform(ParseParameters parseParams) throws IOException {
 		headerParser.parse(parseParams);
-		String boundary = parseParams.mail.getBoundaryKey();
 		boolean endOfMail = false;
 		String line = parseParams.sourceScanner.nextLine();
 		if (parseParams.mail.isMultiPart()) {
+			String boundary = parseParams.mail.getBoundaryKey();
 			do {
-				logger.debug("Start Boundary: " + boundary);
 				parsePart(parseParams, boundary, line);
 				line = parseParams.sourceScanner.nextLine();
 				endOfMail = line.equals(".");

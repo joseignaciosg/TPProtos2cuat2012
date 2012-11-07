@@ -67,8 +67,11 @@ public class Mail {
 
 	public String getBoundaryKey() {
 		MimeHeader header = headers.get("Content-Type");
-		if(!header.getValue().startsWith("text/plain")) {
+		if(header != null && !header.getValue().startsWith("text/plain")) {
 			String boundary = header.getExtraValue("boundary");
+			if (boundary == null) {
+				return null;
+			}
 			if (boundary.startsWith("\"")) {	// un-quote
 				boundary = boundary.substring(1, boundary.length() - 1);
 			}

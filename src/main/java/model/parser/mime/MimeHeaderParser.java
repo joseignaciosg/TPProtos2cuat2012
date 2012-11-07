@@ -19,9 +19,6 @@ public class MimeHeaderParser {
 				break;
 			}
 		}
-		if (!parseParams.mail.hasBoundaryKey()) {
-			throw new IllegalStateException("boundary header could not be parsed");
-		}
 	}
 	
 	private String createHeader(ParseParameters parseParams, String lastReadLine) throws IOException {
