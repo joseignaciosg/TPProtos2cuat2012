@@ -41,6 +41,7 @@ public class DeleteLineCommand extends ServiceCommand {
 			out.print(text.toString());
 			out.close();
 			owner.echoLine(StatusCodes.OK_FILE_UPDATED);
+			Config.getInstance().update(params[1]);
 		} catch (FileNotFoundException e) {
 			// should never happen...
 			e.printStackTrace();
