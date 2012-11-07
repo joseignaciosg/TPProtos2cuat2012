@@ -1,5 +1,6 @@
 package service.start;
 
+import model.configuration.Config;
 import model.util.IOUtil;
 
 import org.apache.log4j.Logger;
@@ -14,7 +15,8 @@ public class ProxyInitializer {
 	}
 
 	public void initialize() {
-		PropertyConfigurator.configure(IOUtil.getStream("log4j.properties"));
+		String configFile = Config.getInstance().getConfigResourcePath("log4j");
+		PropertyConfigurator.configure(IOUtil.getResource(configFile));
 		logger.trace("Initializing proxy.....");
 		new ServerInitializer().initialize("server.init");
 		logger.trace("Proxy Started succesfully!");

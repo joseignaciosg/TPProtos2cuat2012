@@ -29,10 +29,14 @@ public class Config {
 		return generalConfguration;
 	}
 	
-	public String getConfigFullPath(String name) {
+	public String getConfigResourcePath(String name) {
 		String fileName = generalConfguration.get(name);
 		String resourcePath = generalConfguration.get("specific_conf_dir");
-		return IOUtil.fullPath(resourcePath + fileName);
+		return resourcePath + fileName;
+	}
+	
+	public String getConfigFullPath(String name) {
+		return IOUtil.fullPath(getConfigResourcePath(name));
 	}
 	
 	public SimpleListConfiguration getSimpleListConfig(String name) {
