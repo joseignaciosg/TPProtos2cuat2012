@@ -5,10 +5,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
 
 import model.parser.mime.MimeHeader;
@@ -17,12 +15,12 @@ import org.joda.time.LocalDate;
 
 public class Mail {
 
-	private Map<String, MimeHeader> headers;
+	private MimeHeaderCollection headers;
 	private Set<String> attachmentsExtension;
 	private File contents;
 
 	public Mail(File contents) {
-		headers = new HashMap<String, MimeHeader>();
+		headers = new MimeHeaderCollection();
 		attachmentsExtension = new HashSet<String>();
 		setContents(contents);
 	}
@@ -52,8 +50,8 @@ public class Mail {
 		return attachmentsExtension.contains(extension);
 	}
 
-	public void addHeaders(MimeHeader header) {
-		headers.put(header.getKey(), header);
+	public void addHeader(MimeHeader header) {
+		headers.add(header);
 	}
 
 	public MimeHeader getHeader(String name) {
@@ -111,7 +109,7 @@ public class Mail {
 	    return getBoundaryKey() != null;
 	}
 
-	public Map<String, MimeHeader> getHeaders() {
+	public MimeHeaderCollection getHeaders() {
 		return headers;
 	}
 

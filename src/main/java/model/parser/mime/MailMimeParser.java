@@ -3,12 +3,11 @@ package model.parser.mime;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Scanner;
 
 import model.mail.Mail;
 import model.mail.MailTransformer;
+import model.mail.MimeHeaderCollection;
 
 import org.apache.log4j.Logger;
 
@@ -52,7 +51,7 @@ public class MailMimeParser {
 				}
 			} while (!endOfMail);
 		} else {
-			Map<String, MimeHeader> headers = parseParams.mail.getHeaders();
+			MimeHeaderCollection headers = parseParams.mail.getHeaders();
 			StringBuilder text = new StringBuilder();
 			do {
 				endOfMail = line.equals(".");
@@ -73,7 +72,7 @@ public class MailMimeParser {
 		}
 		parseParams.destinationWriter.append("--" + boundaryKey + "\r\n");
 		Scanner sourceScanner = parseParams.sourceScanner;
-		Map<String, MimeHeader> headers = readBoundaryHeaders(parseParams);
+		MimeHeaderCollection headers = readBoundaryHeaders(parseParams);
 		MimeHeader contentType = headers.get("Content-Type");
 		parseParams.mail.addAttachmentsExtension(contentType.getValue());
 		String subBoundary = contentType == null ? null : contentType.getExtraValue("boundary");
@@ -104,8 +103,8 @@ public class MailMimeParser {
 		}
 	}
 
-	private Map<String, MimeHeader> readBoundaryHeaders(ParseParameters parseParams) throws IOException {
-		Map<String, MimeHeader> headers = new HashMap<String, MimeHeader>();
+	private MimeHeaderCollection readBoundaryHeaders(ParseParameters parseParams) throws IOException {
+		MimeHeaderCollection headers = new MimeHeaderCollection();
 		Scanner sourceScanner = parseParams.sourceScanner;
 		while (sourceScanner.hasNextLine()) {
 			String line = sourceScanner.nextLine();
@@ -115,7 +114,7 @@ public class MailMimeParser {
 				break;
 			}
 			MimeHeader header = new MimeHeader(line);
-			headers.put(header.getKey(), header);
+			headers.add(header);
 			parseParams.destinationWriter.append(header.toString() + "\r\n");
 			if (header.getKey().equals("Content-Type")) {
 				parseParams.mail.addAttachmentsExtension(header.getValue());

@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import model.configuration.Config;
 import model.configuration.SimpleListConfiguration;
@@ -41,7 +40,7 @@ public class MailTransformer {
 		}
 	}
 
-	public StringBuilder transformPart(Map<String, MimeHeader> partHeaders, StringBuilder part) throws IOException {
+	public StringBuilder transformPart(MimeHeaderCollection partHeaders, StringBuilder part) throws IOException {
 		StringBuilder retPart = part;
 		List<Transformer> transformers = getTransformerList();
 		for (Transformer transformer : transformers) {

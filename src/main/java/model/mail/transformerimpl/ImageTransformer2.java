@@ -4,11 +4,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 
 import javax.imageio.ImageIO;
 
+import model.mail.MimeHeaderCollection;
 import model.parser.mime.ContentTypeUtil;
 import model.parser.mime.MimeHeader;
 import model.util.Base64Util;
@@ -26,7 +26,7 @@ public class ImageTransformer2 implements Transformer {
 	}
 
 	@Override
-	public StringBuilder transform(StringBuilder part, Map<String, MimeHeader> partheaders) throws IOException {
+	public StringBuilder transform(StringBuilder part, MimeHeaderCollection partheaders) throws IOException {
 		MimeHeader contentType = partheaders.get("Content-Type");
 		MimeHeader contentTransferEncoding = partheaders.get("Content-Transfer-Encoding");
 		if (contentTransferEncoding == null){

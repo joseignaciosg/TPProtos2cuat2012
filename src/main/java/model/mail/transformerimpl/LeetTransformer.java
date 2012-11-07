@@ -3,9 +3,9 @@ package model.mail.transformerimpl;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Map;
 import java.util.Scanner;
 
+import model.mail.MimeHeaderCollection;
 import model.parser.mime.MimeHeader;
 import model.util.Base64Util;
 
@@ -15,13 +15,12 @@ import org.apache.commons.codec.net.QuotedPrintableCodec;
 public class LeetTransformer implements Transformer {
 
 	@Override
-	public StringBuilder transform(StringBuilder text,
-			Map<String, MimeHeader> partheaders) throws IOException {
+	public StringBuilder transform(StringBuilder text, MimeHeaderCollection partheaders) throws IOException {
 		MimeHeader contentType = partheaders.get("Content-Type");
-		MimeHeader contentTransferEncoding = partheaders.get("Content-Transfer-Encoding");
 		if (contentType == null || !contentType.getValue().toLowerCase().startsWith("text/plain")) {
 			return text;
 		}
+		MimeHeader contentTransferEncoding = partheaders.get("Content-Transfer-Encoding");
 		if (contentTransferEncoding == null) {
 			return new StringBuilder(toLeet(text.toString()));
 		} else {
