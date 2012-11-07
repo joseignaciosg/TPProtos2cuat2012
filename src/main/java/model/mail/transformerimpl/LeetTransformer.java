@@ -67,8 +67,7 @@ public class LeetTransformer implements Transformer {
 	}
 
 	private String decode(String quotedPrintable) {
-//		QuotedPrintableCodec codec = new QuotedPrintableCodec("ISO-8859-1");
-		QuotedPrintableCodec codec = new QuotedPrintableCodec("ISO-8859-*");
+		QuotedPrintableCodec codec = new QuotedPrintableCodec("ISO-8859-1");
 		try {
 			return codec.decode(quotedPrintable);
 		} catch (DecoderException e) {
