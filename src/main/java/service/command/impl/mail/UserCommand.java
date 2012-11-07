@@ -27,7 +27,7 @@ public class UserCommand extends ServiceCommand {
 			mailServer.getUserLoginvalidator().userCanLogin(user);
 		} catch (LoginValidationException e) {
 			mailServer.echoLine("-ERR " + e.getMessage());
-			owner.setEndOfTransmission(true);
+			owner.setEndOfTransmission(false);
 			return;
 		}
 		mailServer.setOriginServer(user.getMailServer());
@@ -39,6 +39,10 @@ public class UserCommand extends ServiceCommand {
 		String passwordCmd = owner.read().readLine();
 		resp = echoToOriginServerAndReadLine(passwordCmd);
 		owner.echoLine(resp);
+		if(passwordCmd.toLowerCase().equals("quit")){
+			owner.setEndOfTransmission(true);
+			return;
+		}
 		if (!resp.toUpperCase().startsWith("+OK")) {
 			return;
 		}

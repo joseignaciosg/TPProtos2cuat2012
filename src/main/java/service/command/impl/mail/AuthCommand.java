@@ -36,7 +36,7 @@ public class AuthCommand extends ServiceCommand {
 				mailServer.getUserLoginvalidator().userCanLogin(tmpUser);
 			} catch (LoginValidationException e) {
 				mailServer.echoLine("-ERR " + e.getMessage());
-				owner.setEndOfTransmission(true);
+				owner.setEndOfTransmission(false);
 				return;
 			}
 			mailServer.setOriginServer(tmpUser.getMailServer());

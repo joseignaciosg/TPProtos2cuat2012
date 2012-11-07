@@ -6,8 +6,6 @@ import model.validator.LoginValidationException;
 import model.validator.LoginValidator;
 
 import org.apache.log4j.Logger;
-import org.joda.time.DateTime;
-import org.joda.time.Interval;
 import org.joda.time.LocalTime;
 
 public class TimeValidator implements LoginValidator {
