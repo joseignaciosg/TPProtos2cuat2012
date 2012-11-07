@@ -16,7 +16,7 @@ public class MockedSocketEmailService extends AbstractSockectService {
 	}
 		
 	@Override
-	protected void onConnectionEstabished() throws Exception {
+	protected void onConnectionEstabished(boolean connection) throws Exception {
 		DataOutputStream outToClient = new DataOutputStream(socket.getOutputStream());
 		outToClient.writeBytes(server.exec(null));
 	}

@@ -33,7 +33,7 @@ public abstract class AbstractSockectService implements Runnable {
 	@Override
 	public void run() {
 		try {
-			onConnectionEstabished();
+			onConnectionEstabished(endOfTransmission);
 			while (!endOfTransmission) {
 				BufferedReader inFromClient = read();
 				String clientSentence = inFromClient.readLine(); 
@@ -55,7 +55,7 @@ public abstract class AbstractSockectService implements Runnable {
 		}
 	}
 
-	protected void onConnectionEstabished() throws Exception {
+	protected void onConnectionEstabished(boolean endOfTransmissio) throws Exception {
 		out = new DataOutputStream(socket.getOutputStream());
 		logger.info("Connection with client extablished. Inet Address: " + socket.getInetAddress());
 	}

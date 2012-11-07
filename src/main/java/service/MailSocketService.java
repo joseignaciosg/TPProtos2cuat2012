@@ -21,16 +21,17 @@ import service.state.impl.mail.TransactionMailState;
 
 public class MailSocketService extends AbstractSockectService {
 
-	private static final Logger logger = Logger.getLogger(MailSocketService.class);
-	
+	private static final Logger logger = Logger
+			.getLogger(MailSocketService.class);
+
 	private Socket originServerSocket;
-	
+
 	private MailRetriever mailRetriever;
 	private MailTransformer mailTranformer;
 	private MailMimeParser mailMimeParser;
 	private UserLoginValidator userLoginvalidator;
 	private DataOutputStream outToOriginServer;
-	
+
 	public MailSocketService(Socket socket) {
 		super(socket);
 		stateMachine.setState(new AuthState(this));
@@ -41,17 +42,22 @@ public class MailSocketService extends AbstractSockectService {
 	}
 
 	@Override
-	protected void onConnectionEstabished() throws Exception {
-		super.onConnectionEstabished();
-		echoLine("+OK Mail Poxy Ready.");
+	protected void onConnectionEstabished(boolean endOfTransmission) throws Exception {
+		super.onConnectionEstabished(endOfTransmission);
+		if(!endOfTransmission){
+			echoLine("+OK Mail Proxy Ready.");
+		}else{
+			echoLine("-ERR Your ip is banned.");
+		}
+		
 	}
-	
+
 	@Override
 	protected void exec(String command) throws Exception {
 		logger.trace("Recieved: " + command);
 		stateMachine.exec(command.split(" "));
 	}
-	
+
 	@Override
 	protected void onConnectionClosed() throws Exception {
 		logger.trace("Connection closed");
@@ -61,19 +67,19 @@ public class MailSocketService extends AbstractSockectService {
 		}
 		super.onConnectionClosed();
 	}
-	
+
 	public boolean hasOriginServerSocket() {
 		return originServerSocket != null;
 	}
-	
+
 	public Socket getOriginServerSocket() {
 		return originServerSocket;
 	}
-	
+
 	public MailRetriever getMailRetriever() {
 		return mailRetriever;
 	}
-	
+
 	public MailTransformer getMailTranformer() {
 		return mailTranformer;
 	}
@@ -81,24 +87,25 @@ public class MailSocketService extends AbstractSockectService {
 	public MailMimeParser getMailMimeParser() {
 		return mailMimeParser;
 	}
-	
+
 	public UserLoginValidator getUserLoginvalidator() {
 		return userLoginvalidator;
 	}
-	
+
 	public void echoLineToOriginServer(String s) throws IOException {
 		logger.trace("Echo to origin server: " + s);
 		echoToOriginServer(s + "\r\n");
 	}
-	
+
 	public void echoToOriginServer(String s) throws IOException {
 		outToOriginServer.writeBytes(s);
 	}
-	
+
 	public BufferedReader readFromOriginServer() throws IOException {
-		return new BufferedReader(new InputStreamReader(originServerSocket.getInputStream()));
+		return new BufferedReader(new InputStreamReader(
+				originServerSocket.getInputStream()));
 	}
-	
+
 	public String setOriginServer(String host) throws IOException {
 		logger.info("Origin server is now: " + host);
 		int port = Config.getInstance().getGeneralConfig().getInt("pop3_port");
@@ -107,12 +114,14 @@ public class MailSocketService extends AbstractSockectService {
 		logger.info("Mail server new connection status: " + line);
 		return line;
 	}
-	
-	public void setOriginServerSocket(Socket originServerSocket) throws IOException {
+
+	public void setOriginServerSocket(Socket originServerSocket)
+			throws IOException {
 		this.originServerSocket = originServerSocket;
-		outToOriginServer = new DataOutputStream(originServerSocket.getOutputStream());
+		outToOriginServer = new DataOutputStream(
+				originServerSocket.getOutputStream());
 	}
-	
+
 	public void userLoggedIn(User user) throws LoginValidationException {
 		userLoginvalidator.validateUserLogin(user);
 		getStateMachine().getBundle().put("user", user);
