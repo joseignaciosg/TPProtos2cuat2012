@@ -51,7 +51,7 @@ public class MimeHeader {
 	}
 	
 	public String getValue() {
-		return value;
+		return StringUtil.unquote(value);
 	}
 	
 	public void setValue(String value) {
@@ -62,7 +62,7 @@ public class MimeHeader {
 		for (String keyValuePair : extraValues) {
 			String[] keyValue = keyValuePair.split("=");
 			if (keyValue.length == 2 && name.equals(keyValue[0].trim())) {
-				return keyValue[1].trim();
+				return StringUtil.unquote(keyValue[1].trim());
 			}
 		}
 		return null;

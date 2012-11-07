@@ -63,14 +63,7 @@ public class Mail {
 		if (header == null) {
 			return null;
 		}
-		String boundary = header.getExtraValue("boundary");
-		if (boundary == null) {
-			return null;
-		}
-		if (boundary.startsWith("\"")) {	// un-quote
-			boundary = boundary.substring(1, boundary.length() - 1);
-		}
-	    return boundary;
+		return header.getExtraValue("boundary");
 	}
 
 	public LocalDate getDate() {

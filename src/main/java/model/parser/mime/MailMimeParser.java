@@ -74,7 +74,9 @@ public class MailMimeParser {
 		Scanner sourceScanner = parseParams.sourceScanner;
 		MimeHeaderCollection headers = readBoundaryHeaders(parseParams);
 		MimeHeader contentType = headers.get("Content-Type");
-		parseParams.mail.addAttachmentsExtension(contentType.getValue());
+		if (contentType != null) {
+			parseParams.mail.addAttachmentsExtension(contentType.getValue());
+		}
 		String subBoundary = contentType == null ? null : contentType.getExtraValue("boundary");
 		if (subBoundary != null) {
 			logger.info("Sub Part " + subBoundary + " found. Recursively parsing.");
