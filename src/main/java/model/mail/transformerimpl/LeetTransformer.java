@@ -62,12 +62,13 @@ public class LeetTransformer implements Transformer {
 		textString = textString.replace("a", "4");
 		textString = textString.replace("e", "3");
 		textString = textString.replace("i", "1");
-		textString = textString.replace("a", "4");
+		textString = textString.replace("o", "0");
 		return textString;
 	}
 
 	private String decode(String quotedPrintable) {
-		QuotedPrintableCodec codec = new QuotedPrintableCodec("ISO-8859-1");
+//		QuotedPrintableCodec codec = new QuotedPrintableCodec("ISO-8859-1");
+		QuotedPrintableCodec codec = new QuotedPrintableCodec("ISO-8859-*");
 		try {
 			return codec.decode(quotedPrintable);
 		} catch (DecoderException e) {
