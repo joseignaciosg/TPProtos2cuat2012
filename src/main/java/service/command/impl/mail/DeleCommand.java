@@ -3,20 +3,12 @@ package service.command.impl.mail;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import model.User;
 import model.mail.Mail;
 import model.util.CollectionUtil;
+import model.validator.MailDeleteValidator;
 import model.validator.MailValidationException;
-import model.validator.MailValidator;
-import model.validator.emailvalidator.DelContentTypeValidator;
-import model.validator.emailvalidator.DelHeaderPatternValidator;
-import model.validator.emailvalidator.DelMaxDateValidator;
-import model.validator.emailvalidator.DelSenderValidator;
-import model.validator.emailvalidator.DelSizeValidator;
-import model.validator.emailvalidator.DelStructureValidator;
 
 import org.apache.log4j.Logger;
 
@@ -28,17 +20,8 @@ public class DeleCommand extends ServiceCommand {
 
 	protected static final Logger logger = Logger.getLogger(DeleCommand.class);
 
-	private List<MailValidator> validators;
-
 	public DeleCommand(AbstractSockectService owner) {
 		super(owner);
-		validators = new ArrayList<MailValidator>();
-		validators.add(new DelContentTypeValidator());
-		validators.add(new DelHeaderPatternValidator());
-		validators.add(new DelMaxDateValidator());
-		validators.add(new DelSenderValidator());
-		validators.add(new DelSizeValidator());
-		validators.add(new DelStructureValidator());
 	}
 
 	@Override
@@ -48,11 +31,17 @@ public class DeleCommand extends ServiceCommand {
 			owner.echoLine("-ERR missing msg argument.");
 			return;
 		}
-		Mail email = getMail(params[0]);
+		Mail mail = getMail(params[0]);
+		if (mail == null) {
+			owner.echoLine("-ERR message could not be deleted.");
+			return;
+		}
 		User current = (User) getBundle().get("user");
-		for (MailValidator validator : validators) {
+		MailDeleteValidator validator = mailService.getMailDeletionValidator();
+		if (validator.hasRestrictions(current)) {
+			logger.info(current.getMail() + " has restrictions for mail deleting.");
 			try {
-				validator.validate(current, email);
+				validator.validate(current, mail);
 			} catch (MailValidationException e) {
 				logger.info(e.getMessage());
 				owner.echoLine("-ERR " + e.getMessage());
@@ -70,7 +59,8 @@ public class DeleCommand extends ServiceCommand {
 		BufferedReader mailInputReader = mailService.readFromOriginServer();
 		String statusLine = mailInputReader.readLine();
 		if (!statusLine.toUpperCase().startsWith("+OK")) {
-			throw new IllegalStateException("Could not retrieve mail " + mailName);
+			logger.error("Mail " + mailName + " could not be retrieved. Response: " + statusLine);
+			return null;
 		}
 		File source = mailService.getMailRetriever().retrieve(mailName, mailInputReader);
 		return mailService.getMailMimeParser().parse(source, mailService.getMailTranformer());

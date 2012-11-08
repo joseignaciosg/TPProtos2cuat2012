@@ -10,12 +10,9 @@ import model.util.CollectionUtil;
 
 public class StatsService {
 
-	private static StatsService statsService;
+	private static StatsService statsService = new StatsService(); 
 
-	public static synchronized StatsService getInstace() {
-		if (statsService == null) {
-			statsService = new StatsService();
-		}
+	public static StatsService getInstace() {
 		return statsService;
 	}
 
@@ -58,8 +55,12 @@ public class StatsService {
 		return transferedBytes.get();
 	}
 
-	public UserHistogram getStatsByUser(String user) {
+	public UserHistogram getOrCreateStatsByUser(String user) {
 		createUserInStatsMap(user);
+		return statsByUserMap.get(user);
+	}
+	
+	public UserHistogram getStatsByUser(String user) {
 		return statsByUserMap.get(user);
 	}
 

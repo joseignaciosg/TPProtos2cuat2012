@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
+import model.User;
 import model.util.StringUtil;
 
 import org.apache.log4j.Logger;
@@ -96,8 +97,16 @@ public abstract class AbstractSockectService implements Runnable {
 	public void echo(String s) {
 		try {
 			out.writeBytes(s);
+			logTransferredBytes(s.length());
 		} catch (IOException e) {
 		    logger.error("Could not write to output stream!. Reason: " + e.getMessage());
+		}
+	}
+	
+	protected void logTransferredBytes(long bytes) {
+		User user = (User) stateMachine.getBundle().get("user");
+		if (user != null) {
+			StatsService.getInstace().incrementTransferedBytes(bytes, user.getMail());
 		}
 	}
 	

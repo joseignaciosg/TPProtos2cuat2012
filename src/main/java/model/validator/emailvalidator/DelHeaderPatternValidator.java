@@ -4,15 +4,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.log4j.Logger;
-
 import model.User;
 import model.configuration.Config;
 import model.configuration.KeyValueConfiguration;
 import model.mail.Mail;
 import model.util.CollectionUtil;
-import model.validator.MailValidator;
 import model.validator.MailValidationException;
+import model.validator.MailValidator;
+
+import org.apache.log4j.Logger;
 
 public class DelHeaderPatternValidator implements MailValidator {
 
@@ -20,11 +20,17 @@ public class DelHeaderPatternValidator implements MailValidator {
 	private static KeyValueConfiguration deleteHeaderPatternConfig = Config.getInstance().getKeyValueConfig("notdelete_header_pattern");
 
 	@Override
-	public void validate(User user, Mail email) throws MailValidationException {
+	public boolean hasRestrictions(User user) {
 		String userRestrictions = deleteHeaderPatternConfig.get(user.getMail());
-		if (userRestrictions == null) {
+		return userRestrictions != null;
+	}
+	
+	@Override
+	public void validate(User user, Mail email) throws MailValidationException {
+		if (!hasRestrictions(user)) {
 			return;
 		}
+		String userRestrictions = deleteHeaderPatternConfig.get(user.getMail());
 		String[] headerPatterns = CollectionUtil.trimAll(userRestrictions.split(","));
 		Map<String, String> headerPatternMap = new HashMap<String, String>();
 		for (String s : headerPatterns) {

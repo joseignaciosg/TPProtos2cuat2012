@@ -16,12 +16,17 @@ public class DelMaxDateValidator implements MailValidator {
 	private static KeyValueConfiguration deleteDateConfig = Config.getInstance().getKeyValueConfig("notdelete_max_age");
 
 	@Override
-	public void validate(User user, Mail email) throws MailValidationException {
+	public boolean hasRestrictions(User user) {
 		String maxDateString = deleteDateConfig.get(user.getMail());
-		if (maxDateString == null) {
-			// No restrictions for this user
+		return maxDateString != null;
+	}
+	
+	@Override
+	public void validate(User user, Mail email) throws MailValidationException {
+		if (!hasRestrictions(user)) {
 			return;
 		}
+		String maxDateString = deleteDateConfig.get(user.getMail());
 		DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yyyy");
 		LocalDate maxDate = dtf.parseLocalDate(maxDateString.trim());
 		if (!email.getDate().isBefore(maxDate)) {

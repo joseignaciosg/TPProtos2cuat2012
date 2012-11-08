@@ -13,11 +13,17 @@ public class DelStructureValidator implements MailValidator {
 	private static KeyValueConfiguration deleteStructureConfig = Config.getInstance().getKeyValueConfig("notdelete_structure");
 
 	@Override
-	public void validate(User user, Mail email) throws MailValidationException {
+	public boolean hasRestrictions(User user) {
 		String userRestruictions = deleteStructureConfig.get(user.getMail());
-		if (userRestruictions == null) {
+		return userRestruictions != null;
+	}
+	
+	@Override
+	public void validate(User user, Mail email) throws MailValidationException {
+		if (!hasRestrictions(user)) {
 			return;
 		}
+		String userRestruictions = deleteStructureConfig.get(user.getMail());
 		String[] desiredStructure = CollectionUtil.trimAll(userRestruictions.split(","));
 		for (String field: desiredStructure) {
 			if ("dissabledAttachments".equals(field) && email.hasAttachments()) {

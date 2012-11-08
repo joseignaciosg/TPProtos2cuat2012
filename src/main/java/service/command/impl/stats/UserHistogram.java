@@ -57,7 +57,7 @@ public class UserHistogram {
 		StringBuilder sb = new StringBuilder();
 		sb.append("User: " + user + "\r\n");
 		sb.append("Total accesess: " + numberOfAccesses + "\r\n");
-		sb.append("Acces today: " + accesByDate.todayAccesses());
+		sb.append("Acces today: " + accesByDate.todayAccesses() + "\r\n");
 		sb.append("Tranfered bytes: " + getTransferedBytes() + "\r\n");
 		sb.append("Read mails: " + getNumberOfReadMail() + "\r\n");
 		sb.append("Deleted mails: " + getNumberOfDeletedMail() + "\r\n");
