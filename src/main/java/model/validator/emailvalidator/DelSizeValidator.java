@@ -20,9 +20,9 @@ public class DelSizeValidator implements MailValidator {
 		maxSizeAccepted = maxSizeAccepted.trim();
 		if (Long.valueOf(maxSizeAccepted) > email.getSizeInBytes()) {
 			String message = "Restricting message deletion because it's size ("
-					+ maxSizeAccepted
-					+ " bytes) is bigger than the maximum accepted size for"
-					+ " this account (" + email.getSizeInBytes() + "bytes)";
+					+ email.getSizeInBytes()
+					+ " bytes) is lower than the minimum deletion accepted size for"
+					+ " this account (" + maxSizeAccepted + "bytes)";
 			throw new MailValidationException(message);
 		}
 	}
