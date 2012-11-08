@@ -104,12 +104,12 @@ public class MailSocketService extends AbstractSockectService {
 	}
 
 	public void echoToOriginServer(String s) throws IOException {
+		logTransferredBytes(s.length());
 		outToOriginServer.writeBytes(s);
 	}
 
 	public BufferedReader readFromOriginServer() throws IOException {
-		return new BufferedReader(new InputStreamReader(
-				originServerSocket.getInputStream()));
+		return new BufferedReader(new InputStreamReader(originServerSocket.getInputStream()));
 	}
 
 	public String setOriginServer(String host) throws IOException {
@@ -121,11 +121,9 @@ public class MailSocketService extends AbstractSockectService {
 		return line;
 	}
 
-	public void setOriginServerSocket(Socket originServerSocket)
-			throws IOException {
+	public void setOriginServerSocket(Socket originServerSocket) throws IOException {
 		this.originServerSocket = originServerSocket;
-		outToOriginServer = new DataOutputStream(
-				originServerSocket.getOutputStream());
+		outToOriginServer = new DataOutputStream(originServerSocket.getOutputStream());
 	}
 
 	public void userLoggedIn(User user) throws LoginValidationException {
