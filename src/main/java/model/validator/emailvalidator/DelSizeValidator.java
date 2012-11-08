@@ -12,17 +12,21 @@ public class DelSizeValidator implements MailValidator {
 	private static KeyValueConfiguration deleteSizeConfig = Config.getInstance().getKeyValueConfig("notdelete_size");
 
 	@Override
-	public void validate(User user, Mail email) throws MailValidationException {
+	public boolean hasRestrictions(User user) {
 		String maxSizeAccepted = deleteSizeConfig.get(user.getMail());
-		if (maxSizeAccepted == null) {
+		return maxSizeAccepted != null;
+	}
+	
+	@Override
+	public void validate(User user, Mail email) throws MailValidationException {
+		if (!hasRestrictions(user)) {
 			return;
 		}
+		String maxSizeAccepted = deleteSizeConfig.get(user.getMail());
 		maxSizeAccepted = maxSizeAccepted.trim();
 		if (Long.valueOf(maxSizeAccepted) > email.getSizeInBytes()) {
-			String message = "Restricting message deletion because it's size ("
-					+ maxSizeAccepted
-					+ " bytes) is bigger than the maximum accepted size for"
-					+ " this account (" + email.getSizeInBytes() + "bytes)";
+			String message = "Restricting message deletion because mail size is "
+				+ email.getSizeInBytes() + " bytes. Restriction: Max " + maxSizeAccepted + " bytes";
 			throw new MailValidationException(message);
 		}
 	}

@@ -3,20 +3,12 @@ package service.command.impl.mail;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import model.User;
 import model.mail.Mail;
 import model.util.CollectionUtil;
+import model.validator.MailDeleteValidator;
 import model.validator.MailValidationException;
-import model.validator.MailValidator;
-import model.validator.emailvalidator.DelContentTypeValidator;
-import model.validator.emailvalidator.DelHeaderPatternValidator;
-import model.validator.emailvalidator.DelMaxDateValidator;
-import model.validator.emailvalidator.DelSenderValidator;
-import model.validator.emailvalidator.DelSizeValidator;
-import model.validator.emailvalidator.DelStructureValidator;
 
 import org.apache.log4j.Logger;
 
@@ -28,17 +20,10 @@ public class DeleCommand extends ServiceCommand {
 
 	protected static final Logger logger = Logger.getLogger(DeleCommand.class);
 
-	private List<MailValidator> validators;
+	
 
 	public DeleCommand(AbstractSockectService owner) {
 		super(owner);
-		validators = new ArrayList<MailValidator>();
-		validators.add(new DelContentTypeValidator());
-		validators.add(new DelHeaderPatternValidator());
-		validators.add(new DelMaxDateValidator());
-		validators.add(new DelSenderValidator());
-		validators.add(new DelSizeValidator());
-		validators.add(new DelStructureValidator());
 	}
 
 	@Override
@@ -50,7 +35,9 @@ public class DeleCommand extends ServiceCommand {
 		}
 		Mail email = getMail(params[0]);
 		User current = (User) getBundle().get("user");
-		for (MailValidator validator : validators) {
+		MailDeleteValidator validator = mailService.getMailDeletionValidator();
+		if (validator.hasRestrictions(current)) {
+			logger.info(current.getMail() + " has restrictions for mail deleting.");
 			try {
 				validator.validate(current, email);
 			} catch (MailValidationException e) {

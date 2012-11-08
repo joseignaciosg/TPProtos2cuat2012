@@ -10,15 +10,20 @@ import model.validator.MailValidationException;
 
 public class DelSenderValidator implements MailValidator {
 
-	private static KeyValueConfiguration deleteSenderConfig = Config
-			.getInstance().getKeyValueConfig("notdelete_sender");
+	private static KeyValueConfiguration deleteSenderConfig = Config.getInstance().getKeyValueConfig("notdelete_sender");
 
 	@Override
-	public void validate(User user, Mail email) throws MailValidationException {
+	public boolean hasRestrictions(User user) {
 		String userRestrictions = deleteSenderConfig.get(user.getMail());
-		if (userRestrictions == null) {
+		return userRestrictions != null;
+	}
+	
+	@Override
+	public void validate(User user, Mail email) throws MailValidationException {
+		if (!hasRestrictions(user)) {
 			return;
 		}
+		String userRestrictions = deleteSenderConfig.get(user.getMail());
 		String[] bannedSenders = CollectionUtil.trimAll(userRestrictions
 				.split(","));
 		String sender = email.getSender();

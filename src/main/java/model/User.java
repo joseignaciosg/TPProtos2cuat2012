@@ -26,10 +26,6 @@ public class User {
 	public String getPassword() {
 		return password;
 	}
-	
-	public String getMailhost() {
-		return mail.split("@")[1];
-	}
 
 	public String getMailServer() {
 		String server = originServerConfig.get(mail);

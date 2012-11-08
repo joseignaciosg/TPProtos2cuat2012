@@ -12,6 +12,7 @@ import model.mail.MailRetriever;
 import model.mail.MailTransformer;
 import model.parser.mime.MailMimeParser;
 import model.validator.LoginValidationException;
+import model.validator.MailDeleteValidator;
 import model.validator.UserLoginValidator;
 
 import org.apache.log4j.Logger;
@@ -21,14 +22,14 @@ import service.state.impl.mail.TransactionMailState;
 
 public class MailSocketService extends AbstractSockectService {
 
-	private static final Logger logger = Logger
-			.getLogger(MailSocketService.class);
+	private static final Logger logger = Logger.getLogger(MailSocketService.class);
 
 	private Socket originServerSocket;
 
 	private MailRetriever mailRetriever;
 	private MailTransformer mailTranformer;
 	private MailMimeParser mailMimeParser;
+	private MailDeleteValidator mailDeletionValidator;
 	private UserLoginValidator userLoginvalidator;
 	private DataOutputStream outToOriginServer;
 
@@ -39,6 +40,7 @@ public class MailSocketService extends AbstractSockectService {
 		mailTranformer = new MailTransformer();
 		mailMimeParser = new MailMimeParser();
 		userLoginvalidator = new UserLoginValidator();
+		mailDeletionValidator = new MailDeleteValidator();
 	}
 
 	@Override
@@ -92,6 +94,10 @@ public class MailSocketService extends AbstractSockectService {
 		return userLoginvalidator;
 	}
 
+	public MailDeleteValidator getMailDeletionValidator() {
+		return mailDeletionValidator;
+	}
+	
 	public void echoLineToOriginServer(String s) throws IOException {
 		logger.trace("Echo to origin server: " + s);
 		echoToOriginServer(s + "\r\n");
