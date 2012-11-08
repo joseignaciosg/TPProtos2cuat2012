@@ -31,15 +31,15 @@ public class DeleCommand extends ServiceCommand {
 			owner.echoLine("-ERR missing msg argument.");
 			return;
 		}
-		Mail mail = getMail(params[0]);
-		if (mail == null) {
-			owner.echoLine("-ERR message could not be deleted.");
-			return;
-		}
 		User current = (User) getBundle().get("user");
 		MailDeleteValidator validator = mailService.getMailDeletionValidator();
 		if (validator.hasRestrictions(current)) {
 			logger.info(current.getMail() + " has restrictions for mail deleting.");
+			Mail mail = getMail(params[0]);
+			if (mail == null) {
+				owner.echoLine("-ERR message could not be deleted.");
+				return;
+			}
 			try {
 				validator.validate(current, mail);
 			} catch (MailValidationException e) {
