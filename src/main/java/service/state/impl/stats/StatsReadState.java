@@ -16,7 +16,6 @@ public class StatsReadState extends State {
 		commandRecognizer.register("HIST", HistogramCommand.class);
 		commandRecognizer.register("LIST", ListCommand.class);
 		commandRecognizer.register("SHOW", ShowCommand.class);
-		commandRecognizer.register("STATS", ShowCommand.class);
 		commandRecognizer.register("AUTO", AutoUpdatesCommand.class);
 	}
 

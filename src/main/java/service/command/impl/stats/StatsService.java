@@ -55,8 +55,12 @@ public class StatsService {
 		return transferedBytes.get();
 	}
 
-	public UserHistogram getStatsByUser(String user) {
+	public UserHistogram getOrCreateStatsByUser(String user) {
 		createUserInStatsMap(user);
+		return statsByUserMap.get(user);
+	}
+	
+	public UserHistogram getStatsByUser(String user) {
 		return statsByUserMap.get(user);
 	}
 
