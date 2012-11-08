@@ -34,7 +34,7 @@ public class DelHeaderPatternValidator implements MailValidator {
 		String[] headerPatterns = CollectionUtil.trimAll(userRestrictions.split(","));
 		Map<String, String> headerPatternMap = new HashMap<String, String>();
 		for (String s : headerPatterns) {
-			String[] lineSplit = CollectionUtil.trimAll(s.split("eq"));
+			String[] lineSplit = CollectionUtil.trimAll(s.split("like"));
 			if (lineSplit == null || lineSplit.length != 2) {
 				logger.error("Invalid cofnig line: " + s + " for user: " + user.getMail());
 				continue;
@@ -42,7 +42,7 @@ public class DelHeaderPatternValidator implements MailValidator {
 			headerPatternMap.put(lineSplit[0], lineSplit[1]);
 		}
 		for (Entry<String, String> entry : headerPatternMap.entrySet()) {
-			if (email.containsHeader(entry.getKey(), entry.getValue())) {
+			if (email.headerMatches(entry.getKey(), entry.getValue())) {
 				String message = "Restricting message deletion because mail has the following header " + entry.getValue();
 				throw new MailValidationException(message);
 			}

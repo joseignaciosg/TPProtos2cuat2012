@@ -9,8 +9,7 @@ import model.validator.MailValidationException;
 
 public class DelSizeValidator implements MailValidator {
 
-	private static KeyValueConfiguration deleteSizeConfig = Config
-			.getInstance().getKeyValueConfig("notdelete_size");
+	private static KeyValueConfiguration deleteSizeConfig = Config.getInstance().getKeyValueConfig("notdelete_size");
 
 	@Override
 	public boolean hasRestrictions(User user) {

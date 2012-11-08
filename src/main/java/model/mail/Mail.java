@@ -123,6 +123,10 @@ public class Mail {
 		return headers.contains(key, value);
 	}
 
+	public boolean headerMatches(String key, String match) {
+		return headers.headerMatches(key, match);
+	}
+	
 	public File getContents() {
 		return contents;
 	}
