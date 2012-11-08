@@ -37,7 +37,7 @@ public class MimeHeaderParser {
 			MimeHeader header = new MimeHeader(line);
 			parseParams.mail.addHeader(header);
 			writeHeader(parseParams, header);
-			if (header.getKey().equals("Content-Type")) {
+			if (header.getKey().equalsIgnoreCase("content-type")) {
 				parseParams.mail.addAttachmentsExtension(header.getValue());
 			}
 			logger.debug("Parsed header => " + header);

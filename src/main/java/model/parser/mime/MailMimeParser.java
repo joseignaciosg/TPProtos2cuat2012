@@ -45,6 +45,12 @@ public class MailMimeParser {
 			do {
 				parsePart(parseParams, boundary, line);
 				line = parseParams.sourceScanner.nextLine();
+				if (line.isEmpty()) {
+					// skip all empty lines
+					while ((line = parseParams.sourceScanner.nextLine()).isEmpty()) {
+						parseParams.destinationWriter.append("\r\n");
+					}
+				}
 				endOfMail = line.equals(".");
 				if (!endOfMail && !line.startsWith("--" + boundary)) {
 					throw new IllegalStateException("Unexpected line: " + line + ". Expected end of bondary.");
@@ -74,10 +80,7 @@ public class MailMimeParser {
 		Scanner sourceScanner = parseParams.sourceScanner;
 		MimeHeaderCollection headers = readBoundaryHeaders(parseParams);
 		MimeHeader contentType = headers.get("Content-Type");
-		if (contentType != null) {
-			parseParams.mail.addAttachmentsExtension(contentType.getValue());
-		}
-		String subBoundary = contentType == null ? null : contentType.getExtraValue("boundary");
+		String subBoundary = (contentType == null) ? null : contentType.getExtraValue("boundary");
 		if (subBoundary != null) {
 			logger.info("Sub Part " + subBoundary + " found. Recursively parsing.");
 			parsePart(parseParams, subBoundary, sourceScanner.nextLine());
@@ -108,20 +111,30 @@ public class MailMimeParser {
 	private MimeHeaderCollection readBoundaryHeaders(ParseParameters parseParams) throws IOException {
 		MimeHeaderCollection headers = new MimeHeaderCollection();
 		Scanner sourceScanner = parseParams.sourceScanner;
+		String lastReadLine = sourceScanner.nextLine();
 		while (sourceScanner.hasNextLine()) {
-			String line = sourceScanner.nextLine();
-			// Empty line marks the end of sub-boundary headers
-			if (line.equals("")) {
-				parseParams.destinationWriter.append(line + "\r\n");
-				break;
-			}
+			boolean endOfHeader;
+			String line = lastReadLine;
+			do {
+				endOfHeader = true;
+				lastReadLine = sourceScanner.nextLine();
+				if (lastReadLine.startsWith("\t") || lastReadLine.startsWith(" ") || lastReadLine.startsWith(".")) {
+					line += "\r\n" + lastReadLine;
+					endOfHeader = false;
+				}
+			} while (!endOfHeader);			
 			MimeHeader header = new MimeHeader(line);
 			headers.add(header);
 			parseParams.destinationWriter.append(header.toString() + "\r\n");
-			if (header.getKey().equals("Content-Type")) {
+			if (header.getKey().equalsIgnoreCase("content-type")) {
 				parseParams.mail.addAttachmentsExtension(header.getValue());
 			}
 			logger.debug("Parsed Part header => " + header);
+			// Empty line marks the end of sub-boundary headers
+			if (lastReadLine.isEmpty()) {
+				parseParams.destinationWriter.append(line + "\r\n");
+				break;
+			}
 		}
 		return headers;
 	}

@@ -60,9 +60,15 @@ public class MimeHeader {
 	
 	public String getExtraValue(String name) {
 		for (String keyValuePair : extraValues) {
-			String[] keyValue = keyValuePair.split("=");
-			if (keyValue.length == 2 && name.equals(keyValue[0].trim())) {
-				return StringUtil.unquote(keyValue[1].trim());
+			String cleaned = keyValuePair.replace("\r", "").replace("\n", "");
+			int splitIndex = cleaned.indexOf("=");
+			if (splitIndex == -1) {
+				return null;
+			}
+			String key = cleaned.substring(0, splitIndex).trim();
+			String extraValue = cleaned.substring(splitIndex + 1).trim();
+			if (name.equalsIgnoreCase(key)) {
+				return StringUtil.unquote(extraValue);
 			}
 		}
 		return null;
