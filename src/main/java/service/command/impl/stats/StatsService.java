@@ -10,12 +10,9 @@ import model.util.CollectionUtil;
 
 public class StatsService {
 
-	private static StatsService statsService;
+	private static StatsService statsService = new StatsService(); 
 
-	public static synchronized StatsService getInstace() {
-		if (statsService == null) {
-			statsService = new StatsService();
-		}
+	public static StatsService getInstace() {
 		return statsService;
 	}
 
