@@ -9,9 +9,6 @@ import model.mail.MimeHeaderCollection;
 import model.parser.mime.MimeHeader;
 import model.util.Base64Util;
 
-import org.apache.commons.codec.DecoderException;
-import org.apache.commons.codec.net.QuotedPrintableCodec;
-
 public class LeetTransformer implements Transformer {
 
 	@Override
@@ -50,11 +47,34 @@ public class LeetTransformer implements Transformer {
 					throw new IllegalStateException(e);
 				}
 			} else { // quoted-printable
-				String decodeString = decode(text.toString());
-				String transformed = toLeet(decodeString);
+				String transformed = toQuoted(text.toString());
 				return new StringBuilder(transformed);
 			}
 		}
+	}
+	
+	private String toQuoted(String decodeString ){
+		byte[] aux = decodeString.getBytes();
+		for(int i=0 ; i<aux.length; i++){
+			switch(aux[i]){
+			case 'a':
+				aux[i] = '4';
+				break;
+			case 'e':
+				aux[i] = '3';
+				break;
+			case 'i':
+				aux[i] = '1';
+				break;
+			case 'o':
+				aux[i] = '0';
+				break;
+			case '=':
+				i+=2;
+				break;
+			}
+		}
+		return new String(aux);
 	}
 
 	private String toLeet(String text) {
@@ -66,14 +86,5 @@ public class LeetTransformer implements Transformer {
 		return textString;
 	}
 
-	private String decode(String quotedPrintable) {
-		QuotedPrintableCodec codec = new QuotedPrintableCodec("ISO-8859-1");
-		try {
-			return codec.decode(quotedPrintable);
-		} catch (DecoderException e) {
-			throw new IllegalStateException("Could not decode: "
-					+ quotedPrintable);
-		}
-	}
 
 }
