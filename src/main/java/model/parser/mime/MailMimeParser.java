@@ -44,13 +44,7 @@ public class MailMimeParser {
 			String boundary = parseParams.mail.getBoundaryKey();
 			do {
 				parsePart(parseParams, boundary, line);
-				line = parseParams.sourceScanner.nextLine();
-				if (line.isEmpty()) {
-					// skip all empty lines
-					while ((line = parseParams.sourceScanner.nextLine()).isEmpty()) {
-						parseParams.destinationWriter.append("\r\n");
-					}
-				}
+				line = skipLineBreaks(parseParams.sourceScanner.nextLine(), parseParams);
 				endOfMail = line.equals(".");
 				if (!endOfMail && !line.startsWith("--" + boundary)) {
 					throw new IllegalStateException("Unexpected line: " + line + ". Expected end of bondary.");
@@ -73,6 +67,7 @@ public class MailMimeParser {
 	}
 
 	private void parsePart(ParseParameters parseParams, String boundaryKey, String lastLine) throws IOException {
+		lastLine = skipLineBreaks(lastLine, parseParams);
 		if (!lastLine.equals("--" + boundaryKey)) {
 			throw new IllegalStateException("Expected beggining of boundary");
 		}
@@ -139,4 +134,11 @@ public class MailMimeParser {
 		return headers;
 	}
 
+	private String skipLineBreaks(String currLine, ParseParameters parseParams) throws IOException {
+		while (currLine.isEmpty()) {
+			parseParams.destinationWriter.append("\r\n");
+			currLine = parseParams.sourceScanner.nextLine();
+		}
+		return currLine;
+	}
 }
