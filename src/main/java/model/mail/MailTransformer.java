@@ -15,6 +15,7 @@ import model.mail.transformerimpl.ImageTransformer2;
 import model.mail.transformerimpl.LeetTransformer;
 import model.mail.transformerimpl.Transformer;
 import model.parser.mime.MimeHeader;
+import model.util.IOUtil;
 
 import org.apache.log4j.Logger;
 
@@ -67,26 +68,27 @@ public class MailTransformer {
 	}
 	
 	public void transformComplete(Mail mail) {
-		List<String> xternalTransformers = getExternalTransformerList();
+		List<String> externalTransformers = getExternalTransformerList();
 		List<String> commands = new LinkedList<String>();
 		try {
 			File transformedIn = mail.getContents();
 			File transformedOut = File.createTempFile("externalTransformOut", ".txt");
-			for (String command : xternalTransformers) {
+			for (String command : externalTransformers) {
 				commands.clear();
 				commands.addAll(Arrays.asList(command.split(" ")));
 				commands.add(transformedIn.getAbsolutePath());
 				ProcessBuilder pb = new ProcessBuilder(commands);
-				pb.redirectOutput(transformedOut);
 				Process p = pb.start();
 				p.waitFor();
 				if (p.exitValue() == 0) {
+					IOUtil.redirectOutputStream(p.getInputStream(), transformedOut);
 					mail.setContents(transformedOut);
 					// switch in <-> out
 					File tmp = transformedIn;
 					transformedIn = transformedOut;
 					transformedOut = tmp;
 				} else {
+					// IOUtil.redirectOutputStream(p.getErrorStream(), File.createTempFile("testing", ".txt"));
 					logger.warn(command + "did not finish succesfuly. Exit code " + p.exitValue());
 				}
 			}

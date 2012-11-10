@@ -20,9 +20,9 @@ public class Base64Util {
 		commands.add(file.getAbsolutePath());
 		ProcessBuilder pb = new ProcessBuilder(commands);
 		File decodedContents = File.createTempFile("encoded_", ".tmp");
-		pb.redirectOutput(decodedContents);
 		Process process = pb.start();
 		process.waitFor();
+		IOUtil.redirectOutputStream(process.getInputStream(), decodedContents);
 		file.delete();
 		return decodedContents;
 	}
@@ -40,9 +40,9 @@ public class Base64Util {
 		commands.add(file.getAbsolutePath());
 		ProcessBuilder pb = new ProcessBuilder(commands);
 		File decodedContents = File.createTempFile("decode_", ".tmp");
-		pb.redirectOutput(decodedContents);
 		Process process = pb.start();
 		process.waitFor();
+		IOUtil.redirectOutputStream(process.getInputStream(), decodedContents);
 		file.delete();
 		return decodedContents;
 	}
