@@ -130,7 +130,6 @@ public class MailSocketService extends AbstractSockectService {
 		userLoginvalidator.validateUserLogin(user);
 		getStateMachine().getBundle().put("user", user);
 		getStateMachine().setState(new TransactionMailState(this));
-		statsService.incrementNumberOfAccesses(user.getMail());
 		logger.info(user.getMail() + " logueado correctamente.");
 	}
 }
