@@ -23,22 +23,21 @@ public class ProxyInitializer {
 			System.out.println("\tExample: ./server.init coyote.itba.edu.ar 110");
 			return;
 		}
-		System.setProperty("defualtOriginServer", args[1]);
 		try {
-			int port = Integer.valueOf(args[2]);
-			System.setProperty("originServerPort", port + "");
+			new ProxyInitializer().initialize(args[0], args[1], Integer.valueOf(args[2]));
 		} catch (NumberFormatException e) {
 			System.out.println(args[2] + " is not a number.");
 			return;
 		}
-		new ProxyInitializer().initialize(args[0]);
 	}
 
-	public void initialize(String configurationFile) {
+	public void initialize(String configurationFile, String defaultOriginServer, int originServerPort) {
 		String configFile = Config.getInstance().getConfigResourcePath("log4j");
 		PropertyConfigurator.configure(IOUtil.getResource(configFile));
 		logger.trace("Initializing proxy.....");
 		try {
+			System.setProperty("defualtOriginServer", defaultOriginServer);
+			System.setProperty("originServerPort", originServerPort + "");
 			new ServerInitializer().initialize(new File(configurationFile));
 			logger.trace("Proxy Started succesfully!");
 		} catch (FileNotFoundException e) {
