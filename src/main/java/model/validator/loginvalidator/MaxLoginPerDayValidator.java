@@ -25,9 +25,13 @@ public class MaxLoginPerDayValidator implements LoginValidator {
 			return;
 		}
 		int maxAmount = Integer.valueOf(value);
-		int todayAcceses = statsService.getOrCreateStatsByUser(user.getMail()).getAccesForToday()  + 1;
-		if (maxAmount < todayAcceses) {
-			throw new LoginValidationException("Max number of login acceses reached for the day.");
+		int todayAccesses;
+		synchronized (statsService) {
+			todayAccesses = statsService.incrementNumberOfAccesses(user.getMail());
+			statsService.getStatsByUser(user.getMail()).getAccesForToday();			
+		}
+		if (maxAmount < todayAccesses) {
+			throw new LoginValidationException("Max number of login acceses reached for the day.");			
 		}
 	}
 	

@@ -28,9 +28,10 @@ public class UserHistogram {
 		return numberOfAccesses;
 	}
 
-	public void incrementNumberOfAccesses() {
+	public int incrementNumberOfAccesses() {
 		numberOfAccesses++;
 		accesByDate.incrementAccess();
+		return numberOfAccesses;
 	}
 
 	public int getNumberOfReadMail() {

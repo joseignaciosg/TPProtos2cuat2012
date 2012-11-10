@@ -17,7 +17,7 @@ public class StatsService {
 	}
 
 	private AtomicInteger transferedBytes;
-	private AtomicInteger numberOfAccesses;
+	private AtomicInteger totalNumberOfAccesses;
 	private AtomicInteger numberOfReadMail;
 	private AtomicInteger numberOfDeletedMail;
 	private ConcurrentMap<String, UserHistogram> statsByUserMap;
@@ -28,22 +28,21 @@ public class StatsService {
 
 	private void reset() {
 		transferedBytes = new AtomicInteger();
-		numberOfAccesses = new AtomicInteger();
+		totalNumberOfAccesses = new AtomicInteger();
 		numberOfReadMail = new AtomicInteger();
 		numberOfDeletedMail = new AtomicInteger();
 		statsByUserMap = new ConcurrentHashMap<String, UserHistogram>();
 	}
 
-	public void incrementNumberOfAccesses(String userMail) {
-		numberOfAccesses.incrementAndGet();
-		createUserInStatsMap(userMail);
-		incrementUserAccesses(userMail);
+	public int incrementNumberOfAccesses(String userMail) {
+		totalNumberOfAccesses.incrementAndGet();
+		return incrementUserAccesses(userMail);
 	}
 
-	private void createUserInStatsMap(String userMail) {
-		if (!statsByUserMap.containsKey(userMail)) {
-			statsByUserMap.put(userMail, new UserHistogram(userMail));
-		}		
+	public int decrementNumberOfAccesses(String userMail) {
+		int amount = totalNumberOfAccesses.decrementAndGet();
+		incrementUserAccesses(userMail);
+		return amount;
 	}
 
 	public void incrementTransferedBytes(long bytes, String userMail) {
@@ -55,11 +54,6 @@ public class StatsService {
 		return transferedBytes.get();
 	}
 
-	public UserHistogram getOrCreateStatsByUser(String user) {
-		createUserInStatsMap(user);
-		return statsByUserMap.get(user);
-	}
-	
 	public UserHistogram getStatsByUser(String user) {
 		return statsByUserMap.get(user);
 	}
@@ -84,22 +78,17 @@ public class StatsService {
 	}
 
 	public int getNumberOfAccesses() {
-		return numberOfAccesses.get();
+		return totalNumberOfAccesses.get();
 	}
 	
 
-	private void incrementUserAccesses(String user) {
+	private int incrementUserAccesses(String user) {
 		UserHistogram uh = statsByUserMap.get(user);
-		if (uh != null) {
-			uh.incrementNumberOfAccesses();
+		if (uh == null) {
+			uh = new UserHistogram(user);
+			statsByUserMap.put(user, uh);
 		}
-	}
-
-	private void incrementUserDeletedMail(String user) {
-		UserHistogram uh = statsByUserMap.get(user);
-		if (uh != null) {
-			uh.incrementNumberOfDeletedMail();
-		}
+		return uh.incrementNumberOfAccesses();
 	}
 
 	public int getNumberOfDeletedMail() {
@@ -108,7 +97,8 @@ public class StatsService {
 	
 	public void incrementNumberOfDeletedMail(String userMail) {
 		numberOfDeletedMail.incrementAndGet();
-		incrementUserDeletedMail(userMail);
+		UserHistogram uh = statsByUserMap.get(userMail);
+		uh.incrementNumberOfDeletedMail();
 	}
 
 	public int getNumberOfReadMail() {
