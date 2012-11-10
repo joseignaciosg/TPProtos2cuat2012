@@ -33,6 +33,11 @@ public class UserHistogram {
 		accesByDate.incrementAccess();
 		return numberOfAccesses;
 	}
+	
+	public void decrementNumberOfAccesses() {
+		numberOfAccesses--;
+		accesByDate.decrementAccesses();
+	}
 
 	public int getNumberOfReadMail() {
 		return numberOfReadMail;
@@ -78,6 +83,13 @@ public class UserHistogram {
 			amount++;
 		}
 
+		void decrementAccesses() {
+			if (amount > 0) {
+				amount--;
+			}
+			
+		}
+		
 		int todayAccesses() {
 			return (new LocalDate().equals(lastDayOfAccess)) ? amount : 0;
 		}

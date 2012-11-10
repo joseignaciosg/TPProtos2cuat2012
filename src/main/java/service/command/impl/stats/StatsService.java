@@ -39,10 +39,9 @@ public class StatsService {
 		return incrementUserAccesses(userMail);
 	}
 
-	public int decrementNumberOfAccesses(String userMail) {
-		int amount = totalNumberOfAccesses.decrementAndGet();
-		incrementUserAccesses(userMail);
-		return amount;
+	public void decrementNumberOfAccesses(String userMail) {
+		totalNumberOfAccesses.decrementAndGet();
+		decrementUserAccesses(userMail);
 	}
 
 	public void incrementTransferedBytes(long bytes, String userMail) {
@@ -89,6 +88,10 @@ public class StatsService {
 			statsByUserMap.put(user, uh);
 		}
 		return uh.incrementNumberOfAccesses();
+	}
+
+	private void decrementUserAccesses(String user) {
+		statsByUserMap.get(user).decrementNumberOfAccesses();
 	}
 
 	public int getNumberOfDeletedMail() {
