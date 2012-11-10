@@ -23,12 +23,6 @@ public class UserCommand extends ServiceCommand {
 			return;
 		}
 		User user = new User(params[0], null);
-		try {
-			mailServer.getUserLoginvalidator().userCanLogin(user);
-		} catch (LoginValidationException e) {
-			mailServer.echoLine("-ERR " + e.getMessage());
-			return;
-		}
 		mailServer.setOriginServer(user.getMailServer());
 		String resp = echoToOriginServerAndReadLine(getOriginalLine());
 		owner.echoLine(resp);
@@ -37,15 +31,22 @@ public class UserCommand extends ServiceCommand {
 		}
 		String passwordCmd = owner.read().readLine();
 		resp = echoToOriginServerAndReadLine(passwordCmd);
-		owner.echoLine(resp);
 		if (passwordCmd.toLowerCase().equals("quit")) {
 			owner.setEndOfTransmission(true);
 			return;
 		}
 		if (!resp.toUpperCase().startsWith("+OK")) {
+			owner.echoLine(resp);
 			return;
 		}
 		user.setPassword(passwordCmd.split(" ")[1]);
+		try {
+			mailServer.getUserLoginvalidator().userCanLogin(user);
+		} catch (LoginValidationException e) {
+			mailServer.echoLine("-ERR " + e.getMessage());
+			return;
+		}
+		owner.echoLine(resp);
 		mailServer.userLoggedIn(user);
 	}
 
