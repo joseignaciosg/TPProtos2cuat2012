@@ -7,7 +7,6 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 
 import model.User;
-import model.configuration.Config;
 import model.mail.MailRetriever;
 import model.mail.MailTransformer;
 import model.parser.mime.MailMimeParser;
@@ -26,6 +25,8 @@ public class MailSocketService extends AbstractSockectService {
 
 	private Socket originServerSocket;
 
+	private int originServerPort;
+	
 	private MailRetriever mailRetriever;
 	private MailTransformer mailTranformer;
 	private MailMimeParser mailMimeParser;
@@ -41,6 +42,7 @@ public class MailSocketService extends AbstractSockectService {
 		mailMimeParser = new MailMimeParser();
 		userLoginvalidator = new UserLoginValidator();
 		mailDeletionValidator = new MailDeleteValidator();
+		originServerPort = Integer.valueOf(System.getProperty("originServerPort"));
 	}
 
 	@Override
@@ -114,8 +116,7 @@ public class MailSocketService extends AbstractSockectService {
 
 	public String setOriginServer(String host) throws IOException {
 		logger.info("Origin server is now: " + host);
-		int port = Config.getInstance().getGeneralConfig().getInt("pop3_port");
-		setOriginServerSocket(new Socket(host, port));
+		setOriginServerSocket(new Socket(host, originServerPort));
 		String line = readFromOriginServer().readLine();
 		logger.info("Mail server new connection status: " + line);
 		return line;

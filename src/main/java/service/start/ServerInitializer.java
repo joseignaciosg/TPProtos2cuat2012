@@ -1,8 +1,9 @@
 package service.start;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-import model.util.IOUtil;
 import model.util.StringUtil;
 
 import org.apache.log4j.Logger;
@@ -14,8 +15,8 @@ public class ServerInitializer {
 
 	private static Logger logger = Logger.getLogger(ProxyInitializer.class);
 	
-	public void initialize(String fileName) {
-		Scanner scanner = IOUtil.createScanner(fileName);
+	public void initialize(File serviceConfiguration) throws FileNotFoundException {
+		Scanner scanner = new Scanner(serviceConfiguration);
 		while (scanner.hasNextLine()) {
 			String line = scanner.nextLine();
 			if (StringUtil.empty(line) || line.startsWith("#")) {

@@ -6,6 +6,3 @@ service.StatsSocketService, 8081
 
 # Start a Configurer Socket Server
 service.ConfigurerService, 8082
-
-# Start a Mocked Email Server
-# service.mock.MockedSocketEmailService, 8083

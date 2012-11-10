@@ -11,7 +11,6 @@ import org.junit.Test;
 
 public class toL33tAppTest {
 
-	@Test
 	public void test() throws IOException {
 		File part = File.createTempFile("transfrmedpart", "proxy");
 		FileWriter writer = new FileWriter(part, true);

@@ -1,6 +1,5 @@
 package service;
 
-import java.lang.reflect.InvocationTargetException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
@@ -40,8 +39,7 @@ public class WelcomeSocketService implements Runnable {
 		}	
 	}
 
-	private AbstractSockectService createInstance(Class<? extends AbstractSockectService> serverClass, Socket connectionSocket) 
-			throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, SecurityException {
+	private AbstractSockectService createInstance(Class<? extends AbstractSockectService> serverClass, Socket connectionSocket)  throws Exception {
 		return (AbstractSockectService) serverClass.getConstructors()[0].newInstance(connectionSocket);
 	}
 

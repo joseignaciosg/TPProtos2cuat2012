@@ -29,6 +29,6 @@ public class User {
 
 	public String getMailServer() {
 		String server = originServerConfig.get(mail);
-		return server == null ? originServerConfig.get("default") : server;
+		return server == null ? System.getProperty("defualtOriginServer") : server;
 	}
 }
