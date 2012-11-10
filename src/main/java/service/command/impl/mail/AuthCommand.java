@@ -24,58 +24,55 @@ public class AuthCommand extends ServiceCommand {
 	@Override
 	public void execute(String[] params) throws Exception {
 		MailSocketService mailServer = (MailSocketService) owner;
+		User user;
+		String okLine;
 		if (CollectionUtil.empty(params)) {
 			mailServer.echoLine("+");
 			mailServer.echoLine(".");
 			return;
-		} else if ("PLAIN".equals(params[0].toUpperCase())) {
+		} else if ("PLAIN".equalsIgnoreCase(params[0])) {
 			mailServer.echoLine("+");
 			String base64Credentials = mailServer.read().readLine();
-			User tmpUser = createUser(base64Credentials);
-			try {
-				mailServer.getUserLoginvalidator().userCanLogin(tmpUser);
-			} catch (LoginValidationException e) {
-				mailServer.echoLine("-ERR " + e.getMessage());
-				return;
-			}
-			mailServer.setOriginServer(tmpUser.getMailServer());
+			user = createUser(base64Credentials);
+			mailServer.setOriginServer(user.getMailServer());
 			// login against REAL origin server
 			String resp = echoToOriginServerAndReadLine(getOriginalLine());
 			if (!"+".equals(resp.trim())) {
+				mailServer.echoLine(resp);
 				return;
 			}
-			resp = echoToOriginServerAndReadLine(base64Credentials);
-			mailServer.echoLine(resp);
-			if (!resp.toUpperCase().startsWith("+OK")) {
+			okLine = echoToOriginServerAndReadLine(base64Credentials);
+			if (!okLine.toUpperCase().startsWith("+OK")) {
+				mailServer.echoLine(okLine);
 				return;
 			}
-			mailServer.userLoggedIn(tmpUser);
 		} else if ("LOGIN".equals(params[0].toUpperCase())) {
 			mailServer.echoLine("+ VXNlcm5hbWU6"); 	// Username:
 			String base64Username = mailServer.read().readLine();
 			mailServer.echoLine("+ UGFzc3dvcmQ6"); 	// Password:
 			String base64Password = mailServer.read().readLine();
-			User tmpUser = createUser(base64Username, base64Password);
-			try {
-				mailServer.getUserLoginvalidator().userCanLogin(tmpUser);
-			} catch (LoginValidationException e) {
-				mailServer.echoLine("-ERR " + e.getMessage());
-				owner.setEndOfTransmission(true);
-				return;
-			}
-			mailServer.setOriginServer(tmpUser.getMailServer());
+			user = createUser(base64Username, base64Password);
+			mailServer.setOriginServer(user.getMailServer());
 			// login against REAL origin server
 			echoToOriginServerAndReadLine(getOriginalLine());
 			echoToOriginServerAndReadLine(base64Username);
-			String result = echoToOriginServerAndReadLine(base64Password);
-			mailServer.echoLine(result);
-			if (!result.toUpperCase().startsWith("+OK")) {
+			okLine = echoToOriginServerAndReadLine(base64Password);
+			if (!okLine.toUpperCase().startsWith("+OK")) {
+				mailServer.echoLine(okLine);
 				return;
 			}
-			mailServer.userLoggedIn(tmpUser);
 		} else {
 			logger.error("Unknown login type: " + getOriginalLine());
 			owner.echoLine("-ERR Unknown login type.");
+			return;
+		}
+		try {
+			mailServer.getUserLoginvalidator().userCanLogin(user);
+			mailServer.userLoggedIn(user);
+			mailServer.echoLine(okLine);
+		} catch (LoginValidationException e) {
+			mailServer.echoLine("-ERR " + e.getMessage());
+			return;
 		}
 	}
 
