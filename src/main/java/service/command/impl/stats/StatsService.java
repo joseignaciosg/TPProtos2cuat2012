@@ -81,7 +81,7 @@ public class StatsService {
 	}
 	
 
-	private int incrementUserAccesses(String user) {
+	private synchronized int incrementUserAccesses(String user) {
 		UserHistogram uh = statsByUserMap.get(user);
 		if (uh == null) {
 			uh = new UserHistogram(user);
