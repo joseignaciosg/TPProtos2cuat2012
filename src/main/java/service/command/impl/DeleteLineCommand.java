@@ -1,9 +1,9 @@
 package service.command.impl;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URISyntaxException;
 import java.util.Scanner;
 
 import model.configuration.Config;
@@ -31,14 +31,17 @@ public class DeleteLineCommand extends ServiceCommand {
 			owner.echoLine(StatusCodes.ERR_INVALID_PARAMETERS_NUMBER,  "input: " + params[0]);
 			return;
 		}
-		String fullPath = Config.getInstance().getConfigResourcePath(params[1]);
-		if (fullPath == null) {
+		String path = Config.getInstance().getConfigResourcePath(params[1]);
+		if (path == null) {
 			owner.echoLine(StatusCodes.ERR_INVALID_PARAMETERS_FILE);
 			return;
 		}
-		StringBuilder text = getTextWithoutLine(fullPath, lineNumberToRemove);
+		StringBuilder text = getTextWithoutLine(path, lineNumberToRemove);
 		try {
-			PrintWriter out = new PrintWriter(fullPath);
+			String rootPath = IOUtil.getRoot();
+			rootPath = rootPath.substring(0, rootPath.lastIndexOf('/') + 1);
+			PrintWriter out = new PrintWriter(rootPath + path);
+			// PrintWriter out = new PrintWriter(path);
 			out.print(text.toString());
 			out.close();
 			owner.echoLine(StatusCodes.OK_FILE_UPDATED);
@@ -46,6 +49,8 @@ public class DeleteLineCommand extends ServiceCommand {
 		} catch (FileNotFoundException e) {
 			// should never happen...
 			e.printStackTrace();
+		} catch (URISyntaxException e) {
+			owner.echoLine(StatusCodes.ERR_INVALID_PARAMETERS_FILE);
 		}
 	}
 	

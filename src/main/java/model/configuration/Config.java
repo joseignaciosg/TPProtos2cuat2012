@@ -30,7 +30,7 @@ public class Config {
 	public String getConfigResourcePath(String name) {
 		String fileName = generalConfguration.get(name);
 		String resourcePath = generalConfguration.get("specific_conf_dir");
-		if(fileName == null){
+		if (fileName == null) {
 			return null;
 		}
 		return resourcePath + fileName;

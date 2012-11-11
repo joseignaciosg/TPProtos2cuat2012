@@ -29,6 +29,10 @@ private static final IOUtil instance = new IOUtil();
 		return instance.getClass().getClassLoader().getResource(resorucePath);
 	}
 	
+	public static String getRoot() throws URISyntaxException {
+		return instance.getClass().getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+	}
+	
 	public static File createFileWithContents(String text) throws IOException {
 		File file = File.createTempFile("decode_", ".tmp");
 		FileWriter writer = new FileWriter(file);
