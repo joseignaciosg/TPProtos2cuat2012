@@ -8,24 +8,37 @@ mvn clean package
 Luego para correrlo simplemente ejecutar el jar de la siguiente forma: 
 
 <pre>
-java -jar proxy_file.jar PROXY_CONFIG_FILE DEFAULT_ORIGIN_SERVICE PORT
+java -jar proxy_file.jar PROXY_CONFIG_FILES_PATH DEFAULT_ORIGIN_SERVICE PORT
 </pre>
 
 Ejemplo:
 
-> java -jar proxy-pop3-1.jar ./prop.init akarpovsky.no-ip.org 110
+> java -jar proxy-pop3-1.jar ./myresources/ akarpovsky.no-ip.org 110
 
-Siendo "prop.init" un archivo como el siguiente:
+Siendo "./myresources" el path al directorio con los archivos de configuración el cual tiene la siguiente estructura:
 
 <pre>
-# Start Proxy Server
-service.MailSocketService, 8080
-
-# Start a Statistics Socket Server
-service.StatsSocketService, 8081
-
-# Start a Configurer Socket Server
-service.ConfigurerService, 8082
+├── myresources
+│   ├── conf
+│   │   ├── access_amount.conf
+│   │   ├── access_time.conf
+│   │   ├── banned_ip.conf
+│   │   ├── configurer.conf
+│   │   ├── external_transformation.conf
+│   │   ├── log4j.properties
+│   │   ├── notdelete_content_type.conf
+│   │   ├── notdelete_header_pattern.conf
+│   │   ├── notdelete_max_age.conf
+│   │   ├── notdelete_sender.conf
+│   │   ├── notdelete_size.conf
+│   │   ├── notdelete_structure.conf
+│   │   ├── origin_server.conf
+│   │   ├── stats_service.conf
+│   │   └── transformation.conf
+│   ├── mime
+│   │   └── contenttype
+│   ├── project.properties
+│   └── server.init
 </pre>
 
 
