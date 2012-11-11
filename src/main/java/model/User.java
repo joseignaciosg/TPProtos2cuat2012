@@ -1,11 +1,11 @@
 package model;
 
-import model.configuration.Config;
+import model.configuration.ConfigUtil;
 import model.configuration.KeyValueConfiguration;
 
 public class User {
 
-	private static final KeyValueConfiguration originServerConfig = Config.getInstance().getKeyValueConfig("origin_server");
+	private static final KeyValueConfiguration originServerConfig = ConfigUtil.getInstance().getKeyValueConfig("origin_server");
 	
 	private String mail;
 	private String password;

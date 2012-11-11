@@ -2,7 +2,7 @@ package model.validator.loginvalidator;
 
 import java.util.Collection;
 
-import model.configuration.Config;
+import model.configuration.ConfigUtil;
 import model.configuration.SimpleListConfiguration;
 import model.validator.LoginValidationException;
 import model.validator.LoginValidator;
@@ -19,7 +19,7 @@ public class IpValidator implements LoginValidator {
 	
 	@Override
 	public void validate() throws LoginValidationException {
-		SimpleListConfiguration bannedListConfig = Config.getInstance().getSimpleListConfig("banned_ip");
+		SimpleListConfiguration bannedListConfig = ConfigUtil.getInstance().getSimpleListConfig("banned_ip");
 		Collection<String> bannedList = bannedListConfig.getValues();
 		boolean isClientIpBanned = false;
 		for (String ip : bannedList) {

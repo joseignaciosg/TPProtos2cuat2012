@@ -1,43 +1,52 @@
 package model.configuration;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Config {
+import model.util.StringUtil;
 
-	private static Config instance = new Config();
+public class ConfigUtil {
+
+	private static ConfigUtil instance = new ConfigUtil();
 	
 	private static final String CONFIG_FILE = "project.properties";
 	
-	public static Config getInstance() {
+	public static ConfigUtil getInstance() {
 		return instance;
 	}
 	
-	private KeyValueConfiguration generalConfguration;
+	private String configurationsFolder;
+	private KeyValueConfiguration mainConfguration;
 	private Map<String, KeyValueConfiguration> cachedKeyValueConfig;
 	private Map<String, SimpleListConfiguration> cachedSimpleListConfig;
 	
-	public Config() {
+	private ConfigUtil() {
 		cachedSimpleListConfig = new HashMap<String, SimpleListConfiguration>();
 		cachedKeyValueConfig = new HashMap<String, KeyValueConfiguration>();
-		generalConfguration = new KeyValueConfiguration(CONFIG_FILE);
+		mainConfguration = new KeyValueConfiguration(CONFIG_FILE);
+		configurationsFolder = System.getProperty("configurationsFolder");
+		if (StringUtil.empty(configurationsFolder)) {
+			throw new IllegalArgumentException("System property " + configurationsFolder + " is not set!");
+		}
+		configurationsFolder = new File(configurationsFolder).getAbsolutePath() + "/";
 	}
 	
-	public KeyValueConfiguration getGeneralConfig() {
-		return generalConfguration;
+	public KeyValueConfiguration getMainConfig() {
+		return mainConfguration;
 	}
 	
-	public String getConfigResourcePath(String name) {
-		String fileName = generalConfguration.get(name);
-		String resourcePath = generalConfguration.get("specific_conf_dir");
+	public String getConfigPath(String name) {
+		String fileName = mainConfguration.get(name);
 		if (fileName == null) {
 			return null;
 		}
-		return resourcePath + fileName;
+		String resourcePath = mainConfguration.get("specific_conf_dir");
+		return configurationsFolder + resourcePath + fileName;
 	}
 	
 	public SimpleListConfiguration getSimpleListConfig(String name) {
-		String fileName = generalConfguration.get(name);
+		String fileName = mainConfguration.get(name);
 		if (fileName == null) {
 			throw new IllegalStateException(name + "is not defined!");
 		}
@@ -45,7 +54,7 @@ public class Config {
 		if (simple != null) {
 			return simple;
 		}
-		String resourcePath = generalConfguration.get("specific_conf_dir");
+		String resourcePath = mainConfguration.get("specific_conf_dir");
 		String path = resourcePath + fileName;
 		simple = new SimpleListConfiguration(path);
 		cachedSimpleListConfig.put(fileName, simple);
@@ -53,7 +62,7 @@ public class Config {
 	}
 	
 	public KeyValueConfiguration getKeyValueConfig(String name) {
-		String fileName = generalConfguration.get(name);
+		String fileName = mainConfguration.get(name);
 		if (fileName == null) {
 			throw new IllegalStateException(name + "is not defined!");
 		}
@@ -61,7 +70,7 @@ public class Config {
 		if (keyValue != null) {
 			return keyValue;
 		}
-		String resourcePath = generalConfguration.get("specific_conf_dir");
+		String resourcePath = mainConfguration.get("specific_conf_dir");
 		resourcePath += fileName;
 		keyValue = new KeyValueConfiguration(resourcePath);
 		cachedKeyValueConfig.put(fileName, keyValue);
@@ -69,7 +78,7 @@ public class Config {
 	}
 
 	public void update(String name) {
-		String fileName = generalConfguration.get(name);
+		String fileName = mainConfguration.get(name);
 		KeyValueConfiguration keyValue = cachedKeyValueConfig.get(fileName);
 		if (keyValue != null) {
 			keyValue.update();

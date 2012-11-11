@@ -2,7 +2,7 @@ package service.command.impl.stats;
 
 import org.apache.log4j.Logger;
 
-import model.configuration.Config;
+import model.configuration.ConfigUtil;
 import model.configuration.KeyValueConfiguration;
 import model.util.StringUtil;
 import service.AbstractSockectService;
@@ -12,7 +12,7 @@ import service.command.impl.AuthCommand;
 public class StatsAuthCommand extends AuthCommand {
 	
 	private static final Logger logger = Logger.getLogger(StatsAuthCommand.class);
-	private static final KeyValueConfiguration statsServiceConfig = Config.getInstance().getKeyValueConfig("stats_service");
+	private static final KeyValueConfiguration statsServiceConfig = ConfigUtil.getInstance().getKeyValueConfig("stats_service");
 	
 	public StatsAuthCommand(AbstractSockectService owner) {
 		super(owner);

@@ -1,7 +1,7 @@
 package model.validator.emailvalidator;
 
 import model.User;
-import model.configuration.Config;
+import model.configuration.ConfigUtil;
 import model.configuration.KeyValueConfiguration;
 import model.mail.Mail;
 import model.parser.mime.ContentTypeUtil;
@@ -11,7 +11,7 @@ import model.validator.MailValidator;
 
 public class DelContentTypeValidator implements MailValidator {
 
-	private static KeyValueConfiguration deleteContentTypeConfig = Config.getInstance().getKeyValueConfig("notdelete_content_type");
+	private static KeyValueConfiguration deleteContentTypeConfig = ConfigUtil.getInstance().getKeyValueConfig("notdelete_content_type");
 
 	@Override
 	public boolean hasRestrictions(User user) {

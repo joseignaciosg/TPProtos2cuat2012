@@ -1,6 +1,6 @@
 package service.command.impl.configurer;
 
-import model.configuration.Config;
+import model.configuration.ConfigUtil;
 import model.configuration.KeyValueConfiguration;
 import model.util.StringUtil;
 import service.AbstractSockectService;
@@ -10,7 +10,7 @@ import service.command.impl.AuthCommand;
 
 public class ConfigurerAuthCommand extends AuthCommand {
 
-	private static final KeyValueConfiguration configurerServiceConfig = Config.getInstance().getKeyValueConfig("configurer");
+	private static final KeyValueConfiguration configurerServiceConfig = ConfigUtil.getInstance().getKeyValueConfig("configurer");
 	
 	public ConfigurerAuthCommand(AbstractSockectService owner) {
 		super(owner);

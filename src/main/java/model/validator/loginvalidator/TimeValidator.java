@@ -1,6 +1,6 @@
 package model.validator.loginvalidator;
 
-import model.configuration.Config;
+import model.configuration.ConfigUtil;
 import model.configuration.KeyValueConfiguration;
 import model.validator.LoginValidationException;
 import model.validator.LoginValidator;
@@ -11,7 +11,7 @@ import org.joda.time.LocalTime;
 public class TimeValidator implements LoginValidator {
 
 	private static Logger logger = Logger.getLogger(TimeValidator.class);
-	private static KeyValueConfiguration accessTimeConfig = Config.getInstance().getKeyValueConfig("access_time");
+	private static KeyValueConfiguration accessTimeConfig = ConfigUtil.getInstance().getKeyValueConfig("access_time");
 
 	private String mailAddress;
 	

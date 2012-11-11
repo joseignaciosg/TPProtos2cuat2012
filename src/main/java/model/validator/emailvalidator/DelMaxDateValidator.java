@@ -1,7 +1,7 @@
 package model.validator.emailvalidator;
 
 import model.User;
-import model.configuration.Config;
+import model.configuration.ConfigUtil;
 import model.configuration.KeyValueConfiguration;
 import model.mail.Mail;
 import model.validator.MailValidator;
@@ -13,7 +13,7 @@ import org.joda.time.format.DateTimeFormatter;
 
 public class DelMaxDateValidator implements MailValidator {
 
-	private static KeyValueConfiguration deleteDateConfig = Config.getInstance().getKeyValueConfig("notdelete_max_age");
+	private static KeyValueConfiguration deleteDateConfig = ConfigUtil.getInstance().getKeyValueConfig("notdelete_max_age");
 
 	@Override
 	public boolean hasRestrictions(User user) {

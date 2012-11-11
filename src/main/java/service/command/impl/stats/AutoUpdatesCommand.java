@@ -3,7 +3,7 @@ package service.command.impl.stats;
 import java.io.DataOutputStream;
 import java.util.Timer;
 
-import model.configuration.Config;
+import model.configuration.ConfigUtil;
 import model.configuration.KeyValueConfiguration;
 import model.util.CollectionUtil;
 import service.AbstractSockectService;
@@ -13,7 +13,7 @@ import service.worker.StatsTimedTask;
 
 public class AutoUpdatesCommand extends ServiceCommand {
 
-	private static KeyValueConfiguration statsConfig = Config.getInstance().getKeyValueConfig("stats_service");
+	private static KeyValueConfiguration statsConfig = ConfigUtil.getInstance().getKeyValueConfig("stats_service");
 	private StatsTimer statsTimer;
 	
 	public AutoUpdatesCommand(AbstractSockectService owner) {

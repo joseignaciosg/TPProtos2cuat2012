@@ -3,9 +3,8 @@ package service.start;
 import java.io.File;
 import java.io.FileNotFoundException;
 
-import model.configuration.Config;
+import model.configuration.ConfigUtil;
 import model.util.CollectionUtil;
-import model.util.IOUtil;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
@@ -17,7 +16,7 @@ public class ProxyInitializer {
 	public static void main(String[] args) {
 		if (CollectionUtil.empty(args) || args.length != 3) {
 			System.out.println("Usage:");
-			System.out.println("\tParam 1: path to server.init file configuration.");
+			System.out.println("\tParam 1: path to server configuration files.");
 			System.out.println("\tParam 2: default origin server.");
 			System.out.println("\tParam 3: access port origin server.");
 			System.out.println("\tExample: ./server.init coyote.itba.edu.ar 110");
@@ -31,17 +30,18 @@ public class ProxyInitializer {
 		}
 	}
 
-	public void initialize(String configurationFile, String defaultOriginServer, int originServerPort) {
-		String configFile = Config.getInstance().getConfigResourcePath("log4j");
-		PropertyConfigurator.configure(IOUtil.getStream(configFile));
+	public void initialize(String configurationsFolder, String defaultOriginServer, int originServerPort) {
+		System.setProperty("defualtOriginServer", defaultOriginServer);
+		System.setProperty("originServerPort", originServerPort + "");
+		System.setProperty("configurationsFolder", configurationsFolder);
+		PropertyConfigurator.configure(ConfigUtil.getInstance().getConfigPath("log4j"));
 		logger.trace("Initializing proxy.....");
 		try {
-			System.setProperty("defualtOriginServer", defaultOriginServer);
-			System.setProperty("originServerPort", originServerPort + "");
-			new ServerInitializer().initialize(new File(configurationFile));
+			String serverConf = new File(configurationsFolder).getAbsolutePath() + "/server.init";
+			new ServerInitializer().initialize(new File(serverConf));
 			logger.trace("Proxy Started succesfully!");
 		} catch (FileNotFoundException e) {
-			logger.error("Confuration fie not found.");
+			logger.error("Confuration file not found.");
 		}
 	}
 

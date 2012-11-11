@@ -14,7 +14,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import model.configuration.Config;
+import model.configuration.ConfigUtil;
 import model.configuration.SimpleListConfiguration;
 import model.mail.transformerimpl.HideSenderTransformer;
 import model.mail.transformerimpl.ImageTransformer2;
@@ -28,8 +28,8 @@ import org.apache.log4j.Logger;
 public class MailTransformer {
 
 	private static final Logger logger = Logger.getLogger(MailTransformer.class);
-	private static final SimpleListConfiguration transConfig = Config.getInstance().getSimpleListConfig("transformation");
-	private static final SimpleListConfiguration externalTransConfig = Config.getInstance().getSimpleListConfig("external_transformation");
+	private static final SimpleListConfiguration transConfig = ConfigUtil.getInstance().getSimpleListConfig("transformation");
+	private static final SimpleListConfiguration externalTransConfig = ConfigUtil.getInstance().getSimpleListConfig("external_transformation");
 
 	public boolean hasActiveTransformations() {
 		return !transConfig.getValues().isEmpty() || !externalTransConfig.getValues().isEmpty();
@@ -127,7 +127,7 @@ public class MailTransformer {
 		};
 		try {
 			Future<Integer> ft = Executors.newSingleThreadExecutor().submit(callable);
-			long timeout = Config.getInstance().getGeneralConfig().getLong("external_app_timeout_ms");
+			long timeout = ConfigUtil.getInstance().getMainConfig().getLong("external_app_timeout_ms");
 			int exitValue = ft.get(timeout, TimeUnit.MILLISECONDS);
 			if (exitValue == 0) {
 				return true;

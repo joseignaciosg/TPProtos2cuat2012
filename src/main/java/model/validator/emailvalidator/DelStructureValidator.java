@@ -1,7 +1,7 @@
 package model.validator.emailvalidator;
 
 import model.User;
-import model.configuration.Config;
+import model.configuration.ConfigUtil;
 import model.configuration.KeyValueConfiguration;
 import model.mail.Mail;
 import model.util.CollectionUtil;
@@ -10,7 +10,7 @@ import model.validator.MailValidationException;
 
 public class DelStructureValidator implements MailValidator {
 
-	private static KeyValueConfiguration deleteStructureConfig = Config.getInstance().getKeyValueConfig("notdelete_structure");
+	private static KeyValueConfiguration deleteStructureConfig = ConfigUtil.getInstance().getKeyValueConfig("notdelete_structure");
 
 	@Override
 	public boolean hasRestrictions(User user) {
