@@ -72,12 +72,12 @@ public class ConfigUtil {
 	}
 
 	public void update(String name) {
-		String fileName = mainConfguration.get(name);
-		KeyValueConfiguration keyValue = cachedKeyValueConfig.get(fileName);
+		String path = getConfigPath(name);
+		KeyValueConfiguration keyValue = cachedKeyValueConfig.get(path);
 		if (keyValue != null) {
 			keyValue.update();
 		}
-		SimpleListConfiguration simple = cachedSimpleListConfig.get(fileName);
+		SimpleListConfiguration simple = cachedSimpleListConfig.get(path);
 		if (simple != null) {
 			simple.update();
 		}
