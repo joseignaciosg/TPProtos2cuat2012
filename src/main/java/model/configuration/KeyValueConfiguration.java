@@ -26,6 +26,10 @@ public class KeyValueConfiguration {
 	public boolean getBoolean(String key) {
 		return Boolean.valueOf(get(key));
 	}
+	
+	public long getLong(String key) {
+		return Long.valueOf(get(key));
+	}
 
 	public void update() {
 		try {

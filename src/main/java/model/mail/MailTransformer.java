@@ -7,6 +7,12 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import model.configuration.Config;
 import model.configuration.SimpleListConfiguration;
@@ -28,7 +34,7 @@ public class MailTransformer {
 	public boolean hasActiveTransformations() {
 		return !transConfig.getValues().isEmpty() || !externalTransConfig.getValues().isEmpty();
 	}
-	
+
 	public void transformHeader(MimeHeader header) throws IOException {
 		List<HeaderTransformer> transformers = new ArrayList<HeaderTransformer>();
 		for (String option : transConfig.getValues()) {
@@ -37,7 +43,7 @@ public class MailTransformer {
 			}
 		}
 		for (HeaderTransformer headerTransformer : transformers) {
-		    headerTransformer.transform(header);
+			headerTransformer.transform(header);
 		}
 	}
 
@@ -53,7 +59,7 @@ public class MailTransformer {
 		}
 		return retPart;
 	}
-	
+
 	private List<Transformer> getTransformerList() {
 		List<Transformer> transformers = new ArrayList<Transformer>();
 		Collection<String> options = transConfig.getValues();
@@ -66,30 +72,22 @@ public class MailTransformer {
 		}
 		return transformers;
 	}
-	
+
 	public void transformComplete(Mail mail) {
 		List<String> externalTransformers = getExternalTransformerList();
-		List<String> commands = new LinkedList<String>();
 		try {
 			File transformedIn = mail.getContents();
 			File transformedOut = File.createTempFile("externalTransformOut", ".txt");
 			for (String command : externalTransformers) {
-				commands.clear();
-				commands.addAll(Arrays.asList(command.split(" ")));
-				commands.add(transformedIn.getAbsolutePath());
-				ProcessBuilder pb = new ProcessBuilder(commands);
-				Process p = pb.start();
-				p.waitFor();
-				if (p.exitValue() == 0) {
-					IOUtil.redirectOutputStream(p.getInputStream(), transformedOut);
+				final Process process = createProcess(command, transformedIn);
+				boolean success = execute(process, command);
+				if (success) {
+					IOUtil.redirectOutputStream(process.getInputStream(), transformedOut);
 					mail.setContents(transformedOut);
 					// switch in <-> out
 					File tmp = transformedIn;
 					transformedIn = transformedOut;
 					transformedOut = tmp;
-				} else {
-					// IOUtil.redirectOutputStream(p.getErrorStream(), File.createTempFile("testing", ".txt"));
-					logger.warn(command + "did not finish succesfuly. Exit code " + p.exitValue());
 				}
 			}
 			if (transformedIn == mail.getContents()) {
@@ -110,5 +108,35 @@ public class MailTransformer {
 			transformers.add(option);
 		}
 		return transformers;
+	}
+	
+	private Process createProcess(String command, File inputFile) throws IOException {
+		List<String> commands = new LinkedList<String>();
+		commands.addAll(Arrays.asList(command.split(" ")));
+		commands.add(inputFile.getAbsolutePath());
+		ProcessBuilder pb = new ProcessBuilder(commands);
+		return pb.start();
+	}
+	
+	private boolean execute(final Process process, String command) throws InterruptedException, ExecutionException {
+		Callable<Integer> callable = new Callable<Integer>() {
+			public Integer call() throws Exception {
+				process.waitFor();
+				return process.exitValue();
+			}
+		};
+		try {
+			Future<Integer> ft = Executors.newSingleThreadExecutor().submit(callable);
+			long timeout = Config.getInstance().getGeneralConfig().getLong("external_app_timeout_ms");
+			int exitValue = ft.get(timeout, TimeUnit.MILLISECONDS);
+			if (exitValue == 0) {
+				return true;
+			} else {
+				logger.warn(command + " did not finish succesfuly. Exit code " + exitValue);
+			}
+		} catch (TimeoutException to) {
+			logger.warn(command + " took too much time to excecute. Skipping transformation!");
+		}
+		return false;
 	}
 }

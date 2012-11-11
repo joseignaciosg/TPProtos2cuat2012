@@ -24,10 +24,11 @@ public class PutCommand extends ServiceCommand {
 			owner.echoLine(StatusCodes.ERR_INVALID_PARAMETERS_ARGUMENTS);
 			return;
 		}
-		String line = CollectionUtil.join(params, 1);
+		String line = CollectionUtil.join(params, 1, " ");
 		String path = Config.getInstance().getConfigResourcePath(params[0]);
-		if(path == null){
+		if (path == null) {
 			owner.echoLine(StatusCodes.ERR_INVALID_PARAMETERS_FILE);
+			return;
 		}
 		try {
 			String rootPath = IOUtil.getRoot();
