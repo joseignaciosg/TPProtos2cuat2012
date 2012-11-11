@@ -107,6 +107,10 @@ public class MailMimeParser {
 		MimeHeaderCollection headers = new MimeHeaderCollection();
 		Scanner sourceScanner = parseParams.sourceScanner;
 		String lastReadLine = sourceScanner.nextLine();
+		if (lastReadLine.isEmpty()) {
+			parseParams.destinationWriter.append("\r\n");
+			return headers;
+		}
 		while (sourceScanner.hasNextLine()) {
 			boolean endOfHeader;
 			String line = lastReadLine;
@@ -127,7 +131,7 @@ public class MailMimeParser {
 			logger.debug("Parsed Part header => " + header);
 			// Empty line marks the end of sub-boundary headers
 			if (lastReadLine.isEmpty()) {
-				parseParams.destinationWriter.append(line + "\r\n");
+				parseParams.destinationWriter.append("\r\n");
 				break;
 			}
 		}

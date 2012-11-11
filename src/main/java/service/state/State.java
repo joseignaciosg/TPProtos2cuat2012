@@ -36,7 +36,7 @@ public abstract class State {
 			commandRecognizer.exec(params);
 		} catch(Exception e) {
 			logger.error("Error executing command " + Arrays.toString(params), e);
-			owner.echoLine("-ERR An internal error accoured.");
+			owner.echoLine("-ERR An internal error accoured. " + e.getMessage());
 		}
 	}
 
