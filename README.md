@@ -5,7 +5,29 @@ El programa puede compilarse utizando maven2 de la siguiente manera
 mvn clean package
 </pre>
 
-Para correrlo simplemente ejecutar la clase **ProxyInitializer** y levantara del archivo **server.init** los servicios configurados.
+Luego para correrlo simplemente ejecutar el jar de la siguiente forma: 
+
+<pre>
+java -jar proxy_file.jar PROXY_CONFIG_FILE DEFAULT_ORIGIN_SERVICE PORT
+</pre>
+
+Ejemplo:
+
+> java -jar proxy-pop3-1.jar ./prop.init akarpovsky.no-ip.org 110
+
+Siendo "prop.init" un archivo como el siguiente:
+
+<pre>
+# Start Proxy Server
+service.MailSocketService, 8080
+
+# Start a Statistics Socket Server
+service.StatsSocketService, 8081
+
+# Start a Configurer Socket Server
+service.ConfigurerService, 8082
+</pre>
+
 
 -------------------------
 
