@@ -33,7 +33,7 @@ public class ProxyInitializer {
 
 	public void initialize(String configurationFile, String defaultOriginServer, int originServerPort) {
 		String configFile = Config.getInstance().getConfigResourcePath("log4j");
-		PropertyConfigurator.configure(IOUtil.getResource(configFile));
+		PropertyConfigurator.configure(IOUtil.getStream(configFile));
 		logger.trace("Initializing proxy.....");
 		try {
 			System.setProperty("defualtOriginServer", defaultOriginServer);

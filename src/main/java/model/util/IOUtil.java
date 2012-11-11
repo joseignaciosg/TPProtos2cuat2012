@@ -6,16 +6,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Scanner;
 
 
 public class IOUtil {
 
-	public static String fullPath(String resourcePath) {
-		URL url = getResource(resourcePath);
-		return url == null ? null : url.getPath();
-	}
+private static final IOUtil instance = new IOUtil();
 	
 	@SuppressWarnings("resource")
 	public static Scanner createScanner(String resourcePath) {
@@ -24,11 +22,11 @@ public class IOUtil {
 	}
 	
 	public static InputStream getStream(String resourcePath) {
-		return IOUtil.class.getClassLoader().getResourceAsStream(resourcePath);
+		return instance.getClass().getClassLoader().getResourceAsStream(resourcePath);
 	}
 	
-	public static URL getResource(String resourcePath) {
-		return IOUtil.class.getClassLoader().getResource(resourcePath);
+	public static URL getUrl(String resorucePath) throws URISyntaxException {
+		return instance.getClass().getClassLoader().getResource(resorucePath);
 	}
 	
 	public static File createFileWithContents(String text) throws IOException {

@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.Properties;
 
+import model.util.IOUtil;
+
 public class KeyValueConfiguration {
 
 	private String path;
@@ -30,7 +32,7 @@ public class KeyValueConfiguration {
 	public void update() {
 		try {
 			properties.clear();
-			properties.load(new FileReader(new File(path)));
+			properties.load(IOUtil.getStream(path));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

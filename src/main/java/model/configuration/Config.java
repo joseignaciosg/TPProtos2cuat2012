@@ -3,8 +3,6 @@ package model.configuration;
 import java.util.HashMap;
 import java.util.Map;
 
-import model.util.IOUtil;
-
 public class Config {
 
 	private static Config instance = new Config();
@@ -22,7 +20,7 @@ public class Config {
 	public Config() {
 		cachedSimpleListConfig = new HashMap<String, SimpleListConfiguration>();
 		cachedKeyValueConfig = new HashMap<String, KeyValueConfiguration>();
-		generalConfguration = new KeyValueConfiguration(IOUtil.fullPath(CONFIG_FILE));
+		generalConfguration = new KeyValueConfiguration(CONFIG_FILE);
 	}
 	
 	public KeyValueConfiguration getGeneralConfig() {
@@ -32,11 +30,10 @@ public class Config {
 	public String getConfigResourcePath(String name) {
 		String fileName = generalConfguration.get(name);
 		String resourcePath = generalConfguration.get("specific_conf_dir");
+		if(fileName == null){
+			return null;
+		}
 		return resourcePath + fileName;
-	}
-	
-	public String getConfigFullPath(String name) {
-		return IOUtil.fullPath(getConfigResourcePath(name));
 	}
 	
 	public SimpleListConfiguration getSimpleListConfig(String name) {
@@ -49,7 +46,7 @@ public class Config {
 			return simple;
 		}
 		String resourcePath = generalConfguration.get("specific_conf_dir");
-		String path = IOUtil.fullPath(resourcePath) + fileName;
+		String path = resourcePath + fileName;
 		simple = new SimpleListConfiguration(path);
 		cachedSimpleListConfig.put(fileName, simple);
 		return simple;
@@ -66,7 +63,7 @@ public class Config {
 		}
 		String resourcePath = generalConfguration.get("specific_conf_dir");
 		resourcePath += fileName;
-		keyValue = new KeyValueConfiguration(IOUtil.fullPath(resourcePath));
+		keyValue = new KeyValueConfiguration(resourcePath);
 		cachedKeyValueConfig.put(fileName, keyValue);
 		return keyValue;
 	}

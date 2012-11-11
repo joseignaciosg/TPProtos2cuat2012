@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.util.Scanner;
 
 import model.configuration.Config;
+import model.util.IOUtil;
 import service.AbstractSockectService;
 import service.StatusCodes;
 import service.command.ServiceCommand;
@@ -30,7 +31,7 @@ public class DeleteLineCommand extends ServiceCommand {
 			owner.echoLine(StatusCodes.ERR_INVALID_PARAMETERS_NUMBER,  "input: " + params[0]);
 			return;
 		}
-		String fullPath = Config.getInstance().getConfigFullPath(params[1]);
+		String fullPath = Config.getInstance().getConfigResourcePath(params[1]);
 		if (fullPath == null) {
 			owner.echoLine(StatusCodes.ERR_INVALID_PARAMETERS_FILE);
 			return;
@@ -48,9 +49,9 @@ public class DeleteLineCommand extends ServiceCommand {
 		}
 	}
 	
-	public StringBuilder getTextWithoutLine(String fullPath, int lineNumber) throws IOException {
+	public StringBuilder getTextWithoutLine(String path, int lineNumber) throws IOException {
 		StringBuilder modifiedFile = new StringBuilder();
-		Scanner scanner = new Scanner(new File(fullPath));
+		Scanner scanner = new Scanner(IOUtil.getStream(path));
 		int currLine = 1;
 		while (scanner.hasNextLine()) {
 			String line = scanner.nextLine();
