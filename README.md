@@ -8,7 +8,7 @@ mvn clean package
 Luego para correrlo simplemente ejecutar el jar de la siguiente forma: 
 
 <pre>
-java -jar proxy_file.jar PROXY_CONFIG_FILES_PATH DEFAULT_ORIGIN_SERVICE PORT
+java -jar proxy_file.jar PROXY_CONFIG_FILES_PATH DEFAULT_ORIGIN_SERVER PORT
 </pre>
 
 Ejemplo:
