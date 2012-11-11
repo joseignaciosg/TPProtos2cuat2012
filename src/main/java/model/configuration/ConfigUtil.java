@@ -22,14 +22,14 @@ public class ConfigUtil {
 	private Map<String, SimpleListConfiguration> cachedSimpleListConfig;
 	
 	private ConfigUtil() {
-		cachedSimpleListConfig = new HashMap<String, SimpleListConfiguration>();
-		cachedKeyValueConfig = new HashMap<String, KeyValueConfiguration>();
-		mainConfguration = new KeyValueConfiguration(CONFIG_FILE);
 		configurationsFolder = System.getProperty("configurationsFolder");
 		if (StringUtil.empty(configurationsFolder)) {
 			throw new IllegalArgumentException("System property " + configurationsFolder + " is not set!");
 		}
 		configurationsFolder = new File(configurationsFolder).getAbsolutePath() + "/";
+		cachedSimpleListConfig = new HashMap<String, SimpleListConfiguration>();
+		cachedKeyValueConfig = new HashMap<String, KeyValueConfiguration>();
+		mainConfguration = new KeyValueConfiguration(configurationsFolder + CONFIG_FILE);
 	}
 	
 	public KeyValueConfiguration getMainConfig() {
@@ -46,34 +46,28 @@ public class ConfigUtil {
 	}
 	
 	public SimpleListConfiguration getSimpleListConfig(String name) {
-		String fileName = mainConfguration.get(name);
-		if (fileName == null) {
+		String path = getConfigPath(name);
+		if (path == null) {
 			throw new IllegalStateException(name + "is not defined!");
 		}
-		SimpleListConfiguration simple = cachedSimpleListConfig.get(fileName);
-		if (simple != null) {
-			return simple;
+		SimpleListConfiguration simple = cachedSimpleListConfig.get(path);
+		if (simple == null) {
+			simple = new SimpleListConfiguration(path);
+			cachedSimpleListConfig.put(path, simple);
 		}
-		String resourcePath = mainConfguration.get("specific_conf_dir");
-		String path = resourcePath + fileName;
-		simple = new SimpleListConfiguration(path);
-		cachedSimpleListConfig.put(fileName, simple);
 		return simple;
 	}
 	
 	public KeyValueConfiguration getKeyValueConfig(String name) {
-		String fileName = mainConfguration.get(name);
-		if (fileName == null) {
+		String path = getConfigPath(name);
+		if (path == null) {
 			throw new IllegalStateException(name + "is not defined!");
 		}
-		KeyValueConfiguration keyValue = cachedKeyValueConfig.get(fileName);
-		if (keyValue != null) {
-			return keyValue;
+		KeyValueConfiguration keyValue = cachedKeyValueConfig.get(path);
+		if (keyValue == null) {
+			keyValue = new KeyValueConfiguration(path);
+			cachedKeyValueConfig.put(path, keyValue);
 		}
-		String resourcePath = mainConfguration.get("specific_conf_dir");
-		resourcePath += fileName;
-		keyValue = new KeyValueConfiguration(resourcePath);
-		cachedKeyValueConfig.put(fileName, keyValue);
 		return keyValue;
 	}
 

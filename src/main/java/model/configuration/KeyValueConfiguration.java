@@ -1,8 +1,8 @@
 package model.configuration;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.Properties;
-
-import model.util.IOUtil;
 
 public class KeyValueConfiguration {
 
@@ -34,9 +34,9 @@ public class KeyValueConfiguration {
 	public void update() {
 		try {
 			properties.clear();
-			properties.load(IOUtil.getStream(path));
+			properties.load(new FileInputStream(new File(path)));
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new IllegalArgumentException(path + " does not exists.");
 		}
 	}
 }
