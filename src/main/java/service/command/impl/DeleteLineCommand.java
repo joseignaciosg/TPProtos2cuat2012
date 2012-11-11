@@ -41,14 +41,12 @@ public class DeleteLineCommand extends ServiceCommand {
 			String rootPath = IOUtil.getRoot();
 			rootPath = rootPath.substring(0, rootPath.lastIndexOf('/') + 1);
 			PrintWriter out = new PrintWriter(rootPath + path);
-			// PrintWriter out = new PrintWriter(path);
 			out.print(text.toString());
 			out.close();
 			owner.echoLine(StatusCodes.OK_FILE_UPDATED);
 			Config.getInstance().update(params[1]);
 		} catch (FileNotFoundException e) {
-			// should never happen...
-			e.printStackTrace();
+			owner.echoLine(StatusCodes.ERR_INVALID_PARAMETERS_FILE);
 		} catch (URISyntaxException e) {
 			owner.echoLine(StatusCodes.ERR_INVALID_PARAMETERS_FILE);
 		}

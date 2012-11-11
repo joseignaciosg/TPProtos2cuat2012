@@ -7,6 +7,7 @@ import java.net.URISyntaxException;
 
 import model.configuration.Config;
 import model.util.CollectionUtil;
+import model.util.IOUtil;
 import service.AbstractSockectService;
 import service.StatusCodes;
 import service.command.ServiceCommand;
@@ -29,7 +30,7 @@ public class PutCommand extends ServiceCommand {
 			owner.echoLine(StatusCodes.ERR_INVALID_PARAMETERS_FILE);
 		}
 		try {
-			String rootPath = PutCommand.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+			String rootPath = IOUtil.getRoot();
 			rootPath = rootPath.substring(0, rootPath.lastIndexOf('/') + 1);
 			FileWriter fw = new FileWriter(new File(rootPath + path), true);
 			fw.write("\r\n" + line.trim());

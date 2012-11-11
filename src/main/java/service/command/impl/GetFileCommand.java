@@ -26,7 +26,6 @@ public class GetFileCommand extends ServiceCommand {
 			owner.echoLine(StatusCodes.ERR_INVALID_PARAMETERS_FILE);
 			return;
 		}
-		System.out.println(path);
 		Scanner scanner = new Scanner(IOUtil.getStream(path));
 		owner.echoLine(StatusCodes.OK_FILE_PRINTED, params[0]);
 		while (scanner.hasNextLine()) {
