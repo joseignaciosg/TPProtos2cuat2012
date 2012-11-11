@@ -13,9 +13,9 @@ java -jar proxy_file.jar PROXY_CONFIG_FILES_PATH DEFAULT_ORIGIN_SERVICE PORT
 
 Ejemplo:
 
-> java -jar proxy-pop3-1.jar ./myresources/ akarpovsky.no-ip.org 110
+> java -jar proxy-pop3-1.jar ./myresources/ mysuperserver.no-ip.org 110
 
-Siendo "./myresources" el path al directorio con los archivos de configuración el cual tiene la siguiente estructura:
+Siendo **"./myresources"** el path al directorio con los archivos de configuración el cual tiene la siguiente estructura:
 
 <pre>
 ├── myresources
