@@ -26,10 +26,11 @@ public class GetFileCommand extends ServiceCommand {
 			owner.echoLine(StatusCodes.ERR_INVALID_PARAMETERS_FILE);
 			return;
 		}
+		int lineNumber = 1;
 		owner.echoLine(StatusCodes.OK_FILE_PRINTED, params[0]);
 		Scanner scanner = new Scanner(new File(path));
 		while (scanner.hasNextLine()) {
-			owner.echoLine(scanner.nextLine());
+			owner.echoLine(lineNumber++ + "\t" + scanner.nextLine());
 		}
 		scanner.close();
 		owner.echoLine(".");

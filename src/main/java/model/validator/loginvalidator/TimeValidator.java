@@ -34,11 +34,11 @@ public class TimeValidator implements LoginValidator {
 			final LocalTime startTime = new LocalTime(Integer.valueOf(startTimeParts[0].trim()), Integer.valueOf(startTimeParts[1].trim()));
 			LocalTime endTime = new LocalTime(Integer.valueOf(endTimeParts[0].trim()), Integer.valueOf(endTimeParts[1].trim()));
 			LocalTime now = LocalTime.now();
-			if(startTime.isAfter(endTime)){
+			if (startTime.isAfter(endTime)) {
 				if (now.isBefore(startTime) && now.isAfter(endTime)) {
 					throw new LoginValidationException(mailAddress + " does not have access during this time");
 				}
-			}else{
+			} else {
 				if (now.isBefore(startTime) || now.isAfter(endTime)) {
 					throw new LoginValidationException(mailAddress + " does not have access during this time");
 				}
