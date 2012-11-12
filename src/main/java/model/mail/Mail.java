@@ -32,7 +32,7 @@ public class Mail {
 	}
 	
 	public void addAttachmentsExtension(String extension) {
-		attachmentsExtension.add(extension);
+		attachmentsExtension.add(extension.toLowerCase());
 	}
 
 	public Set<String> getAttachmentsExtension() {
@@ -44,7 +44,7 @@ public class Mail {
 	}
 
 	public boolean hasAttachmentWithExtension(String extension) {
-		return attachmentsExtension.contains(extension);
+		return attachmentsExtension.contains(extension.toLowerCase());
 	}
 
 	public void addHeader(MimeHeader header) {
