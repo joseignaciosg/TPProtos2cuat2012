@@ -37,9 +37,6 @@ public class MimeHeaderParser {
 			MimeHeader header = new MimeHeader(line);
 			parseParams.mail.addHeader(header);
 			writeHeader(parseParams, header);
-			if (header.getKey().equalsIgnoreCase("content-type")) {
-				parseParams.mail.addAttachmentsExtension(header.getValue());
-			}
 			logger.debug("Parsed header => " + header);
 		} catch (IllegalArgumentException e) {
 			logger.error("Inavlid header: " + line + ". Ignoring...");
