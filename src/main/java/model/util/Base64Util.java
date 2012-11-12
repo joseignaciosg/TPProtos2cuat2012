@@ -31,31 +31,11 @@ public class Base64Util {
 	}
 
 	public static File decodeUsingOS(String text) throws IOException, InterruptedException {
-		File file = createFileWithContents(text);
-		List<String> commands = new LinkedList<String>();
-		commands.add("base64");
-		String osname = System.getProperty("os.name");
-		if ("mac os x".equals(osname.toLowerCase()) ) {
-			commands.add("-D");
-		} else {
-			commands.add("-d");
-		}
-		commands.add(file.getAbsolutePath());
-		ProcessBuilder pb = new ProcessBuilder(commands);
-		File decodedContents = File.createTempFile("decode_", ".tmp");
-		Process process = pb.start();
-		process.waitFor();
-		IOUtil.redirectOutputStream(process.getInputStream(), decodedContents);
-		file.delete();
-		return decodedContents;
-	}
+		byte[] decoded = new Base64().decode(text.getBytes());
+        File out = File.createTempFile("encodedImage", ".jpg");
+        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(out));
+        bos.write(decoded);
+        bos.close();
+        return out;	}
 
-	private static File createFileWithContents(String text) throws IOException {
-		File file = File.createTempFile("decode_", ".tmp");
-		FileWriter writer = new FileWriter(file);
-		writer.append(text);
-		writer.flush();
-		writer.close();
-		return file;
-	}
 }
