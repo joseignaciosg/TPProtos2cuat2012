@@ -19,7 +19,7 @@ import service.command.ServiceCommand;
 
 public class RetrCommand extends ServiceCommand {
 
-	protected static final Logger logger = Logger.getLogger(DeleCommand.class);
+	protected static final Logger logger = Logger.getLogger(RetrCommand.class);
 
 	public RetrCommand(AbstractSockectService owner) {
 		super(owner);
