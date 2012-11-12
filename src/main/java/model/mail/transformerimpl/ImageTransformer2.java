@@ -35,7 +35,7 @@ public class ImageTransformer2 implements Transformer {
 		if (contentType == null || !availableTypes.contains(contentType.getValue())) {
 			return part;
 		}
-		if ("base64".equals(contentTransferEncoding.getValue())) {
+		if ("base64".equalsIgnoreCase(contentTransferEncoding.getValue())) {
 			try {
 				File originalImage = getUnencodedImage(part);
 				File rotatedImage = rotator.createRotatedImage(ImageIO.read(originalImage));

@@ -1,28 +1,27 @@
 package model.util;
 
-import java.io.BufferedReader;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.Scanner;
-
 
 public class IOUtil {
 
-private static final IOUtil instance = new IOUtil();
-	
+	private static final IOUtil instance = new IOUtil();
+
 	@SuppressWarnings("resource")
 	public static Scanner createScanner(String resourcePath) {
 		InputStream is = getStream(resourcePath);
 		return (is == null) ? null : new Scanner(is);
 	}
-	
+
 	public static InputStream getStream(String resourcePath) {
 		return instance.getClass().getClassLoader().getResourceAsStream(resourcePath);
 	}
-	
+
 	public static File createFileWithContents(String text) throws IOException {
 		File file = File.createTempFile("decode_", ".tmp");
 		FileWriter writer = new FileWriter(file);
@@ -31,17 +30,20 @@ private static final IOUtil instance = new IOUtil();
 		writer.close();
 		return file;
 	}
-	
+
 	public static void redirectOutputStream(InputStream inputStream, File out) throws IOException {
-		BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-		FileWriter writer = new FileWriter(out);
-		String line;
-		while ((line = reader.readLine()) != null) {
-			writer.write(line + "\n");
+		BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(out));
+		long length = inputStream.available();
+		byte[] bytes = new byte[(int) length];
+		// Read in the bytes
+		int offset = 0;
+		int numRead = 0;
+		while (offset < bytes.length && (numRead = inputStream.read(bytes, offset, bytes.length - offset)) >= 0) {
+			bos.write(bytes);
+			offset += numRead;
 		}
-		writer.flush();
-		writer.close();
-		reader.close();
+		bos.flush();
+		bos.close();
 	}
-	
+
 }
