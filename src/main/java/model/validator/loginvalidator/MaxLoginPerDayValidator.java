@@ -21,10 +21,11 @@ public class MaxLoginPerDayValidator implements LoginValidator {
 	@Override
 	public void validate() throws LoginValidationException {
 		String value = maxLoginConfig.get(user.getMail());
+		String userMail = user.getMail();
 		if (value == null) {
+			statsService.incrementNumberOfAccesses(userMail);
 			return;
 		}
-		String userMail = user.getMail();
 		int maxAmount = Integer.valueOf(value);
 		int todayAccesses = statsService.incrementNumberOfAccesses(userMail);
 		if (maxAmount < todayAccesses) {
