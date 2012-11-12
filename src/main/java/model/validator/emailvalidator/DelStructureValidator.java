@@ -26,7 +26,7 @@ public class DelStructureValidator implements MailValidator {
 		String userRestruictions = deleteStructureConfig.get(user.getMail());
 		String[] desiredStructure = CollectionUtil.trimAll(userRestruictions.split(","));
 		for (String field: desiredStructure) {
-			if ("dissabledAttachments".equals(field) && email.hasAttachments()) {
+			if ("dissabledAttachments".equalsIgnoreCase(field) && email.hasAttachments()) {
 				String message = "Restricting message deletion because mail has attachments";
 				throw new MailValidationException(message);
 			}
