@@ -1,8 +1,11 @@
 package model.util;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -15,16 +18,16 @@ public class Base64Util {
 	}
 
 	public static File encodeToFile(File file) throws IOException, InterruptedException {
-		List<String> commands = new LinkedList<String>();
-		commands.add("base64");
-		commands.add(file.getAbsolutePath());
-		ProcessBuilder pb = new ProcessBuilder(commands);
-		File decodedContents = File.createTempFile("encoded_", ".tmp");
-		Process process = pb.start();
-		process.waitFor();
-		IOUtil.redirectOutputStream(process.getInputStream(), decodedContents);
-		file.delete();
-		return decodedContents;
+		File encoded = File.createTempFile("encoded", ".base64");
+		BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(encoded));
+		RandomAccessFile f = new RandomAccessFile(file, "r");
+		byte[] b = new byte[(int)f.length()];
+		f.read(b);
+		bos.write(new Base64().encode(b));
+		f.close();
+		bos.flush();
+		bos.close();
+		return encoded;
 	}
 
 	public static File decodeUsingOS(String text) throws IOException, InterruptedException {
