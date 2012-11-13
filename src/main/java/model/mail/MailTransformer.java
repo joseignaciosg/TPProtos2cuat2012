@@ -1,18 +1,16 @@
 package model.mail;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import model.configuration.ConfigUtil;
 import model.configuration.SimpleListConfiguration;
@@ -21,7 +19,6 @@ import model.mail.transformerimpl.ImageTransformer2;
 import model.mail.transformerimpl.LeetTransformer;
 import model.mail.transformerimpl.Transformer;
 import model.parser.mime.MimeHeader;
-import model.util.IOUtil;
 
 import org.apache.log4j.Logger;
 
@@ -80,9 +77,8 @@ public class MailTransformer {
 			File transformedOut = File.createTempFile("externalTransformOut", ".txt");
 			for (String command : externalTransformers) {
 				final Process process = createProcess(command, transformedIn);
-				boolean success = execute(process, command);
+				boolean success = execute(process, command, transformedOut);
 				if (success) {
-					IOUtil.redirectOutputStream(process.getInputStream(), transformedOut);
 					mail.setContents(transformedOut);
 					// switch in <-> out
 					File tmp = transformedIn;
@@ -118,25 +114,22 @@ public class MailTransformer {
 		return pb.start();
 	}
 	
-	private boolean execute(final Process process, String command) throws InterruptedException, ExecutionException {
-		Callable<Integer> callable = new Callable<Integer>() {
-			public Integer call() throws Exception {
-				process.waitFor();
-				return process.exitValue();
-			}
-		};
-		try {
-			Future<Integer> ft = Executors.newSingleThreadExecutor().submit(callable);
-			long timeout = ConfigUtil.getInstance().getMainConfig().getLong("external_app_timeout_ms");
-			int exitValue = ft.get(timeout, TimeUnit.MILLISECONDS);
-			if (exitValue == 0) {
-				return true;
-			} else {
-				logger.warn(command + " did not finish succesfuly. Exit code " + exitValue);
-			}
-		} catch (TimeoutException to) {
-			logger.warn(command + " took too much time to excecute. Skipping transformation!");
+	private boolean execute(Process process, String command, File out) throws IOException {
+		InputStream is = process.getInputStream();
+		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+		FileWriter writer = new FileWriter(out);
+		String line;
+		while ((line = reader.readLine()) != null) {
+			writer.append(line + "\n");
 		}
-		return false;
+		writer.close();
+		reader.close();
+		int exitValue = process.exitValue();
+		if (exitValue == 0) {
+			return true;
+		} else {
+			logger.warn(command + " did not finish succesfuly. Exit code " + exitValue);
+			return false;
+		}
 	}
 }
