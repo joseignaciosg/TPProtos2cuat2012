@@ -29,7 +29,7 @@ public class DelSenderValidator implements MailValidator {
 		String sender = email.getSender();
 		if (sender != null) {
 			for (String s : bannedSenders) {
-				if (s.equals(sender)) {
+				if (s.toLowerCase().equals(sender)) {
 					String message = "Restricting message deletion because mail sender "
 							+ s + " is banned.";
 					throw new MailValidationException(message);

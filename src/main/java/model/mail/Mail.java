@@ -91,30 +91,40 @@ public class Mail {
 	 * */
 	public String getSender() {
 		String sender = null;
+		String[] headerFromArray; 
 		boolean lookForSender = false;
-		String[] headerFromArray = headers.get("from").getValue().split(",");
-		if(headerFromArray.length == 1){
-			sender = headerFromArray[0];
-			if (sender==null){
+		MimeHeader headerFrom = headers.get("from");
+		if (headerFrom == null){
+			lookForSender = true;
+		}else{
+			headerFromArray = headerFrom.getValue().toLowerCase().split(",");
+			if(headerFromArray.length == 1){
+				sender = headerFromArray[0];
+				if (sender==null){
+					lookForSender = true;
+				}
+			}else{
 				lookForSender = true;
 			}
-		}else{
-			lookForSender = true;
 		}
 			
 		if(lookForSender){
-			sender = headers.get("sender").getValue();
+			MimeHeader headerSender = headers.get("sender"); 
+			if (headerSender != null){
+				sender = headerSender.getValue().toLowerCase();
+			}
 		}
-		
-		String[] aux;
-		if(sender.contains("<")){
-			aux = sender.split("<");
-			sender = aux[1];
-			aux = sender.split(">");
-			sender = aux[0];
-		}else if (sender.contains(" ")){
-			aux = sender.split(" ");
-			sender = aux[1];
+		if (sender != null){
+			String[] aux;
+			if(sender.contains("<")){
+				aux = sender.split("<");
+				sender = aux[1];
+				aux = sender.split(">");
+				sender = aux[0];
+			}else if (sender.contains(" ")){
+				aux = sender.split(" ");
+				sender = aux[1];
+			}
 		}
 		return sender;
 	}
