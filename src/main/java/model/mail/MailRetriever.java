@@ -6,14 +6,21 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import model.User;
+import service.command.impl.stats.StatsService;
+
 
 public class MailRetriever {
 	
-	public void retrieve(BufferedReader inputBuffer, DataOutputStream outStream) throws IOException {
+	private static final StatsService statsService = StatsService.getInstace();
+	
+	public void retrieve(BufferedReader inputBuffer, DataOutputStream outStream, User user) throws IOException {
 		String line;
 		do {
 			line = inputBuffer.readLine();
-			outStream.writeBytes(line + "\r\n");
+			String out = line + "\r\n";
+			outStream.writeBytes(out);
+			statsService.incrementTransferedBytes(out.length(), user.getMail());
 		} while (!line.equals("."));
 	}
 	
