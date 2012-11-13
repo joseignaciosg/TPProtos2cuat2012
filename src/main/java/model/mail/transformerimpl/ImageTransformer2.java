@@ -43,7 +43,7 @@ public class ImageTransformer2 implements Transformer {
 				StringBuilder rotatedEncodedImage = new StringBuilder();
 				Scanner scanner = new Scanner(encodedImage);
 				while (scanner.hasNextLine()) {
-					rotatedEncodedImage.append(scanner.nextLine() + "\r\n");
+					rotatedEncodedImage.append(scanner.nextLine() + "\n");
 				}
 				encodedImage.delete();
 				rotatedImage.delete();
@@ -58,7 +58,7 @@ public class ImageTransformer2 implements Transformer {
 	}
 
 	private File getUnencodedImage(StringBuilder encodedText) throws IOException, InterruptedException {
-		return Base64Util.decodeUsingOS(encodedText.toString().replace("\r", ""));
+		return Base64Util.decodeAnsStoreToFile(encodedText.toString().replace("\r", ""));
 	}
 
 

@@ -30,7 +30,7 @@ public class LeetTransformer implements Transformer {
 				File encodedFile = File.createTempFile("encode_", ".tmp");
 				FileWriter encodedContentsWriter = new FileWriter(encodedFile);
 				try {
-					File decodedFile = Base64Util.decodeUsingOS(text.toString());
+					File decodedFile = Base64Util.decodeAnsStoreToFile(text.toString());
 					Scanner decodedContents = new Scanner(decodedFile);
 					while (decodedContents.hasNextLine()) {
 						encodedContentsWriter.append(toLeet(decodedContents.nextLine()) + "\r\n");
