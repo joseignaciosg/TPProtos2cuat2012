@@ -45,7 +45,7 @@ public class RetrCommand extends ServiceCommand {
 		if (!mailTransformer.hasActiveTransformations()) {
 			logger.info("No transformation needed, sending mail without parsing.");
 			mailSocketService.echoLine(firstLine);
-			mailRetriever.retrieve(mailInStream, mailSocketService.getClientOutputStream());
+			mailRetriever.retrieve(mailInStream, mailSocketService.getClientOutputStream(), (User) getBundle().get("user"));
 		} else {
 			logger.info("Downloading mail from origin server.");
 			File originalMail = mailRetriever.retrieve(params[0], mailInStream);
